@@ -43,7 +43,6 @@
 		"connect": "2.12.x",
 		"express": "3.4.x",
 		"lodash": "2.4.x",
-		"connect-powered-by": "0.1.x",
 		"merge-descriptors": "0.0.2"
 	},
 	"devDependencies": {
