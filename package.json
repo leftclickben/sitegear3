@@ -1,0 +1,54 @@
+{
+	"name": "Sitegear3",
+	"version": "0.0.1",
+	"description": "Simple website framework and decoupled web content management system",
+	"keywords": [
+		"sitegear",
+		"sitegear3",
+		"framework",
+		"web",
+		"router",
+		"cms",
+		"content management"
+	],
+	"homepage": "http://sitegear.org/",
+	"bugs": {
+		"url": "https://github.com/sitegear/sitegear3/issues"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "Sitegear.org",
+		"email": "admin@sitegear.org",
+		"url": "http://sitegear.org/"
+	},
+	"contributors": [
+		{
+			"name": "Ben New",
+			"email": "ben@leftclick.com.au",
+			"url": "http://leftclick.com.au/"
+		}
+	],
+	"main": "index",
+	"directories": {
+		"lib": "./lib",
+		"doc": "./doc"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/sitegear/sitegear3"
+	},
+	"scripts": {
+	},
+	"dependencies": {
+		"express": "3.4.x",
+		"lodash": "2.4.x",
+		"connect-powered-by": "0.1.x",
+		"merge-descriptors": "0.0.2"
+	},
+	"devDependencies": {
+	},
+	"engines": {
+		"node": ">=0.11.0"
+	},
+	"readmeFilename": "README.md"
+}

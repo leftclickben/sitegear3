@@ -1,0 +1,13 @@
+{
+	"site": {
+		"name": "Anonymous Website"
+	},
+	"server": {
+		"port": 80,
+		"baseUrl": "http://localhost/"
+	},
+	"session": {
+		"key": "sitegear3.session",
+		"secret": "Sitegear3"
+	}
+}
