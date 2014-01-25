@@ -49,4 +49,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../index'), require('../../lib/controllers/default')));
+}(require('lodash'), require('../../../index'), require('../../../lib/controllers/default')));

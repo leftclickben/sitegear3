@@ -12,10 +12,7 @@
 	describe('Sitegear3 application lifecycle: dispose()', function () {
 		var app;
 		beforeEach(function () {
-			app = sitegear3();
-			app.initialise();
-			app.persistence();
-			app.start();
+			app = sitegear3().initialise().persistence();
 			spyOn(app.redis, 'end').andCallThrough();
 			app.dispose();
 		});
@@ -23,4 +20,4 @@
 			expect(app.redis.end).toHaveBeenCalled();
 		});
 	});
-}(require('../index')));
+}(require('../../../index')));

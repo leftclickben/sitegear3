@@ -24,4 +24,4 @@
 			app.dispose();
 		});
 	});
-}(require('../index')));
+}(require('../../../index')));
