@@ -1,10 +1,11 @@
 {
 	"site": {
-		"name": "Anonymous Website"
+		"key": "anonymous-website",
+		"name": "Anonymous Website",
+		"baseUrl": "http://localhost/"
 	},
 	"server": {
-		"port": 80,
-		"baseUrl": "http://localhost/"
+		"port": 80
 	},
 	"session": {
 		"key": "sitegear3.session",

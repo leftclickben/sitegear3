@@ -42,6 +42,7 @@
 	"dependencies": {
 		"connect": "2.12.x",
 		"express": "3.4.x",
+		"redis": "0.10.x",
 		"lodash": "2.4.x",
 		"merge-descriptors": "0.0.2"
 	},
