@@ -6,17 +6,17 @@
  * MIT Licensed
  */
 
-(function (_, sitegear3) {
+(function (_, sitegear3, redis) {
 	"use strict";
 
-	describe('Sitegear3 lifecycle', function () {
+	describe('Sitegear3 application lifecycle', function () {
 		var app;
 		beforeEach(function () {
 			app = sitegear3();
 		});
 		describe('app.setup()', function () {
 			beforeEach(function () {
-				app.setup({ site: { name: 'Test Spec', additionalKey: 'value' }, foo: 'bar' });
+				app.initialise({ site: { name: 'Test Spec', additionalKey: 'value' }, foo: 'bar' });
 			});
 			it('Should apply settings over defaults', function () {
 				expect(app.settings.site.name).toBe('Test Spec');
@@ -28,27 +28,13 @@
 				expect(_.isFunction(app.controllers.default)).toBeTruthy();
 				expect(_.size(app.controllers)).toBe(2);
 			});
-			it('Should connect to redis', function () {
-				expect(_.isObject(app.redis)).toBeTruthy();
-			});
-			afterEach(function () {
-				app.dispose();
-			});
-		});
-		describe('app.setup() with redis disabled', function () {
-			beforeEach(function () {
-				app.setup({ redis: { connect: false } });
-			});
-			it('Should not connect to redis', function () {
-				expect(app.hasOwnProperty('redis')).toBeFalsy();
-			});
 			afterEach(function () {
 				app.dispose();
 			});
 		});
 		describe('app.mapRoutes()', function () {
 			beforeEach(function () {
-				app.setup({ redis: { connect: false }});
+				app.initialise();
 				app.mapRoutes({
 					'/': {},
 					'/about': {},
@@ -187,9 +173,43 @@
 				app.dispose();
 			});
 		});
+		describe('app.connect() with default settings', function () {
+			beforeEach(function () {
+				app.initialise();
+				spyOn(redis, 'createClient').andCallThrough();
+				app.connect();
+			});
+			it('Should have called redis.createClient()', function () {
+				expect(redis.createClient).toHaveBeenCalled();
+			});
+			describe('Should have a working connection', function () {
+				var key = 'test_spec_' + Date.now(),
+					value = 'test: passed';
+				it('Should allow values to be set, retrieved and deleted', function (done) {
+					app.redis.set(key, value, function (err, result) {
+						var delCallback = function (err, result) {
+								expect(err).toBeNull();
+								expect(result).toBe(1);
+								done();
+							},
+							getCallback = function (err, result) {
+								expect(err).toBeNull();
+								expect(result).toBe(value);
+								app.redis.del(key, delCallback);
+							};
+						expect(err).toBeNull();
+						expect(result).toBe('OK');
+						app.redis.get(key, getCallback);
+					});
+				});
+			});
+			afterEach(function () {
+				app.dispose();
+			});
+		});
 		describe('app.start()', function () {
 			beforeEach(function () {
-				app.setup({ redis: { connect: false }});
+				app.initialise();
 				spyOn(app, 'listen');
 				app.start();
 			});
@@ -202,7 +222,8 @@
 		});
 		describe('app.dispose()', function () {
 			beforeEach(function () {
-				app.setup();
+				app.initialise();
+				app.connect();
 				app.start();
 				spyOn(app.redis, 'end').andCallThrough();
 				app.dispose();
@@ -212,4 +233,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../index')));
+}(require('lodash'), require('../index'), require('redis')));
