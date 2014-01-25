@@ -16,6 +16,6 @@ Or, from the project root:
 
 Then, run the tests, from the project root:
 
-    jasmine-node spec/ --verbose
+    jasmine-node tests/ --verbose
 
 If you want less output and just want to see the final result, omit the `--verbose` argument.

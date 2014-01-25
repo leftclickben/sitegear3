@@ -43,4 +43,4 @@
 			app.dispose();
 		});
 	});
-}(require('../index'), require('redis')));
+}(require('../../../index'), require('redis')));

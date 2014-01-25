@@ -36,7 +36,7 @@
 				expect(app.locals.now.__proto__).toBe(Date.prototype);
 			});
 			it('Loads view helpers', function () {
-				fs.readdirSync(path.join(__dirname, '..', '..', 'lib', 'viewHelpers'), function (filename) {
+				fs.readdirSync(path.join(__dirname, '..', '..', '..', 'lib', 'viewHelpers'), function (filename) {
 					if (/\.js$/.test(filename)) {
 						var name = path.basename(filename, '.js');
 						expect(app.locals[name]).toBeDefined();
@@ -52,4 +52,4 @@
 			app.dispose();
 		});
 	});
-}(require('lodash'), require('../../index.js'), require('fs'), require('path'), require('../../lib/helpers/prepareView')));
+}(require('lodash'), require('../../../index.js'), require('fs'), require('path'), require('../../../lib/helpers/prepareView')));

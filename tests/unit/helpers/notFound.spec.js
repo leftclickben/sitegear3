@@ -6,13 +6,13 @@
  * MIT Licensed
  */
 
-(function (_, internalServerError) {
+(function (_, notFound) {
 	"use strict";
 
-	describe('Helper: internalServerError', function () {
-		var helper, mockRequest, mockResponse, container, error, error501;
+	describe('Helper: notFound', function () {
+		var helper, mockRequest, mockResponse, container;
 		beforeEach(function () {
-			helper = internalServerError();
+			helper = notFound();
 			mockRequest = {
 				accepts: function () { return false; }
 			};
@@ -25,38 +25,17 @@
 			container = {
 				next: function () {}
 			};
-			error = new Error('This is an error.');
-			error501 = new Error('This is an error.');
-			error501.status = 501;
 		});
 		it('Exports a function', function () {
 			expect(_.isFunction(helper)).toBeTruthy();
 		});
-		describe('Uses the logger', function () {
-			beforeEach(function () {
-				spyOn(console, 'log');
-				helper(error, mockRequest, mockResponse);
-			});
-			it('Logs to the console', function () {
-				expect(console.log).toHaveBeenCalled();
-			});
-		});
-		describe('Sets HTTP status to 500 by default', function () {
+		describe('Sets HTTP status to 404', function () {
 			beforeEach(function () {
 				spyOn(mockResponse, 'status');
-				helper(error, mockRequest, mockResponse);
+				helper(mockRequest, mockResponse);
 			});
-			it('Sets a 500 status', function () {
-				expect(mockResponse.status).toHaveBeenCalledWith(500);
-			});
-		});
-		describe('Sets HTTP status to status given by Error object', function () {
-			beforeEach(function () {
-				spyOn(mockResponse, 'status');
-				helper(error501, mockRequest, mockResponse);
-			});
-			it('Sets the status from the Error object', function () {
-				expect(mockResponse.status).toHaveBeenCalledWith(501);
+			it('Sets a 404 status', function () {
+				expect(mockResponse.status).toHaveBeenCalledWith(404);
 			});
 		});
 		describe('Calls response.render() when HTML is accepted', function () {
@@ -65,10 +44,10 @@
 				mockRequest.accepts = function (type) {
 					return type === 'html';
 				};
-				helper(error, mockRequest, mockResponse);
+				helper(mockRequest, mockResponse);
 			});
 			it('Calls response.render()', function () {
-				expect(mockResponse.render).toHaveBeenCalledWith('_errors/500', { status: 'Internal Server Error', error: error });
+				expect(mockResponse.render).toHaveBeenCalledWith('_errors/404', { status: 'Not Found' });
 			});
 		});
 		describe('Returns an object when JSON is accepted', function () {
@@ -77,10 +56,10 @@
 				mockRequest.accepts = function (type) {
 					return type === 'json';
 				};
-				helper(error, mockRequest, mockResponse);
+				helper(mockRequest, mockResponse);
 			});
-			it('Returns an object with "status" and "error" keys', function () {
-				expect(mockResponse.send).toHaveBeenCalledWith({ status: 'Internal Server Error', error: error });
+			it('Returns an object with "status" key', function () {
+				expect(mockResponse.send).toHaveBeenCalledWith({ status: 'Not Found' });
 			});
 		});
 		describe('Returns a plain text response when neither HTML nor JSON is accepted', function () {
@@ -90,21 +69,21 @@
 				mockRequest.accepts = function (type) {
 					return type !== 'html' && type !== 'json';
 				};
-				helper(error, mockRequest, mockResponse);
+				helper(mockRequest, mockResponse);
 			});
 			it('Returns the error as plain text', function () {
 				expect(mockResponse.type).toHaveBeenCalledWith('txt');
-				expect(mockResponse.send).toHaveBeenCalledWith('Internal Server Error: ' + error);
+				expect(mockResponse.send).toHaveBeenCalledWith('Not Found');
 			});
 		});
 		describe('Doesn\'t call next()', function () {
 			beforeEach(function () {
 				spyOn(container, 'next');
-				helper(error, mockRequest, mockResponse, container.next);
+				helper(mockRequest, mockResponse, container.next);
 			});
 			it('Doesn\'t call next()', function () {
 				expect(container.next).not.toHaveBeenCalled();
 			});
 		});
 	});
-}(require('lodash'), require('../../lib/helpers/internalServerError')));
+}(require('lodash'), require('../../../lib/helpers/notFound')));

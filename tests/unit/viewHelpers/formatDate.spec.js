@@ -43,4 +43,4 @@
 			expect(formatDate(date, 'invalid')).toBe('');
 		});
 	});
-}(require('lodash'), require('../../lib/viewHelpers/formatDate')));
+}(require('lodash'), require('../../../lib/viewHelpers/formatDate')));

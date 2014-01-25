@@ -33,4 +33,4 @@
 			app.dispose();
 		});
 	});
-}(require('lodash'), require('../index')));
+}(require('lodash'), require('../../../index')));
