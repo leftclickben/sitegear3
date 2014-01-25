@@ -11,8 +11,8 @@
 		"key": "sitegear3.session",
 		"secret": "Sitegear3"
 	},
-	"redis": {
-		"connect": true
+	"persistence": {
+		"redis": true
 	},
 	"controllers": {
 		"default": {
