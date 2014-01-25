@@ -9,13 +9,11 @@
 (function (sitegear3, redis) {
 	"use strict";
 
-	describe('Sitegear3 application lifecycle: connect()', function () {
+	describe('Sitegear3 application lifecycle: persistence()', function () {
 		var app;
 		beforeEach(function () {
-			app = sitegear3();
-			app.initialise();
 			spyOn(redis, 'createClient').andCallThrough();
-			app.connect();
+			app = sitegear3().initialise().persistence();
 		});
 		it('Calls redis.createClient()', function () {
 			expect(redis.createClient).toHaveBeenCalled();
