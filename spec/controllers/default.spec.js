@@ -38,6 +38,7 @@
 				});
 				it('Makes the correct number of calls to persistence', function () {
 					expect(app.redis.get).toHaveBeenCalled();
+					expect(app.redis.get.callCount).toBe(2);
 				});
 				it('Calls response.render()', function () {
 					expect(mockResponse.render).toHaveBeenCalled();
