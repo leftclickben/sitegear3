@@ -14,7 +14,7 @@
 		beforeEach(function () {
 			app = sitegear3();
 			app.initialise();
-			app.connect();
+			app.persistence();
 			app.start();
 			spyOn(app.redis, 'end').andCallThrough();
 			app.dispose();
