@@ -10,5 +10,17 @@
 	"session": {
 		"key": "sitegear3.session",
 		"secret": "Sitegear3"
+	},
+	"redis": {
+		"connect": true
+	},
+	"controllers": {
+		"default": {
+			"page": {
+				"prefix": "page",
+				"separator": ".",
+				"blocks": [ "main", "title" ]
+			}
+		}
 	}
 }
