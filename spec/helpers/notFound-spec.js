@@ -10,19 +10,22 @@
 	"use strict";
 
 	describe('Helper: notFound', function () {
-		var helper = notFound(),
+		var helper, mockRequest, mockResponse, container;
+		beforeEach(function () {
+			helper = notFound();
 			mockRequest = {
 				accepts: function () { return false; }
-			},
+			};
 			mockResponse = {
 				type: function () { return mockResponse; },
 				status: function () { return mockResponse; },
 				render: function () { return mockResponse; },
 				send: function () { return mockResponse; }
-			},
+			};
 			container = {
 				next: function () {}
 			};
+		});
 		it('Exports a function', function () {
 			expect(_.isFunction(helper)).toBeTruthy();
 		});

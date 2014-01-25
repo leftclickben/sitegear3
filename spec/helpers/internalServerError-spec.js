@@ -10,22 +10,25 @@
 	"use strict";
 
 	describe('Helper: internalServerError', function () {
-		var helper = internalServerError(),
+		var helper, mockRequest, mockResponse, container, error, error501;
+		beforeEach(function () {
+			helper = internalServerError();
 			mockRequest = {
 				accepts: function () { return false; }
-			},
+			};
 			mockResponse = {
 				type: function () { return mockResponse; },
 				status: function () { return mockResponse; },
 				render: function () { return mockResponse; },
 				send: function () { return mockResponse; }
-			},
+			};
 			container = {
 				next: function () {}
-			},
-			error = new Error('This is an error.'),
+			};
+			error = new Error('This is an error.');
 			error501 = new Error('This is an error.');
-		error501.status = 501;
+			error501.status = 501;
+		});
 		it('Exports a function', function () {
 			expect(_.isFunction(helper)).toBeTruthy();
 		});
