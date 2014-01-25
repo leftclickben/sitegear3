@@ -14,9 +14,13 @@
 		beforeEach(function () {
 			app = sitegear3();
 		});
-		describe('app.setup()', function () {
+		describe('app.initialise()', function () {
 			beforeEach(function () {
+				spyOn(app, 'init').andCallThrough();
 				app.initialise({ site: { name: 'Test Spec', additionalKey: 'value' }, foo: 'bar' });
+			});
+			it('Should call app.init()', function () {
+				expect(app.init).toHaveBeenCalled();
 			});
 			it('Should apply settings over defaults', function () {
 				expect(app.settings.site.name).toBe('Test Spec');
