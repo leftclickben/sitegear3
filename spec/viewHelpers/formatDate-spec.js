@@ -6,12 +6,11 @@
  * MIT Licensed
  */
 
-(function (_) {
+(function (_, formatDate) {
 	"use strict";
 
 	describe('View Helper: formatDate', function () {
-		var formatDate = require('../../lib/viewHelpers/formatDate'),
-			date = new Date();
+		var date = new Date();
 		it('Exports a function', function () {
 			expect(_.isFunction(formatDate)).toBeTruthy();
 		});
@@ -44,4 +43,4 @@
 			expect(formatDate(date, 'invalid')).toBe('');
 		});
 	});
-}(require('lodash')));
+}(require('lodash'), require('../../lib/viewHelpers/formatDate')));
