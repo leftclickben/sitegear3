@@ -1,0 +1,8 @@
+{
+	"site": {
+		"key": "test-spec",
+		"name": "Test Spec",
+		"additionalKey": "value"
+	},
+	"foo": "bar"
+}
