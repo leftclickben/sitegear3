@@ -8,7 +8,7 @@
 		"port": 80
 	},
 	"session": {
-		"key": "sitegear3.session",
+		"baseKey": "sitegear3.session",
 		"secret": "Sitegear3"
 	},
 	"persistence": {
