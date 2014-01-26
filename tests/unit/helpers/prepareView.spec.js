@@ -12,7 +12,7 @@
 	describe('Helper: prepareView', function () {
 		var app, helper, mockRequest, mockResponse, container;
 		beforeEach(function () {
-			app = sitegear3().initialise({ site: { name: 'Test Spec' }});
+			app = sitegear3().initialise(require('../settings.json'));
 			helper = prepareView(app);
 			mockRequest = {};
 			mockResponse = {};

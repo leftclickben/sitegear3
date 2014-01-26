@@ -48,6 +48,7 @@
 			});
 			it('Sets a 500 status', function () {
 				expect(mockResponse.status).toHaveBeenCalledWith(500);
+				expect(mockResponse.status.callCount).toBe(1);
 			});
 		});
 		describe('Sets HTTP status to status given by Error object', function () {
@@ -57,6 +58,7 @@
 			});
 			it('Sets the status from the Error object', function () {
 				expect(mockResponse.status).toHaveBeenCalledWith(501);
+				expect(mockResponse.status.callCount).toBe(1);
 			});
 		});
 		describe('Calls response.render() when HTML is accepted', function () {
@@ -69,6 +71,7 @@
 			});
 			it('Calls response.render()', function () {
 				expect(mockResponse.render).toHaveBeenCalledWith('_errors/500', { status: 'Internal Server Error', error: error });
+				expect(mockResponse.render.callCount).toBe(1);
 			});
 		});
 		describe('Returns an object when JSON is accepted', function () {
@@ -81,6 +84,7 @@
 			});
 			it('Returns an object with "status" and "error" keys', function () {
 				expect(mockResponse.send).toHaveBeenCalledWith({ status: 'Internal Server Error', error: error });
+				expect(mockResponse.send.callCount).toBe(1);
 			});
 		});
 		describe('Returns a plain text response when neither HTML nor JSON is accepted', function () {
@@ -94,7 +98,9 @@
 			});
 			it('Returns the error as plain text', function () {
 				expect(mockResponse.type).toHaveBeenCalledWith('txt');
+				expect(mockResponse.type.callCount).toBe(1);
 				expect(mockResponse.send).toHaveBeenCalledWith('Internal Server Error: ' + error);
+				expect(mockResponse.send.callCount).toBe(1);
 			});
 		});
 		describe('Doesn\'t call next()', function () {

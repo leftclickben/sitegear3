@@ -13,7 +13,7 @@
 		var app;
 		beforeEach(function () {
 			app = sitegear3();
-			app.initialise();
+			app.initialise(require('../settings.json'));
 			app.mapRoutes({
 				'/': {},
 				'/about': {},

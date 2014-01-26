@@ -11,7 +11,7 @@
 
 	describe('Sitegear3 application lifecycle: initialise()', function () {
 		var app;
-		describe('With null parameter', function () {
+		describe('With no parameters', function () {
 			beforeEach(function () {
 				app = sitegear3();
 				spyOn(app, 'init').andCallThrough();
@@ -19,13 +19,14 @@
 			});
 			it('Calls app.init()', function () {
 				expect(app.init).toHaveBeenCalled();
+				expect(app.init.callCount).toBe(1);
 			});
 			it('Exposes all defaults as settings', function () {
 				expect(app.settings.site.key).toBe('anonymous-website');
 				expect(app.settings.site.name).toBe('Anonymous Website');
 				expect(app.settings.site.baseUrl).toBe('http://localhost/');
 				expect(app.settings.server.port).toBe(80);
-				expect(app.settings.session.key).toBe("sitegear3.session");
+				expect(app.settings.session.baseKey).toBe("sitegear3.session");
 				expect(app.settings.session.secret).toBe("Sitegear3");
 				expect(app.settings.persistence.redis).toBe(true);
 				expect(app.settings.controllers.default.page.prefix).toBe("page");
@@ -49,24 +50,26 @@
 			});
 		});
 		describe('With object parameter', function () {
+			var settings = require('../settings.json');
 			beforeEach(function () {
 				app = sitegear3();
 				spyOn(app, 'init').andCallThrough();
-				app.initialise({ site: { name: 'Test Spec', additionalKey: 'value' }, foo: 'bar' });
+				app.initialise(settings);
 			});
 			it('Calls app.init()', function () {
 				expect(app.init).toHaveBeenCalled();
+				expect(app.init.callCount).toBe(1);
 			});
 			it('Applies settings over defaults', function () {
+				expect(app.settings.site.key).toBe('test-spec');
 				expect(app.settings.site.name).toBe('Test Spec');
 				expect(app.settings.site.additionalKey).toBe('value');
 				expect(app.settings.foo).toBe('bar');
 			});
 			it('Exposes defaults not overridden as settings', function () {
-				expect(app.settings.site.key).toBe('anonymous-website');
 				expect(app.settings.site.baseUrl).toBe('http://localhost/');
 				expect(app.settings.server.port).toBe(80);
-				expect(app.settings.session.key).toBe("sitegear3.session");
+				expect(app.settings.session.baseKey).toBe("sitegear3.session");
 				expect(app.settings.session.secret).toBe("Sitegear3");
 				expect(app.settings.persistence.redis).toBe(true);
 				expect(app.settings.controllers.default.page.prefix).toBe("page");
