@@ -1,6 +1,6 @@
 {
 	"name": "sitegear3",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "Simple website framework and decoupled web content management system",
 	"keywords": [
 		"sitegear",
@@ -37,19 +37,21 @@
 		"type": "git",
 		"url": "git://github.com/sitegear/sitegear3"
 	},
-	"scripts": {
-	},
+	"scripts": {},
 	"dependencies": {
-		"connect": "2.12.x",
-		"express": "3.4.x",
-		"redis": "0.10.x",
-		"lodash": "2.4.x",
-		"merge-descriptors": "0.0.2"
+		"connect": "~2.12.0",
+		"express": "~3.4.8",
+		"redis": "~0.10.0",
+		"lodash": "~2.4.1",
+		"merge-descriptors": "~0.0.2"
 	},
 	"devDependencies": {
+		"grunt": "~0.4.2",
+		"grunt-jasmine-node": "~0.1.0",
+		"grunt-jslint": "~1.1.2"
 	},
 	"engines": {
-		"node": ">=0.11.0",
+		"node": ">=0.10.0",
 		"swig": ">=1.3.0",
 		"request": ">=2.33.0"
 	},

@@ -30,7 +30,7 @@
 				on: function () { return mockResponse; }
 			};
 			container = {
-				next: function () {}
+				next: _.noop
 			};
 		});
 		it('Exports a function', function () {
@@ -43,7 +43,7 @@
 				helper(mockRequest, mockResponse, container.next);
 			});
 			it('Sets an appropriate session cookie key', function () {
-				expect(app.settings.session.key).toBe('sitegear3.session.test-spec')
+				expect(app.settings.session.key).toBe('sitegear3.session.test-spec');
 			});
 			it('Delegates to the cookieSession middleware', function () {
 				expect(mockResponse.on).toHaveBeenCalled();

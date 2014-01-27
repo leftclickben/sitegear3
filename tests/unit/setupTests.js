@@ -6,9 +6,9 @@
  * MIT Licensed
  */
 
-(function () {
+(function (_) {
 	"use strict";
 
 	// Switch off logging for testing purposes.  This doesn't interfere with output of the test runner.
-	console.log = function() {};
-}());
+	console.log = _.noop;
+}(require('lodash')));

@@ -24,7 +24,7 @@
 				send: function () { return mockResponse; }
 			};
 			container = {
-				next: function () {}
+				next: _.noop
 			};
 			error = new Error('This is an error.');
 			error501 = new Error('This is an error.');
