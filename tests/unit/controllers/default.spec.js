@@ -8,6 +8,7 @@
 
 (function (_, sitegear3, defaultController) {
 	"use strict";
+	require('../setupTests');
 
 	describe('Controller: default', function () {
 		it('Exports a function', function () {

@@ -8,6 +8,7 @@
 
 (function (_, sitegear3, sitegearSession) {
 	"use strict";
+	require('../setupTests');
 
 	describe('Helper: sitegearSession', function () {
 		var app, helper, mockRequest, mockResponse, container;

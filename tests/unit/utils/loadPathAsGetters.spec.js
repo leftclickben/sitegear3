@@ -8,6 +8,7 @@
 
 (function (_, utils, path) {
 	"use strict";
+	require('../setupTests');
 
 	describe('Utility Function: loadPathAsGetters()', function () {
 		var object, returnedObject;

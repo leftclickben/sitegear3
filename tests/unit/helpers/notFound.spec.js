@@ -8,6 +8,7 @@
 
 (function (_, notFound) {
 	"use strict";
+	require('../setupTests');
 
 	describe('Helper: notFound', function () {
 		var helper, mockRequest, mockResponse, container;

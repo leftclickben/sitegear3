@@ -8,6 +8,7 @@
 
 (function (sitegear3, redis) {
 	"use strict";
+	require('../setupTests');
 
 	describe('Sitegear3 application lifecycle: persistence()', function () {
 		var app;

@@ -8,6 +8,7 @@
 
 (function (sitegear3) {
 	"use strict";
+	require('../setupTests');
 
 	describe('Sitegear3 application lifecycle: dispose()', function () {
 		var app;

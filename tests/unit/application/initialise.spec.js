@@ -8,6 +8,7 @@
 
 (function (_, sitegear3, utils) {
 	"use strict";
+	require('../setupTests');
 
 	describe('Sitegear3 application lifecycle: initialise()', function () {
 		var app;

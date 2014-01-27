@@ -8,6 +8,7 @@
 
 (function (_, sitegear3, fs, path, prepareView) {
 	"use strict";
+	require('../setupTests');
 
 	describe('Helper: prepareView', function () {
 		var app, helper, mockRequest, mockResponse, container;
