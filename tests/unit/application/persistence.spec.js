@@ -6,14 +6,18 @@
  * MIT Licensed
  */
 
-(function (sitegear3, redis) {
+(function (_, sitegear3, redis) {
 	"use strict";
 	require('../setupTests');
 
 	describe('Sitegear3 application lifecycle: persistence()', function () {
 		var app;
 		beforeEach(function () {
-			spyOn(redis, 'createClient');
+			spyOn(redis, 'createClient').andCallFake(function () {
+				return {
+					on: _.noop
+				};
+			});
 			app = sitegear3().initialise(require('../settings.json')).persistence();
 		});
 		it('Calls redis.createClient()', function () {
@@ -24,4 +28,4 @@
 			app.dispose();
 		});
 	});
-}(require('../../../index'), require('redis')));
+}(require('lodash'), require('../../../index'), require('redis')));

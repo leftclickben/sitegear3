@@ -22,4 +22,4 @@ If you want less output and just want to see the final result, omit the `--verbo
 
 ## Continuous Integration
 
-Using travis, grunt, jslint and jasmine-node.  Details coming soon.
+Using travis, grunt, jslint and jasmine-node.  Details coming soon...
