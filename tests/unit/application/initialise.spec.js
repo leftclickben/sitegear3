@@ -6,7 +6,7 @@
  * MIT Licensed
  */
 
-(function (_, sitegear3) {
+(function (_, sitegear3, utils) {
 	"use strict";
 
 	describe('Sitegear3 application lifecycle: initialise()', function () {
@@ -28,7 +28,8 @@
 				expect(app.settings.server.port).toBe(80);
 				expect(app.settings.session.baseKey).toBe("sitegear3.session");
 				expect(app.settings.session.secret).toBe("Sitegear3");
-				expect(app.settings.persistence.redis).toBe(true);
+				expect(app.settings.persistence.redis).toBeTruthy();
+				expect(app.settings.persistence.redis.prefix).toBe("sitegear3.anonymous-website");
 				expect(app.settings.controllers.default.page.prefix).toBe("page");
 				expect(app.settings.controllers.default.page.separator).toBe(".");
 				expect(app.settings.controllers.default.page.blocks.length).toBe(2);
@@ -54,6 +55,7 @@
 			beforeEach(function () {
 				app = sitegear3();
 				spyOn(app, 'init').andCallThrough();
+				spyOn(utils, 'expandSettings').andCallThrough();
 				app.initialise(settings);
 			});
 			it('Calls app.init()', function () {
@@ -71,12 +73,25 @@
 				expect(app.settings.server.port).toBe(80);
 				expect(app.settings.session.baseKey).toBe("sitegear3.session");
 				expect(app.settings.session.secret).toBe("Sitegear3");
-				expect(app.settings.persistence.redis).toBe(true);
+				expect(app.settings.persistence.redis).toBeTruthy();
+				expect(app.settings.persistence.redis.prefix).toBe("sitegear3.test-spec");
 				expect(app.settings.controllers.default.page.prefix).toBe("page");
 				expect(app.settings.controllers.default.page.separator).toBe(".");
 				expect(app.settings.controllers.default.page.blocks.length).toBe(2);
 				expect(app.settings.controllers.default.page.blocks[0]).toBe('main');
 				expect(app.settings.controllers.default.page.blocks[1]).toBe('title');
+			});
+			it('Utilises settings expansion', function () {
+				expect(utils.expandSettings).toHaveBeenCalled();
+				expect(utils.expandSettings.callCount).toBe(11); // includes recursive calls
+				expect(app.settings.expando).toBe('bar');
+				expect(app.settings.expando).toBe('bar');
+				expect(app.settings.expando2).toBe('childValue');
+				expect(app.settings.expando3).toBe('bar');
+				expect(app.settings.expando4a).toBe('prefix-bar');
+				expect(app.settings.expando4b).toBe('bar-suffix');
+				expect(app.settings.expando4c).toBe('prefix-bar-suffix');
+				expect(app.settings.expando5).toBeNull();
 			});
 			it('Does not expose additional settings', function () {
 				expect(app.settings.testKey).toBeUndefined();
@@ -91,4 +106,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../index')));
+}(require('lodash'), require('../../../index'), require('../../../lib/utils')));
