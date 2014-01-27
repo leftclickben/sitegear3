@@ -12,7 +12,9 @@
 		"secret": "Sitegear3"
 	},
 	"persistence": {
-		"redis": true
+		"redis": {
+			"prefix": "sitegear3.{{ site.key }}"
+		}
 	},
 	"controllers": {
 		"default": {
