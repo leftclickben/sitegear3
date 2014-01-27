@@ -1,0 +1,3 @@
+Title Fragment: Index
+Main Fragment: This is the main fragment of the index page.
+End.
