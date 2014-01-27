@@ -8,6 +8,7 @@
 
 (function (_, sitegear3) {
 	"use strict";
+	require('../setupTests');
 
 	describe('Sitegear3 application lifecycle: mapRoutes()', function () {
 		var app;

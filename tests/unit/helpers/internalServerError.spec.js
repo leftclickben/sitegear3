@@ -8,6 +8,7 @@
 
 (function (_, internalServerError) {
 	"use strict";
+	require('../setupTests');
 
 	describe('Helper: internalServerError', function () {
 		var helper, mockRequest, mockResponse, container, error, error501;

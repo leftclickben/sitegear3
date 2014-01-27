@@ -8,6 +8,7 @@
 
 (function (utils) {
 	"use strict";
+	require('../setupTests');
 
 	describe('Utility Function: expandSettings()', function () {
 		var settings = require('../settings.json');
