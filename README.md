@@ -19,3 +19,7 @@ Then, run the tests, from the project root:
     jasmine-node tests/ --verbose
 
 If you want less output and just want to see the final result, omit the `--verbose` argument.
+
+## Continuous Integration
+
+Using travis, grunt, jslint and jasmine-node.  Details coming soon.
