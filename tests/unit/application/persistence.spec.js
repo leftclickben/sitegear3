@@ -15,7 +15,8 @@
 		beforeEach(function () {
 			spyOn(redis, 'createClient').andCallFake(function () {
 				return {
-					on: _.noop
+					on: _.noop,
+					dispose: _.noop
 				};
 			});
 			app = sitegear3().initialise(require('../settings.json')).persistence();
