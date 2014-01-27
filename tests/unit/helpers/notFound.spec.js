@@ -24,7 +24,7 @@
 				send: function () { return mockResponse; }
 			};
 			container = {
-				next: function () {}
+				next: _.noop
 			};
 		});
 		it('Exports a function', function () {

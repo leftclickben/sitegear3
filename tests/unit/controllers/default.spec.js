@@ -32,7 +32,7 @@
 				var mockRequest, mockResponse;
 				beforeEach(function () {
 					mockRequest = { path: '/some/url/path' };
-					mockResponse = { render: function () { } };
+					mockResponse = { render: _.noop };
 					spyOn(mockResponse, 'render');
 					spyOn(app.redis, 'get').andCallThrough();
 					controller.index()(mockRequest, mockResponse);
