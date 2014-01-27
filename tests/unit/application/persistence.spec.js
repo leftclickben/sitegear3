@@ -13,33 +13,12 @@
 	describe('Sitegear3 application lifecycle: persistence()', function () {
 		var app;
 		beforeEach(function () {
-			spyOn(redis, 'createClient').andCallThrough();
+			spyOn(redis, 'createClient');
 			app = sitegear3().initialise(require('../settings.json')).persistence();
 		});
 		it('Calls redis.createClient()', function () {
 			expect(redis.createClient).toHaveBeenCalled();
 			expect(redis.createClient.callCount).toBe(1);
-		});
-		describe('Has a working connection', function () {
-			var key = 'test_spec_' + Date.now(),
-				value = 'test: passed';
-			it('Allows values to be set, retrieved and deleted', function (done) {
-				app.redis.set(key, value, function (err, result) {
-					var delCallback = function (err, result) {
-							expect(err).toBeNull();
-							expect(result).toBe(1);
-							done();
-						},
-						getCallback = function (err, result) {
-							expect(err).toBeNull();
-							expect(result).toBe(value);
-							app.redis.del(key, delCallback);
-						};
-					expect(err).toBeNull();
-					expect(result).toBe('OK');
-					app.redis.get(key, getCallback);
-				});
-			});
 		});
 		afterEach(function () {
 			app.dispose();
