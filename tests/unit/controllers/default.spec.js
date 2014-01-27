@@ -16,7 +16,7 @@
 		describe('Operates correctly', function () {
 			var app, controller;
 			beforeEach(function () {
-				app = sitegear3().initialise({ site: { name: 'Test Spec' }});
+				app = sitegear3().initialise(require('../settings.json'));
 				app.redis = {
 					get: function (key, callback) {
 						callback(null, 'This is the value for key: ' + key);
@@ -42,6 +42,7 @@
 				});
 				it('Calls response.render()', function () {
 					expect(mockResponse.render).toHaveBeenCalled();
+					expect(mockResponse.render.callCount).toBe(1);
 				});
 			});
 			afterEach(function () {

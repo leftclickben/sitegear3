@@ -13,12 +13,13 @@
 		var app;
 		beforeEach(function () {
 			app = sitegear3();
-			app.initialise();
+			app.initialise(require('../settings.json'));
 			spyOn(app, 'listen');
 			app.start();
 		});
 		it('Calls listen()', function () {
 			expect(app.listen).toHaveBeenCalled();
+			expect(app.listen.callCount).toBe(1);
 		});
 		afterEach(function () {
 			app.dispose();

@@ -36,6 +36,7 @@
 			});
 			it('Sets a 404 status', function () {
 				expect(mockResponse.status).toHaveBeenCalledWith(404);
+				expect(mockResponse.status.callCount).toBe(1);
 			});
 		});
 		describe('Calls response.render() when HTML is accepted', function () {
@@ -48,6 +49,7 @@
 			});
 			it('Calls response.render()', function () {
 				expect(mockResponse.render).toHaveBeenCalledWith('_errors/404', { status: 'Not Found' });
+				expect(mockResponse.render.callCount).toBe(1);
 			});
 		});
 		describe('Returns an object when JSON is accepted', function () {
@@ -60,6 +62,7 @@
 			});
 			it('Returns an object with "status" key', function () {
 				expect(mockResponse.send).toHaveBeenCalledWith({ status: 'Not Found' });
+				expect(mockResponse.send.callCount).toBe(1);
 			});
 		});
 		describe('Returns a plain text response when neither HTML nor JSON is accepted', function () {
@@ -73,7 +76,9 @@
 			});
 			it('Returns the error as plain text', function () {
 				expect(mockResponse.type).toHaveBeenCalledWith('txt');
+				expect(mockResponse.type.callCount).toBe(1);
 				expect(mockResponse.send).toHaveBeenCalledWith('Not Found');
+				expect(mockResponse.send.callCount).toBe(1);
 			});
 		});
 		describe('Doesn\'t call next()', function () {

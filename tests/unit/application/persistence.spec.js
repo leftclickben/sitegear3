@@ -13,10 +13,11 @@
 		var app;
 		beforeEach(function () {
 			spyOn(redis, 'createClient').andCallThrough();
-			app = sitegear3().initialise().persistence();
+			app = sitegear3().initialise(require('../settings.json')).persistence();
 		});
 		it('Calls redis.createClient()', function () {
 			expect(redis.createClient).toHaveBeenCalled();
+			expect(redis.createClient.callCount).toBe(1);
 		});
 		describe('Has a working connection', function () {
 			var key = 'test_spec_' + Date.now(),

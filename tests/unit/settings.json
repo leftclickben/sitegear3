@@ -1,0 +1,18 @@
+{
+	"site": {
+		"key": "test-spec",
+		"name": "Test Spec",
+		"additionalKey": "value",
+		"parent": {
+			"child": "childValue"
+		}
+	},
+	"foo": "bar",
+	"expando": "{{ foo }}",
+	"expando2": "{{ site.parent.child }}",
+	"expando3": "{{ expando }}",
+	"expando4a": "prefix-{{ foo }}",
+	"expando4b": "{{ foo }}-suffix",
+	"expando4c": "prefix-{{ foo }}-suffix",
+	"expando5": "{{ unknown.reference }}"
+}

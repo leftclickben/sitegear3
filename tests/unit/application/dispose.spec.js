@@ -12,12 +12,13 @@
 	describe('Sitegear3 application lifecycle: dispose()', function () {
 		var app;
 		beforeEach(function () {
-			app = sitegear3().initialise().persistence();
+			app = sitegear3().initialise(require('../settings.json')).persistence();
 			spyOn(app.redis, 'end').andCallThrough();
 			app.dispose();
 		});
 		it('Calls end() on the redis client', function () {
 			expect(app.redis.end).toHaveBeenCalled();
+			expect(app.redis.end.callCount).toBe(1);
 		});
 	});
 }(require('../../../index')));
