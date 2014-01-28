@@ -51,7 +51,8 @@
 		"grunt": "~0.4.2",
 		"grunt-cli": "~0.1.13",
 		"grunt-jasmine-node": "~0.1.0",
-		"grunt-jslint": "~1.1.2"
+		"grunt-jslint": "~1.1.2",
+		"grunt-contrib-watch": "~0.5.3"
 	},
 	"engines": {
 		"node": ">=0.8.0",
