@@ -8,8 +8,8 @@
 (function () {
 	"use strict";
 	module.exports = function (grunt) {
-		grunt.loadNpmTasks('grunt-jasmine-node');
 		grunt.loadNpmTasks('grunt-jslint');
+		grunt.loadNpmTasks('grunt-jasmine-node');
 		grunt.loadNpmTasks('grunt-contrib-watch');
 		grunt.initConfig({
 			pkg: grunt.file.readJSON('package.json'),
@@ -76,7 +76,7 @@
 				}
 			}
 		});
-		grunt.registerTask('qa', ['jasmine_node', 'jslint']);
+		grunt.registerTask('qa', ['jslint', 'jasmine_node']);
 		grunt.registerTask('default', ['qa']);
 		grunt.event.on('watch', function(action, filepath, target) {
 		  grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
