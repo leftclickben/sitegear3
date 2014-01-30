@@ -6,41 +6,27 @@
  * MIT Licensed
  */
 
-(function (_, sitegear3, sitegearSession) {
+(function (_, jasmine, sitegear3, sitegearSession) {
 	"use strict";
 	require('../setupTests');
 
 	describe('Helper: sitegearSession', function () {
-		var app, helper, mockRequest, mockResponse, container;
+		var app, helper;
 		beforeEach(function () {
-			app = sitegear3().initialise(require('../settings.json'));
+			app = require('../_mock/app');
 			helper = sitegearSession(app);
-			mockRequest = {
-				accepts: function () { return false; },
-				originalUrl: 'http://localhost:8080/',
-				cookies: {
-					"sitegear3.session.test-spec": []
-				}
-			};
-			mockResponse = {
-				type: function () { return mockResponse; },
-				status: function () { return mockResponse; },
-				render: function () { return mockResponse; },
-				send: function () { return mockResponse; },
-				on: function () { return mockResponse; }
-			};
-			container = {
-				next: _.noop
-			};
 		});
 		it('Exports a function', function () {
 			expect(_.isFunction(helper)).toBeTruthy();
 		});
 		describe('Operates correctly', function () {
+			var mockRequest, mockResponse, next;
 			beforeEach(function () {
-				spyOn(container, 'next');
+				mockRequest = require('../_mock/request');
+				mockResponse = require('../_mock/response');
+				next = jasmine.createSpy('next');
 				spyOn(mockResponse, 'on');
-				helper(mockRequest, mockResponse, container.next);
+				helper(mockRequest, mockResponse, next);
 			});
 			it('Sets an appropriate session cookie key', function () {
 				expect(app.settings.session.key).toBe('sitegear3.session.test-spec');
@@ -50,12 +36,9 @@
 				expect(mockResponse.on.callCount).toBe(1);
 			});
 			it('Calls next()', function () {
-				expect(container.next).toHaveBeenCalled();
-				expect(container.next.callCount).toBe(1);
+				expect(next).toHaveBeenCalled();
+				expect(next.callCount).toBe(1);
 			});
 		});
-		afterEach(function () {
-			app.stop();
-		});
 	});
-}(require('lodash'), require('../../../index'), require('../../../lib/helpers/sitegearSession')));
+}(require('lodash'), require('jasmine-node'), require('../../../index'), require('../../../lib/helpers/sitegearSession')));

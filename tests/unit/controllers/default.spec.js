@@ -17,12 +17,7 @@
 		describe('Operates correctly', function () {
 			var app, controller;
 			beforeEach(function () {
-				app = sitegear3().initialise(require('../settings.json'));
-				app.redis = {
-					get: function (key, callback) {
-						callback(null, 'This is the value for key: ' + key);
-					}
-				};
+				app = require('../_mock/app');
 				controller = defaultController(app);
 			});
 			it('Exposes all required action methods', function () {
@@ -31,8 +26,8 @@
 			describe('The index() action', function () {
 				var mockRequest, mockResponse;
 				beforeEach(function () {
-					mockRequest = { path: '/some/url/path' };
-					mockResponse = { render: _.noop };
+					mockRequest = require('../_mock/request');
+					mockResponse = require('../_mock/response');
 					spyOn(mockResponse, 'render');
 					spyOn(app.redis, 'get').andCallThrough();
 					controller.index()(mockRequest, mockResponse);
