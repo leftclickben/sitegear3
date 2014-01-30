@@ -54,7 +54,7 @@
 //			});
 		});
 		afterEach(function () {
-			app.dispose();
+			app.stop();
 		});
 	});
 }(require('lodash'), require('../../../index.js'), require('fs'), require('path'), require('../../../lib/helpers/prepareView')));

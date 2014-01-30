@@ -55,7 +55,7 @@
 			});
 		});
 		afterEach(function () {
-			app.dispose();
+			app.stop();
 		});
 	});
 }(require('lodash'), require('../../../index'), require('../../../lib/helpers/sitegearSession')));

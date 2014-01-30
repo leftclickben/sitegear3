@@ -151,7 +151,7 @@
 				expect(app.routes.get[5].regexp.test('/products/')).toBeFalsy();
 			});
 			afterEach(function () {
-				app.dispose();
+				app.stop();
 			});
 		});
 		describe('Throws correct errors on misconfiguration', function () {
@@ -185,7 +185,7 @@
 				}
 			});
 			afterEach(function () {
-				app.dispose();
+				app.stop();
 			});
 		});
 	});

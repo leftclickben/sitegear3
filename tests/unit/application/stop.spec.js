@@ -10,12 +10,12 @@
 	"use strict";
 	require('../setupTests');
 
-	describe('Sitegear3 application lifecycle: dispose()', function () {
+	describe('Sitegear3 application lifecycle: stop()', function () {
 		var app;
 		beforeEach(function () {
 			app = sitegear3().initialise(require('../settings.json')).persistence();
 			spyOn(app.redis, 'end').andCallThrough();
-			app.dispose();
+			app.stop();
 		});
 		it('Calls end() on the redis client', function () {
 			expect(app.redis.end).toHaveBeenCalled();

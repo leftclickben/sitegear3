@@ -23,7 +23,7 @@
 			expect(app.listen.callCount).toBe(1);
 		});
 		afterEach(function () {
-			app.dispose();
+			app.stop();
 		});
 	});
 }(require('../../../index')));

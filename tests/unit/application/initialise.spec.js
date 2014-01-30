@@ -48,7 +48,7 @@
 				expect(_.size(app.controllers)).toBe(2);
 			});
 			afterEach(function () {
-				app.dispose();
+				app.stop();
 			});
 		});
 		describe('With object parameter', function () {
@@ -103,7 +103,7 @@
 				expect(_.size(app.controllers)).toBe(2);
 			});
 			afterEach(function () {
-				app.dispose();
+				app.stop();
 			});
 		});
 	});

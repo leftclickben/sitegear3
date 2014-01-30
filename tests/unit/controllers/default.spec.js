@@ -47,7 +47,7 @@
 				});
 			});
 			afterEach(function () {
-				app.dispose();
+				app.stop();
 			});
 		});
 	});
