@@ -16,7 +16,7 @@
 			beforeEach(function () {
 				object = {};
 				spyOn(object, '__defineGetter__').andCallThrough();
-				utils.loadPathAsGetters(object, path.join(__dirname, 'getters'));
+				utils.loadPathAsGetters(object, path.join(__dirname, '_getters'));
 			});
 			it('Uses __defineGetter__() to define getters', function () {
 				expect(object.__defineGetter__).toHaveBeenCalled();
@@ -25,7 +25,7 @@
 		});
 		describe('Creates and returns an empty object by default', function () {
 			beforeEach(function () {
-				object = utils.loadPathAsGetters(path.join(__dirname, 'getters'));
+				object = utils.loadPathAsGetters(path.join(__dirname, '_getters'));
 			});
 			it('Loads all .js files in specified directory and unpacks them as getters', function () {
 				expect(object.a).toBeTruthy();
@@ -52,7 +52,7 @@
 		describe('Extends an empty object and returns it', function () {
 			beforeEach(function () {
 				object = {};
-				returnedObject = utils.loadPathAsGetters(object, path.join(__dirname, 'getters'));
+				returnedObject = utils.loadPathAsGetters(object, path.join(__dirname, '_getters'));
 			});
 			it('Returns the passed-in object', function () {
 				expect(returnedObject).toBe(object);
@@ -92,7 +92,7 @@
 					},
 					z: 'A string'
 				};
-				returnedObject = utils.loadPathAsGetters(object, path.join(__dirname, 'getters'));
+				returnedObject = utils.loadPathAsGetters(object, path.join(__dirname, '_getters'));
 			});
 			it('Returns the passed-in object', function () {
 				expect(returnedObject).toBe(object);

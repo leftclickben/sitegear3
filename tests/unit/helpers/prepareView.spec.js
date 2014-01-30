@@ -6,28 +6,26 @@
  * MIT Licensed
  */
 
-(function (_, sitegear3, fs, path, prepareView) {
+(function (_, jasmine, fs, path, sitegear3, prepareView) {
 	"use strict";
 	require('../setupTests');
 
 	describe('Helper: prepareView', function () {
-		var app, helper, mockRequest, mockResponse, container;
+		var app, helper;
 		beforeEach(function () {
-			app = sitegear3().initialise(require('../settings.json'));
+			app = require('../_mock/app');
 			helper = prepareView(app);
-			mockRequest = {};
-			mockResponse = {};
-			container = {
-				next: _.noop
-			};
 		});
 		it('Exports a function', function () {
 			expect(_.isFunction(helper)).toBeTruthy();
 		});
 		describe('Operates correctly', function () {
+			var mockRequest, mockResponse, next;
 			beforeEach(function () {
-				spyOn(container, 'next');
-				helper(mockRequest, mockResponse, container.next);
+				mockRequest = require('../_mock/request');
+				mockResponse = require('../_mock/response');
+				next = jasmine.createSpy('next');
+				helper(mockRequest, mockResponse, next);
 			});
 			it('Sets site info from settings into app.locals', function () {
 				expect(_.isObject(app.locals.site)).toBeTruthy();
@@ -50,11 +48,8 @@
 			});
 			// TODO This doesn't work because of the asynchronous readdir()
 //			it('Calls next()', function () {
-//				expect(container.next).toHaveBeenCalled();
+//				expect(next).toHaveBeenCalled();
 //			});
 		});
-		afterEach(function () {
-			app.dispose();
-		});
 	});
-}(require('lodash'), require('../../../index.js'), require('fs'), require('path'), require('../../../lib/helpers/prepareView')));
+}(require('lodash'), require('jasmine-node'), require('fs'), require('path'), require('../../../index.js'), require('../../../lib/helpers/prepareView')));
