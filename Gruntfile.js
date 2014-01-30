@@ -35,6 +35,9 @@
 					src: [
 						'tests/**/*.js'
 					],
+					exclude: [
+						'tests/unit/setupTests.js'
+					],
 					options: {
 						log: 'build/log/jslint/jslint.tests.log'
 					}
@@ -79,7 +82,7 @@
 		grunt.registerTask('qa', ['jslint', 'jasmine_node']);
 		grunt.registerTask('default', ['qa']);
 		grunt.event.on('watch', function(action, filepath, target) {
-		  grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
+			grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
 		});
 	};
 }());
