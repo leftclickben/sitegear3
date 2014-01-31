@@ -13,6 +13,9 @@
 		locals: {},
 		start: _.noop,
 		stop: _.noop,
+		get: function (key) {
+			return this.settings[key];
+		},
 		redis: {
 			get: function (key, callback) {
 				callback(null, 'This is the value for key: ' + key);

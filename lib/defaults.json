@@ -1,21 +1,8 @@
 {
-	"site": {
-		"key": "anonymous-website",
-		"name": "Anonymous Website",
-		"baseUrl": "http://localhost/"
-	},
-	"server": {
-		"port": 80
-	},
-	"session": {
-		"baseKey": "sitegear3.session",
-		"secret": "Sitegear3"
-	},
-	"persistence": {
-		"redis": {
-			"prefix": "sitegear3.{{ site.key }}"
-		}
-	},
+	"view engine": "html",
+	"site name": "Anonymous Website",
+	"site url": "http://localhost/",
+	"http port": 80,
 	"controllers": {
 		"default": {
 			"page": {

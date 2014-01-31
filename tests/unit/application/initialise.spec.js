@@ -23,25 +23,18 @@
 				expect(app.init.callCount).toBe(1);
 			});
 			it('Exposes all defaults as settings', function () {
-				expect(app.settings.site.key).toBe('anonymous-website');
-				expect(app.settings.site.name).toBe('Anonymous Website');
-				expect(app.settings.site.baseUrl).toBe('http://localhost/');
-				expect(app.settings.server.port).toBe(80);
-				expect(app.settings.session.baseKey).toBe("sitegear3.session");
-				expect(app.settings.session.secret).toBe("Sitegear3");
-				expect(app.settings.persistence.redis).toBeTruthy();
-				expect(app.settings.persistence.redis.prefix).toBe("sitegear3.anonymous-website");
-				expect(app.settings.controllers.default.page.prefix).toBe("page");
-				expect(app.settings.controllers.default.page.separator).toBe(".");
-				expect(app.settings.controllers.default.page.blocks.length).toBe(2);
-				expect(app.settings.controllers.default.page.blocks[0]).toBe('main');
-				expect(app.settings.controllers.default.page.blocks[1]).toBe('title');
+				expect(app.get('site name')).toBe('Anonymous Website');
+				expect(app.get('site url')).toBe('http://localhost/');
+				expect(app.get('http port')).toBe(80);
+				expect(app.get('controllers').default.page.prefix).toBe("page");
+				expect(app.get('controllers').default.page.separator).toBe(".");
+				expect(app.get('controllers').default.page.blocks.length).toBe(2);
+				expect(app.get('controllers').default.page.blocks[0]).toBe('main');
+				expect(app.get('controllers').default.page.blocks[1]).toBe('title');
 			});
 			it('Does not expose additional settings', function () {
-				expect(app.settings.testKey).toBeUndefined();
-				expect(app.settings.site.testKey).toBeUndefined();
-				expect(app.settings.site.additionalKey).toBeUndefined();
-				expect(app.settings.foo).toBeUndefined();
+				expect(app.get('testKey')).toBeUndefined();
+				expect(app.get('foo')).toBeUndefined();
 			});
 			it('Loads controllers', function () {
 				expect(_.isFunction(app.controllers.default)).toBeTruthy();
@@ -64,39 +57,30 @@
 				expect(app.init.callCount).toBe(1);
 			});
 			it('Applies settings over defaults', function () {
-				expect(app.settings.site.key).toBe('test-spec');
-				expect(app.settings.site.name).toBe('Test Spec');
-				expect(app.settings.site.additionalKey).toBe('value');
-				expect(app.settings.foo).toBe('bar');
+				expect(app.get('site name')).toBe('Test Spec');
+				expect(app.get('foo')).toBe('bar');
 			});
 			it('Exposes defaults not overridden as settings', function () {
-				expect(app.settings.site.baseUrl).toBe('http://localhost/');
-				expect(app.settings.server.port).toBe(80);
-				expect(app.settings.session.baseKey).toBe("sitegear3.session");
-				expect(app.settings.session.secret).toBe("Sitegear3");
-				expect(app.settings.persistence.redis).toBeTruthy();
-				expect(app.settings.persistence.redis.prefix).toBe("sitegear3.test-spec");
-				expect(app.settings.controllers.default.page.prefix).toBe("page");
-				expect(app.settings.controllers.default.page.separator).toBe(".");
-				expect(app.settings.controllers.default.page.blocks.length).toBe(2);
-				expect(app.settings.controllers.default.page.blocks[0]).toBe('main');
-				expect(app.settings.controllers.default.page.blocks[1]).toBe('title');
+				expect(app.get('site url')).toBe('http://localhost/');
+				expect(app.get('http port')).toBe(80);
+				expect(app.get('controllers').default.page.prefix).toBe("page");
+				expect(app.get('controllers').default.page.separator).toBe(".");
+				expect(app.get('controllers').default.page.blocks.length).toBe(2);
+				expect(app.get('controllers').default.page.blocks[0]).toBe('main');
+				expect(app.get('controllers').default.page.blocks[1]).toBe('title');
 			});
 			it('Utilises settings expansion', function () {
 				expect(utils.expandSettings).toHaveBeenCalled();
-				expect(utils.expandSettings.callCount).toBe(11); // includes recursive calls
-				expect(app.settings.expando).toBe('bar');
-				expect(app.settings.expando).toBe('bar');
-				expect(app.settings.expando2).toBe('childValue');
-				expect(app.settings.expando3).toBe('bar');
-				expect(app.settings.expando4a).toBe('prefix-bar');
-				expect(app.settings.expando4b).toBe('bar-suffix');
-				expect(app.settings.expando4c).toBe('prefix-bar-suffix');
-				expect(app.settings.expando5).toBeNull();
+				expect(utils.expandSettings.callCount).toBe(5); // includes recursive calls
+				expect(app.get('expando')).toBe('bar');
+				expect(app.get('expando2')).toBe('bar');
+				expect(app.get('expando3')).toBe('prefix-bar');
+				expect(app.get('expando4')).toBe('bar-suffix');
+				expect(app.get('expando5')).toBe('prefix-bar-suffix');
+				expect(app.get('expando6')).toBeNull();
 			});
 			it('Does not expose additional settings', function () {
-				expect(app.settings.testKey).toBeUndefined();
-				expect(app.settings.site.testKey).toBeUndefined();
+				expect(app.get('testKey')).toBeUndefined();
 			});
 			it('Loads controllers', function () {
 				expect(_.isFunction(app.controllers.default)).toBeTruthy();
