@@ -19,7 +19,7 @@
 		it('Exports a function', function () {
 			expect(_.isFunction(helper)).toBeTruthy();
 		});
-		describe('Operates correctly', function () {
+		describe('By default', function () {
 			var mockRequest, mockResponse, next;
 			beforeEach(function () {
 				mockRequest = require('../_mock/request');
@@ -28,16 +28,13 @@
 				helper(mockRequest, mockResponse, next);
 			});
 			it('Sets site info from settings into app.locals', function () {
-				expect(app.locals.site.name).toBe(app.get('site name'));
-				expect(app.locals.site.url).toBe(app.get('site url'));
-			});
-			it('Does not set any additional values into app.locals.site', function () {
-				expect(_.size(app.locals.site)).toBe(2);
+				expect(app.locals.siteName).toBe(app.get('site name'));
+				expect(app.locals.baseUrl).toBe(app.get('http url'));
 			});
 			it('Sets the current date into app.locals', function () {
 				expect(Object.getPrototypeOf(app.locals.now)).toBe(Date.prototype);
 			});
-			it('Loads view helpers and calls next()', function () {
+			it('Loads view helpers', function () {
 				var name;
 				fs.readdir(path.join(__dirname, '..', '..', '..', 'lib', 'viewHelpers'), function (filenames) {
 					_.each(filenames, function (filename) {
@@ -48,6 +45,24 @@
 						}
 					});
 				});
+			});
+			// TODO This doesn't work because of the asynchronous readdir()
+//			it('Calls next()', function () {
+//				expect(next).toHaveBeenCalled();
+//			});
+		});
+		describe('On https', function () {
+			var mockRequest, mockResponse, next;
+			beforeEach(function () {
+				mockRequest = require('../_mock/request');
+				mockRequest.secure = true;
+				mockResponse = require('../_mock/response');
+				next = jasmine.createSpy('next');
+				helper(mockRequest, mockResponse, next);
+			});
+			it('Sets site info from settings into app.locals', function () {
+				expect(app.locals.siteName).toBe(app.get('site name'));
+				expect(app.locals.baseUrl).toBe(app.get('https url'));
 			});
 			// TODO This doesn't work because of the asynchronous readdir()
 //			it('Calls next()', function () {
