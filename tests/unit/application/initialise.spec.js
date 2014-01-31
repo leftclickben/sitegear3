@@ -26,19 +26,19 @@
 				expect(app.get('site name')).toBe('Anonymous Website');
 				expect(app.get('site url')).toBe('http://localhost/');
 				expect(app.get('http port')).toBe(80);
-				expect(app.get('controllers').default.page.prefix).toBe("page");
-				expect(app.get('controllers').default.page.separator).toBe(".");
-				expect(app.get('controllers').default.page.blocks.length).toBe(2);
-				expect(app.get('controllers').default.page.blocks[0]).toBe('main');
-				expect(app.get('controllers').default.page.blocks[1]).toBe('title');
+				expect(app.get('modules').default.page.prefix).toBe("page");
+				expect(app.get('modules').default.page.separator).toBe(".");
+				expect(app.get('modules').default.page.blocks.length).toBe(2);
+				expect(app.get('modules').default.page.blocks[0]).toBe('main');
+				expect(app.get('modules').default.page.blocks[1]).toBe('title');
 			});
 			it('Does not expose additional settings', function () {
 				expect(app.get('testKey')).toBeUndefined();
 				expect(app.get('foo')).toBeUndefined();
 			});
-			it('Loads controllers', function () {
-				expect(_.isFunction(app.controllers.default)).toBeTruthy();
-				expect(_.size(app.controllers)).toBe(2);
+			it('Loads modules', function () {
+				expect(_.isFunction(app.modules.default)).toBeTruthy();
+				expect(_.size(app.modules)).toBe(2);
 			});
 			afterEach(function () {
 				app.stop();
@@ -63,11 +63,11 @@
 			it('Exposes defaults not overridden as settings', function () {
 				expect(app.get('site url')).toBe('http://localhost/');
 				expect(app.get('http port')).toBe(80);
-				expect(app.get('controllers').default.page.prefix).toBe("page");
-				expect(app.get('controllers').default.page.separator).toBe(".");
-				expect(app.get('controllers').default.page.blocks.length).toBe(2);
-				expect(app.get('controllers').default.page.blocks[0]).toBe('main');
-				expect(app.get('controllers').default.page.blocks[1]).toBe('title');
+				expect(app.get('modules').default.page.prefix).toBe("page");
+				expect(app.get('modules').default.page.separator).toBe(".");
+				expect(app.get('modules').default.page.blocks.length).toBe(2);
+				expect(app.get('modules').default.page.blocks[0]).toBe('main');
+				expect(app.get('modules').default.page.blocks[1]).toBe('title');
 			});
 			it('Utilises settings expansion', function () {
 				expect(utils.expandSettings).toHaveBeenCalled();
@@ -82,9 +82,9 @@
 			it('Does not expose additional settings', function () {
 				expect(app.get('testKey')).toBeUndefined();
 			});
-			it('Loads controllers', function () {
-				expect(_.isFunction(app.controllers.default)).toBeTruthy();
-				expect(_.size(app.controllers)).toBe(2);
+			it('Loads modules', function () {
+				expect(_.isFunction(app.modules.default)).toBeTruthy();
+				expect(_.size(app.modules)).toBe(2);
 			});
 			afterEach(function () {
 				app.stop();

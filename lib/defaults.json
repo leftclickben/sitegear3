@@ -3,7 +3,7 @@
 	"site name": "Anonymous Website",
 	"site url": "http://localhost/",
 	"http port": 80,
-	"controllers": {
+	"modules": {
 		"default": {
 			"page": {
 				"prefix": "page",
