@@ -25,7 +25,6 @@
 			it('Exposes all defaults as settings', function () {
 				expect(app.get('site name')).toBe('Anonymous Website');
 				expect(app.get('site url')).toBe('http://localhost/');
-				expect(app.get('http port')).toBe(80);
 				expect(app.get('modules').default.page.prefix).toBe("page");
 				expect(app.get('modules').default.page.separator).toBe(".");
 				expect(app.get('modules').default.page.blocks.length).toBe(2);
@@ -62,7 +61,6 @@
 			});
 			it('Exposes defaults not overridden as settings', function () {
 				expect(app.get('site url')).toBe('http://localhost/');
-				expect(app.get('http port')).toBe(80);
 				expect(app.get('modules').default.page.prefix).toBe("page");
 				expect(app.get('modules').default.page.separator).toBe(".");
 				expect(app.get('modules').default.page.blocks.length).toBe(2);

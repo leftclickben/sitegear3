@@ -2,7 +2,6 @@
 	"view engine": "html",
 	"site name": "Anonymous Website",
 	"site url": "http://localhost/",
-	"http port": 80,
 	"modules": {
 		"default": {
 			"page": {
