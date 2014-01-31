@@ -11,6 +11,7 @@
 	module.exports = {
 		path: '/some/url/path',
 		originalUrl: 'http://localhost:8080/some/url/path',
+		secure: false,
 		accepts: function () {
 			return false;
 		},

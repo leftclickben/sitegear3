@@ -6,24 +6,79 @@
  * MIT Licensed
  */
 
-(function (sitegear3) {
+(function (sitegear3, http, https) {
 	"use strict";
 	require('../setupTests');
 
 	describe('Sitegear3 application lifecycle: start()', function () {
-		var app;
+		var app,
+			mockServer = require('../_mock/server');
 		beforeEach(function () {
-			app = sitegear3();
-			app.initialise(require('../settings.json'));
-			spyOn(app, 'listen');
-			app.start();
+			app = sitegear3().initialise(require('../settings.json'));
+			spyOn(http, 'createServer').andReturn(mockServer);
+			spyOn(https, 'createServer').andReturn(mockServer);
 		});
-		it('Calls listen()', function () {
-			expect(app.listen).toHaveBeenCalled();
-			expect(app.listen.callCount).toBe(1);
+		describe('With no parameters', function () {
+			beforeEach(function () {
+				app.start();
+			});
+			it('Calls createServer() on http', function () {
+				expect(http.createServer).toHaveBeenCalledWith(app);
+				expect(http.createServer.callCount).toBe(1);
+			});
+			it('Does not call createServer() on https', function () {
+				expect(https.createServer).not.toHaveBeenCalled();
+			});
+			afterEach(function () {
+				app.stop();
+			});
 		});
-		afterEach(function () {
-			app.stop();
+		describe('With one parameter', function () {
+			beforeEach(function () {
+				app.start(8080);
+			});
+			it('Calls createServer() on http', function () {
+				expect(http.createServer).toHaveBeenCalledWith(app);
+				expect(http.createServer.callCount).toBe(1);
+			});
+			it('Does not call createServer() on https', function () {
+				expect(https.createServer).not.toHaveBeenCalled();
+			});
+			afterEach(function () {
+				app.stop();
+			});
+		});
+		describe('With two parameters', function () {
+			beforeEach(function () {
+				app.start(8080, {});
+			});
+			it('Calls createServer() on http', function () {
+				expect(http.createServer).toHaveBeenCalledWith(app);
+				expect(http.createServer.callCount).toBe(1);
+			});
+			it('Calls createServer() on https', function () {
+				expect(https.createServer).toHaveBeenCalledWith({}, app);
+				expect(https.createServer.callCount).toBe(1);
+			});
+			afterEach(function () {
+				app.stop();
+			});
+		});
+		describe('With three parameters', function () {
+			beforeEach(function () {
+				app.start(8080, {}, 8443);
+			});
+			it('Calls createServer() on http', function () {
+				expect(http.createServer).toHaveBeenCalledWith(app);
+				expect(http.createServer.callCount).toBe(1);
+			});
+			it('Calls createServer() on https', function () {
+				expect(https.createServer).toHaveBeenCalledWith({}, app);
+				expect(https.createServer.callCount).toBe(1);
+			});
+			afterEach(function () {
+				app.stop();
+			});
 		});
 	});
-}(require('../../../index')));
+}(require('../../../index'), require('http'), require('https')));
