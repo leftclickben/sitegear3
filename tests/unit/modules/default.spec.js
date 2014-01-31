@@ -6,22 +6,22 @@
  * MIT Licensed
  */
 
-(function (_, sitegear3, defaultController) {
+(function (_, sitegear3, defaultModule) {
 	"use strict";
 	require('../setupTests');
 
-	describe('Controller: default', function () {
+	describe('Module: default', function () {
 		it('Exports a function', function () {
-			expect(_.isFunction(defaultController)).toBeTruthy();
+			expect(_.isFunction(defaultModule)).toBeTruthy();
 		});
 		describe('Operates correctly', function () {
-			var app, controller;
+			var app, module;
 			beforeEach(function () {
 				app = require('../_mock/app');
-				controller = defaultController(app);
+				module = defaultModule(app);
 			});
 			it('Exposes all required action methods', function () {
-				expect(_.isFunction(controller.index)).toBeTruthy();
+				expect(_.isFunction(module.index)).toBeTruthy();
 			});
 			describe('The index() action', function () {
 				var mockRequest, mockResponse;
@@ -30,7 +30,7 @@
 					mockResponse = require('../_mock/response');
 					spyOn(mockResponse, 'render');
 					spyOn(app.redis, 'get').andCallThrough();
-					controller.index()(mockRequest, mockResponse);
+					module.index()(mockRequest, mockResponse);
 				});
 				it('Makes the correct number of calls to persistence', function () {
 					expect(app.redis.get).toHaveBeenCalled();
@@ -46,4 +46,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../index'), require('../../../lib/controllers/default')));
+}(require('lodash'), require('../../../index'), require('../../../lib/modules/default')));

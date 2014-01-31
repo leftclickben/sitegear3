@@ -22,10 +22,10 @@
 					'/about/history': {},
 					'/about/history/early-days': {},
 					'/products': {
-						controller: 'products'
+						module: 'products'
 					},
 					'/products/:product': {
-						controller: 'products',
+						module: 'products',
 						action: 'product'
 					}
 				});
@@ -112,7 +112,7 @@
 				expect(app.routes.get[3].regexp.test('/products/widget-xyz')).toBeFalsy();
 				expect(app.routes.get[3].regexp.test('/products/widget-xyz/')).toBeFalsy();
 			});
-			it('Correctly configures routes for a non-default controller', function () {
+			it('Correctly configures routes for a non-default module', function () {
 				expect(app.routes.get[4].path).toBe('/products');
 				expect(app.routes.get[4].callbacks.length).toBe(1);
 				expect(_.isFunction(app.routes.get[4].callbacks[0])).toBeTruthy();
@@ -159,23 +159,23 @@
 				app = sitegear3();
 				app.initialise(require('../settings.json'));
 			});
-			it('Throws an error when invalid controller is specified', function () {
+			it('Throws an error when invalid module is specified', function () {
 				try {
 					app.mapRoutes({
 						'/some/path': {
-							controller: 'INVALID'
+							module: 'INVALID'
 						}
 					});
 					expect('This code should not execute').toBeFalsy();
 				} catch (error) {
-					expect(error.toString()).toBe('Error: Unknown controller "INVALID" specified for route at URL "/some/path"');
+					expect(error.toString()).toBe('Error: Unknown module "INVALID" specified for route at URL "/some/path"');
 				}
 			});
-			it('Throws an error when invalid action is specified in a valid controller', function () {
+			it('Throws an error when invalid action is specified in a valid module', function () {
 				try {
 					app.mapRoutes({
 						'/another/path': {
-							controller: 'default',
+							module: 'default',
 							action: 'INVALID'
 						}
 					});

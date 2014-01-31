@@ -28,8 +28,7 @@
 				helper(mockRequest, mockResponse, next);
 			});
 			it('Sets site info from settings into app.locals', function () {
-				expect(_.isObject(app.locals.site)).toBeTruthy();
-				expect(app.locals.site.name).toBe('Test Spec');
+				expect(app.locals['site name']).not.toBeUndefined();
 			});
 			it('Sets the current date into app.locals', function () {
 				expect(Object.getPrototypeOf(app.locals.now)).toBe(Date.prototype);
