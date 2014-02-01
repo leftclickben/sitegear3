@@ -6,7 +6,7 @@
  * MIT Licensed
  */
 
-(function (filesystemDriver, os, fs) {
+(function (_, filesystemDriver, os, fs) {
 	"use strict";
 	require('../../setupTests');
 
@@ -18,31 +18,34 @@
 			});
 			describe('The set() method', function () {
 				beforeEach(function () {
-					spyOn(fs, 'writeFile').andCallFake(function (path, value, callback) {
+					spyOn(fs, 'writeFile').andCallFake(function (path, value, options, callback) {
+						if (!_.isFunction(callback) && _.isFunction(options)) {
+							callback = options;
+						}
 						callback();
 					});
 				});
 				it('Calls fs.writeFile()', function (done) {
-					filesystem.set('type', 'key', 'value', function () {
+					filesystem.set('type', 'key', { title: 'title', main: 'body content' }, function () {
 						expect(fs.writeFile).toHaveBeenCalled();
 						expect(fs.writeFile.callCount).toBe(1);
 						done();
 					});
 				});
 				it('Calls the callback with correct values', function (done) {
-					filesystem.set('type', 'key', 'value', function (error, type, key, value) {
+					filesystem.set('type', 'key', { title: 'title', main: 'body content' }, function (error) {
 						expect(error).toBeUndefined();
-						expect(type).toBe('type');
-						expect(key).toBe('key');
-						expect(value).toBe('value');
 						done();
 					});
 				});
 			});
 			describe('The get() method', function () {
 				beforeEach(function () {
-					spyOn(fs, 'readFile').andCallFake(function (path, callback) {
-						callback(undefined, 'value');
+					spyOn(fs, 'readFile').andCallFake(function (path, options, callback) {
+						if (!_.isFunction(callback) && _.isFunction(options)) {
+							callback = options;
+						}
+						callback(undefined, '{ "title": "title", "main": "body content" }');
 					});
 				});
 				it('Calls fs.readFile()', function (done) {
@@ -53,11 +56,11 @@
 					});
 				});
 				it('Calls the callback with correct values', function (done) {
-					filesystem.get('type', 'key', function (error, type, key, value) {
+					filesystem.get('type', 'key', function (error, value) {
 						expect(error).toBeUndefined();
-						expect(type).toBe('type');
-						expect(key).toBe('key');
-						expect(value).toBe('value');
+						expect(_.isPlainObject(value)).toBeTruthy();
+						expect(value.title).toBe('title');
+						expect(value.main).toBe('body content');
 						done();
 					});
 				});
@@ -76,11 +79,8 @@
 					});
 				});
 				it('Calls the callback with correct values', function (done) {
-					filesystem.remove('type', 'key', function (error, type, key, value) {
+					filesystem.remove('type', 'key', function (error) {
 						expect(error).toBeUndefined();
-						expect(type).toBe('type');
-						expect(key).toBe('key');
-						expect(value).toBeUndefined();
 						done();
 					});
 				});
@@ -93,30 +93,33 @@
 			});
 			describe('The set() method', function () {
 				beforeEach(function () {
-					spyOn(fs, 'writeFile').andCallFake(function (path, value, callback) {
+					spyOn(fs, 'writeFile').andCallFake(function (path, value, options, callback) {
+						if (!_.isFunction(callback) && _.isFunction(options)) {
+							callback = options;
+						}
 						callback(thrownError);
 					});
 				});
 				it('Calls fs.writeFile()', function (done) {
-					filesystem.set('type', 'key', 'value', function () {
+					filesystem.set('type', 'key', { title: 'title', main: 'body content' }, function () {
 						expect(fs.writeFile).toHaveBeenCalled();
 						expect(fs.writeFile.callCount).toBe(1);
 						done();
 					});
 				});
 				it('Calls the callback with correct values', function (done) {
-					filesystem.set('type', 'key', 'value', function (error, type, key, value) {
+					filesystem.set('type', 'key', { title: 'title', main: 'body content' }, function (error) {
 						expect(error).toBe(thrownError);
-						expect(type).toBe('type');
-						expect(key).toBe('key');
-						expect(value).toBe('value');
 						done();
 					});
 				});
 			});
 			describe('The get() method', function () {
 				beforeEach(function () {
-					spyOn(fs, 'readFile').andCallFake(function (path, callback) {
+					spyOn(fs, 'readFile').andCallFake(function (path, options, callback) {
+						if (!_.isFunction(callback) && _.isFunction(options)) {
+							callback = options;
+						}
 						callback(thrownError);
 					});
 				});
@@ -128,10 +131,8 @@
 					});
 				});
 				it('Calls the callback with correct values', function (done) {
-					filesystem.get('type', 'key', function (error, type, key, value) {
+					filesystem.get('type', 'key', function (error, value) {
 						expect(error).toBe(thrownError);
-						expect(type).toBe('type');
-						expect(key).toBe('key');
 						expect(value).toBeUndefined();
 						done();
 					});
@@ -151,15 +152,12 @@
 					});
 				});
 				it('Calls the callback with correct values', function (done) {
-					filesystem.remove('type', 'key', function (error, type, key, value) {
+					filesystem.remove('type', 'key', function (error) {
 						expect(error).toBe(thrownError);
-						expect(type).toBe('type');
-						expect(key).toBe('key');
-						expect(value).toBeUndefined();
 						done();
 					});
 				});
 			});
 		});
 	});
-}(require('../../../../lib/storage/drivers/filesystem'), require('os'), require('fs')));
+}(require('lodash'), require('../../../../lib/storage/drivers/filesystem'), require('os'), require('fs')));

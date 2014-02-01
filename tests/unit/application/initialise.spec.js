@@ -26,11 +26,6 @@
 				expect(app.get('site name')).toBe('Anonymous Website');
 				expect(app.get('http url')).toBe('http://localhost/');
 				expect(app.get('https url')).toBe('https://localhost/');
-				expect(app.get('modules').default.page.prefix).toBe("page");
-				expect(app.get('modules').default.page.separator).toBe(".");
-				expect(app.get('modules').default.page.blocks.length).toBe(2);
-				expect(app.get('modules').default.page.blocks[0]).toBe('main');
-				expect(app.get('modules').default.page.blocks[1]).toBe('title');
 			});
 			it('Does not expose additional settings', function () {
 				expect(app.get('testKey')).toBeUndefined();
@@ -63,15 +58,10 @@
 			it('Exposes defaults not overridden as settings', function () {
 				expect(app.get('http url')).toBe('http://localhost/');
 				expect(app.get('https url')).toBe('https://localhost/');
-				expect(app.get('modules').default.page.prefix).toBe("page");
-				expect(app.get('modules').default.page.separator).toBe(".");
-				expect(app.get('modules').default.page.blocks.length).toBe(2);
-				expect(app.get('modules').default.page.blocks[0]).toBe('main');
-				expect(app.get('modules').default.page.blocks[1]).toBe('title');
 			});
 			it('Utilises settings expansion', function () {
 				expect(utils.expandSettings).toHaveBeenCalled();
-				expect(utils.expandSettings.callCount).toBe(5); // includes recursive calls
+				expect(utils.expandSettings.callCount).toBe(1);
 				expect(app.get('expando')).toBe('bar');
 				expect(app.get('expando2')).toBe('bar');
 				expect(app.get('expando3')).toBe('prefix-bar');
