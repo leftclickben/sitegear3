@@ -10,10 +10,10 @@
 	"use strict";
 	require('../setupTests');
 
-//	describe('Module: default', function () {
-//		it('Exports a function', function () {
-//			expect(_.isFunction(defaultModule)).toBeTruthy();
-//		});
+	describe('Module: default', function () {
+		it('Exports a function', function () {
+			expect(_.isFunction(defaultModule)).toBeTruthy();
+		});
 //		describe('Operates correctly', function () {
 //			var app, module;
 //			beforeEach(function () {
@@ -45,5 +45,5 @@
 //				app.stop();
 //			});
 //		});
-//	});
+	});
 }(require('lodash'), require('../../../index'), require('../../../lib/modules/default')));

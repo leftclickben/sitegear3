@@ -6,13 +6,16 @@
  * MIT Licensed
  */
 
-(function (storageInterface, jasmine) {
+(function (_, storageInterface, jasmine) {
 	"use strict";
 	require('../setupTests');
 
 	describe('Storage interface', function () {
-		var storage, driver, returnValue;
+		it('Exports a function', function () {
+			expect(_.isFunction(storageInterface)).toBeTruthy();
+		});
 		describe('When driver is not generating errors', function () {
+			var storage, driver, returnValue;
 			beforeEach(function () {
 				driver = require('../_mock/storageDriver');
 				storage = storageInterface(driver());
@@ -76,7 +79,8 @@
 			});
 		});
 		describe('When driver is generating errors', function () {
-			var error = new Error('something went wrong');
+			var storage, driver, returnValue,
+				error = new Error('something went wrong');
 			beforeEach(function () {
 				driver = require('../_mock/storageDriverWithErrors');
 				storage = storageInterface(driver({ error: error }));
@@ -140,4 +144,4 @@
 			});
 		});
 	});
-}(require('../../../lib/storage/interface'), require('jasmine-node')));
+}(require('lodash'), require('../../../lib/storage/interface'), require('jasmine-node')));
