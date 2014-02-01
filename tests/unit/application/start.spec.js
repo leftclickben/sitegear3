@@ -64,6 +64,21 @@
 				app.stop();
 			});
 		});
+		describe('With two parameters skipping httpPort', function () {
+			beforeEach(function () {
+				app.start({}, 8443);
+			});
+			it('Does not call createServer() on http', function () {
+				expect(http.createServer).not.toHaveBeenCalled();
+			});
+			it('Calls createServer() on https', function () {
+				expect(https.createServer).toHaveBeenCalledWith({}, app);
+				expect(https.createServer.callCount).toBe(1);
+			});
+			afterEach(function () {
+				app.stop();
+			});
+		});
 		describe('With three parameters', function () {
 			beforeEach(function () {
 				app.start(8080, {}, 8443);
