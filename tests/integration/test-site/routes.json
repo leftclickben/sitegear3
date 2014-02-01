@@ -2,5 +2,7 @@
 	"/": {},
 	"/test": {},
 	"/nested/test": {},
-	"/third/level/page": {}
+	"/third/level/page": {},
+	"/internal/server/error": {},
+	"/bad/data": {}
 }
