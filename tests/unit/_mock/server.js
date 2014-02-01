@@ -8,8 +8,11 @@
 (function (_) {
 	"use strict";
 
-	module.exports = {
-		listen: function () { return module.exports; },
-		close: _.noop
+	module.exports = function () {
+		var server = {
+			listen: function () { return server; },
+			close: _.noop
+		};
+		return server;
 	};
 }(require('lodash')));
