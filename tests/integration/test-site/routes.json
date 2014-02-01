@@ -1,3 +1,6 @@
 {
-	"/": {}
+	"/": {},
+	"/test": {},
+	"/nested/test": {},
+	"/third/level/page": {}
 }

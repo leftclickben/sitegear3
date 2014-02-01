@@ -7,6 +7,7 @@
 	"use strict";
 
 	module.exports = function () {
+
 		// Create the application instance
 		var app = sitegear3();
 
@@ -20,12 +21,11 @@
 			.use(app.router)
 			.use(sitegear3.notFound())
 			.use(sitegear3.internalServerError())
+			.persistence('filesystem', { root: __dirname + '/data' })
 			.mapRoutes(require('./routes.json'))
-			.persistence()
 			.engine('html', swig.renderFile)
-			.set('view engine', 'html')
 			.set('views', __dirname + '/templates')
-			.start();
+			.start(8888);
 	};
 
 }(require('../../../index'), require('swig')));

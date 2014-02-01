@@ -12,16 +12,58 @@
 	describe('Sitegear3 integration test', function () {
 		var app;
 		beforeEach(function () {
-			// TODO: execute 'test-site/data/init-redis.js' -- after applying namespaces in redis
 			app = siteBootstrap();
 		});
-		it('Serves the home page', function () {
-			request('http://localhost:8888/', function (error, response, body) {
-				//expect(body).toBe(fs.readFileSync('./expectations/index.html'));
+		it('Serves the home page', function (done) {
+			fs.readFile(__dirname + '/expectations/index.txt', { encoding: 'utf8' }, function (readFileError, expectedData) {
+				request('http://localhost:8888/', function (requestError, response, data) {
+					expect(data).toBe(expectedData);
+					done();
+				});
+			});
+		});
+		it('Serves a test page at the top level', function (done) {
+			fs.readFile(__dirname + '/expectations/test.txt', { encoding: 'utf8' }, function (readFileError, expectedData) {
+				request('http://localhost:8888/test', function (requestError, response, data) {
+					expect(data).toBe(expectedData);
+					done();
+				});
+			});
+		});
+		it('Serves a test page at the second level', function (done) {
+			fs.readFile(__dirname + '/expectations/nested_test.txt', { encoding: 'utf8' }, function (readFileError, expectedData) {
+				request('http://localhost:8888/nested/test', function (requestError, response, data) {
+					expect(data).toBe(expectedData);
+					done();
+				});
+			});
+		});
+		it('Serves a test page at the third level', function (done) {
+			fs.readFile(__dirname + '/expectations/third_level_page.txt', { encoding: 'utf8' }, function (readFileError, expectedData) {
+				request('http://localhost:8888/third/level/page', function (requestError, response, data) {
+					expect(data).toBe(expectedData);
+					done();
+				});
+			});
+		});
+		it('Serves a 404 page for unknown URLs', function (done) {
+			fs.readFile(__dirname + '/expectations/not_found.txt', { encoding: 'utf8' }, function (readFileError, expectedData) {
+				request('http://localhost:8888/not/found', function (requestError, response, data) {
+					expect(data).toBe(expectedData);
+					done();
+				});
+			});
+		});
+		it('Serves a static URL', function (done) {
+			fs.readFile(__dirname + '/test-site/static/resource.txt', { encoding: 'utf8' }, function (readFileError, expectedData) {
+				request('http://localhost:8888/resource.txt', function (requestError, response, data) {
+					expect(data).toBe(expectedData);
+					done();
+				});
 			});
 		});
 		afterEach(function () {
-			app.dispose();
-		})
+			app.stop();
+		});
 	});
 }(require('./test-site/site'), require('fs'), require('request')));

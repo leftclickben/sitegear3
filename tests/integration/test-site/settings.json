@@ -1,27 +1,4 @@
 {
-	"site": {
-		"key": "integration-test-site",
-		"name": "Integration Test Site"
-	},
-	"server": {
-		"port": 8088
-	},
-	"session": {
-		"key": "sitegear3.session",
-		"secret": "Sitegear3"
-	},
-	"persistence": {
-		"redis": {
-			"prefix": "__INTEGRATION_TESTS__"
-		}
-	},
-	"controllers": {
-		"default": {
-			"page": {
-				"prefix": "page",
-				"separator": ".",
-				"blocks": [ "main", "title" ]
-			}
-		}
-	}
+	"site name": "Integration Test Site",
+	"http url": "http://localhost:8888/"
 }
