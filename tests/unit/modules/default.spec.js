@@ -6,7 +6,7 @@
  * MIT Licensed
  */
 
-(function (_, sitegear3, defaultModule) {
+(function (_, sitegear3, defaultModule, jasmine) {
 	"use strict";
 	require('../setupTests');
 
@@ -25,25 +25,52 @@
 			});
 			describe('The index() action', function () {
 				var mockRequest, mockResponse;
-				beforeEach(function () {
-					mockRequest = require('../_mock/request');
-					mockResponse = require('../_mock/response');
-					spyOn(app.interfaces.storage, 'get').andCallThrough();
-					spyOn(mockResponse, 'render');
-					module.index()(mockRequest, mockResponse);
+				describe('By default', function () {
+					beforeEach(function () {
+						mockRequest = require('../_mock/request');
+						mockResponse = require('../_mock/response');
+						spyOn(app.interfaces.storage, 'get').andCallThrough();
+						module.index()(mockRequest, mockResponse);
+					});
+					it('Makes the correct number of calls to persistence', function () {
+						expect(app.interfaces.storage.get).toHaveBeenCalled();
+						expect(app.interfaces.storage.get.callCount).toBe(1);
+					});
 				});
-				it('Makes the correct number of calls to persistence', function () {
-					expect(app.interfaces.storage.get).toHaveBeenCalled();
-					expect(app.interfaces.storage.get.callCount).toBe(1);
+				describe('When persistence is returning data normally', function () {
+					beforeEach(function () {
+						mockRequest = require('../_mock/request');
+						mockResponse = require('../_mock/response');
+						spyOn(mockResponse, 'render');
+						module.index()(mockRequest, mockResponse);
+					});
+					it('Calls response.render()', function () {
+						expect(mockResponse.render).toHaveBeenCalled();
+						expect(mockResponse.render.callCount).toBe(1);
+					});
 				});
-				it('Calls response.render()', function () {
-					expect(mockResponse.render).toHaveBeenCalled();
-					expect(mockResponse.render.callCount).toBe(1);
+				describe('When persistence is throwing errors', function () {
+					var next,
+						error = new Error('This is an error from storage interface');
+					beforeEach(function () {
+						mockRequest = require('../_mock/request');
+						mockResponse = require('../_mock/response');
+						spyOn(mockResponse, 'render');
+						next = jasmine.createSpy('next');
+						app.interfaces.storage.get = function (type, key, callback) {
+							callback(error);
+						};
+						module.index()(mockRequest, mockResponse, next);
+					});
+					it('Calls next() with the error', function () {
+						expect(next).toHaveBeenCalledWith(error);
+						expect(next.callCount).toBe(1);
+					});
+					it('Doesn\'t call response.render()', function () {
+						expect(mockResponse.render).not.toHaveBeenCalled();
+					});
 				});
-			});
-			afterEach(function () {
-				app.stop();
 			});
 		});
 	});
-}(require('lodash'), require('../../../index'), require('../../../lib/modules/default')));
+}(require('lodash'), require('../../../index'), require('../../../lib/modules/default'), require('jasmine-node')));
