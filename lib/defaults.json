@@ -2,14 +2,5 @@
 	"view engine": "html",
 	"site name": "Anonymous Website",
 	"http url": "http://localhost/",
-	"https url": "https://localhost/",
-	"modules": {
-		"default": {
-			"page": {
-				"prefix": "page",
-				"separator": ".",
-				"blocks": [ "main", "title" ]
-			}
-		}
-	}
+	"https url": "https://localhost/"
 }
