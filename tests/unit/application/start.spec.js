@@ -15,8 +15,8 @@
 			mockServer = require('../_mock/server');
 		beforeEach(function () {
 			app = sitegear3().initialise(require('../settings.json'));
-			spyOn(http, 'createServer').andReturn(mockServer);
-			spyOn(https, 'createServer').andReturn(mockServer);
+			spyOn(http, 'createServer').andReturn(mockServer());
+			spyOn(https, 'createServer').andReturn(mockServer());
 		});
 		describe('With no parameters', function () {
 			beforeEach(function () {
