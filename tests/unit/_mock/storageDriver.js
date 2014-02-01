@@ -11,15 +11,15 @@
 	module.exports = function () {
 		return {
 			set: function (type, key, value, callback) {
-				callback(null, type, key, value);
+				callback();
 			},
 
 			get: function (type, key, callback) {
-				callback(null, type, key, 'this is the value');
+				callback(undefined, 'this is the value');
 			},
 
 			remove: function (type, key, callback) {
-				callback(null, type, key);
+				callback();
 			}
 		};
 	};

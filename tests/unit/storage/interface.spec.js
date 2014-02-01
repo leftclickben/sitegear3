@@ -25,7 +25,7 @@
 					returnValue = storage.set('test-type', 'test-key', 'this is the value', callbackSpy);
 				});
 				it('Calls set() on the driver', function () {
-					expect(callbackSpy).toHaveBeenCalledWith(null, 'test-type', 'test-key', 'this is the value');
+					expect(callbackSpy).toHaveBeenCalledWith(undefined);
 					expect(callbackSpy.callCount).toBe(1);
 				});
 				it('Emits a "set" event', function () {
@@ -44,7 +44,7 @@
 					returnValue = storage.get('test-type', 'test-key', callbackSpy);
 				});
 				it('Calls get() on the driver', function () {
-					expect(callbackSpy).toHaveBeenCalledWith(null, 'test-type', 'test-key', 'this is the value');
+					expect(callbackSpy).toHaveBeenCalledWith(undefined, 'this is the value');
 					expect(callbackSpy.callCount).toBe(1);
 				});
 				it('Emits a "get" event', function () {
@@ -63,11 +63,11 @@
 					returnValue = storage.remove('test-type', 'test-key', callbackSpy);
 				});
 				it('Calls remove() on the driver', function () {
-					expect(callbackSpy).toHaveBeenCalledWith(null, 'test-type', 'test-key', undefined);
+					expect(callbackSpy).toHaveBeenCalledWith(undefined);
 					expect(callbackSpy.callCount).toBe(1);
 				});
 				it('Emits a "remove" event', function () {
-					expect(storage.emit).toHaveBeenCalledWith('remove', 'test-type', 'test-key', undefined);
+					expect(storage.emit).toHaveBeenCalledWith('remove', 'test-type', 'test-key');
 					expect(storage.emit.callCount).toBe(1);
 				});
 				it('Returns the storage instance for chaining', function () {
@@ -89,7 +89,7 @@
 					returnValue = storage.set('test-type', 'test-key', 'this is the value', callbackSpy);
 				});
 				it('Calls set() on the driver, passing an error', function () {
-					expect(callbackSpy).toHaveBeenCalledWith(error, 'test-type', 'test-key', 'this is the value');
+					expect(callbackSpy).toHaveBeenCalledWith(error);
 					expect(callbackSpy.callCount).toBe(1);
 				});
 				it('Emits an "error" event', function () {
@@ -108,7 +108,7 @@
 					returnValue = storage.get('test-type', 'test-key', callbackSpy);
 				});
 				it('Calls get() on the driver, passing an error', function () {
-					expect(callbackSpy).toHaveBeenCalledWith(error, 'test-type', 'test-key', undefined);
+					expect(callbackSpy).toHaveBeenCalledWith(error, undefined);
 					expect(callbackSpy.callCount).toBe(1);
 				});
 				it('Emits an "error" event', function () {
@@ -127,7 +127,7 @@
 					returnValue = storage.remove('test-type', 'test-key', callbackSpy);
 				});
 				it('Calls remove() on the driver, passing an error', function () {
-					expect(callbackSpy).toHaveBeenCalledWith(error, 'test-type', 'test-key', undefined);
+					expect(callbackSpy).toHaveBeenCalledWith(error);
 					expect(callbackSpy.callCount).toBe(1);
 				});
 				it('Emits an "error" event', function () {

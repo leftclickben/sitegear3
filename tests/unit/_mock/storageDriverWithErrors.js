@@ -11,15 +11,15 @@
 	module.exports = function (options) {
 		return {
 			set: function (type, key, value, callback) {
-				callback(options.error, type, key, value);
+				callback(options.error);
 			},
 
 			get: function (type, key, callback) {
-				callback(options.error, type, key);
+				callback(options.error);
 			},
 
 			remove: function (type, key, callback) {
-				callback(options.error, type, key);
+				callback(options.error);
 			}
 		};
 	};
