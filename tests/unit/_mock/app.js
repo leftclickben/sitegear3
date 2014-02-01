@@ -16,9 +16,17 @@
 		get: function (key) {
 			return this.settings[key];
 		},
-		redis: {
-			get: function (key, callback) {
-				callback(null, 'This is the value for key: ' + key);
+		interfaces: {
+			storage: {
+				set: function (type, key, value, callback) {
+					callback();
+				},
+				get: function (type, key, callback) {
+					callback(undefined, 'this is the value');
+				},
+				remove: function (type, key, callback) {
+					callback();
+				}
 			}
 		}
 	};
