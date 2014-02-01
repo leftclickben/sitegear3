@@ -11,8 +11,11 @@
 	require('../../setupTests');
 
 	describe('Storage driver: filesystem', function () {
-		var filesystem;
+		it('Exports a function', function () {
+			expect(_.isFunction(filesystemDriver)).toBeTruthy();
+		});
 		describe('When underlying filesystem is working and accessible', function () {
+			var filesystem;
 			beforeEach(function () {
 				filesystem = filesystemDriver({ root: os.tmpdir() });
 			});
@@ -87,7 +90,8 @@
 			});
 		});
 		describe('When underlying filesystem is returning errors', function () {
-			var thrownError = new Error('This is an error');
+			var filesystem,
+				thrownError = new Error('This is an error');
 			beforeEach(function () {
 				filesystem = filesystemDriver({ root: os.tmpdir() });
 			});
