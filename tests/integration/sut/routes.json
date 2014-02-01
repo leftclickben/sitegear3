@@ -1,0 +1,8 @@
+{
+	"/": {},
+	"/test": {},
+	"/nested/test": {},
+	"/third/level/page": {},
+	"/internal/server/error": {},
+	"/bad/data": {}
+}
