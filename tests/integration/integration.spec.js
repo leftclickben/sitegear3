@@ -47,7 +47,7 @@
 			});
 		});
 		it('Serves a static URL', function (done) {
-			fs.readFile(__dirname + '/test-site/static/resource.txt', { encoding: 'utf8' }, function (readFileError, expectedData) {
+			fs.readFile(__dirname + '/sut/static/resource.txt', { encoding: 'utf8' }, function (readFileError, expectedData) {
 				request('http://localhost:8888/resource.txt', function (requestError, response, data) {
 					expect(data).toBe(expectedData);
 					done();
@@ -82,4 +82,4 @@
 			app.stop();
 		});
 	});
-}(require('./test-site/site'), require('fs'), require('request')));
+}(require('./sut/site'), require('fs'), require('request')));
