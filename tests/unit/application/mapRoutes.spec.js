@@ -16,9 +16,7 @@
 			describe('Works correctly with correct configuration', function () {
 				beforeEach(function () {
 					app = sitegear3().initialise(require('../settings.json'));
-					app.interfaces = {
-						storage: mockStorageInterface()
-					};
+					app.storage = mockStorageInterface();
 					app.mapRoutes([
 						{
 							path: '/products',
@@ -98,9 +96,7 @@
 			describe('Throws correct errors on misconfiguration', function () {
 				beforeEach(function () {
 					app = sitegear3().initialise(require('../settings.json'));
-					app.interfaces = {
-						storage: mockStorageInterface()
-					};
+					app.storage = mockStorageInterface();
 				});
 				it('Throws an error when invalid module is specified', function () {
 					try {

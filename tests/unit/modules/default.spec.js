@@ -27,7 +27,7 @@
 				var collection, mockRequest, mockResponse;
 				describe('By default', function () {
 					beforeEach(function () {
-						collection = app.interfaces.storage.collection('page');
+						collection = app.storage.collection('page');
 						mockRequest = require('../_mock/request');
 						mockResponse = require('../_mock/response');
 						spyOn(collection, 'get').andCallThrough();
@@ -58,7 +58,7 @@
 						mockResponse = require('../_mock/response');
 						spyOn(mockResponse, 'render');
 						next = jasmine.createSpy('next');
-						app.interfaces.storage.collection('page').get = function (key, callback) {
+						app.storage.collection('page').get = function (key, callback) {
 							callback(error);
 						};
 						module.index()(mockRequest, mockResponse, next);

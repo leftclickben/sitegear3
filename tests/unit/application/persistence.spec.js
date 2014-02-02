@@ -23,11 +23,11 @@
 					app.persistence('test', { foo: 'foo', bar: 'baz' });
 				});
 				it('Instantiates the storage interface', function () {
-					expect(app.interfaces.storage).not.toBeUndefined();
+					expect(app.storage).not.toBeUndefined();
 				});
 				describe('When creating a collection', function () {
 					beforeEach(function () {
-						app.interfaces.storage.collection('test-collection');
+						app.storage.collection('test-collection');
 					});
 					it('Instantiates the specified driver', function () {
 						expect(sitegear3.storageDrivers.test).toHaveBeenCalledWith({ foo: 'foo', bar: 'baz' });
@@ -45,7 +45,7 @@
 					}
 				});
 				it('Does not instantiate the storage interface', function () {
-					expect(app.interfaces.storage).toBeUndefined();
+					expect(app.storage).toBeUndefined();
 				});
 				it('Throws the relevant exception', function () {
 					expect(error).not.toBeUndefined();
@@ -63,7 +63,7 @@
 					}
 				});
 				it('Does not instantiate the storage interface', function () {
-					expect(app.interfaces.storage).toBeUndefined();
+					expect(app.storage).toBeUndefined();
 				});
 				it('Throws the relevant exception', function () {
 					expect(error).not.toBeUndefined();
@@ -72,4 +72,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../index'), require('../../../lib/storage/interface')));
+}(require('lodash'), require('../../../index'), require('../../../lib/storage')));

@@ -146,4 +146,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../lib/storage/interface'), require('jasmine-node')));
+}(require('lodash'), require('../../../lib/storage'), require('jasmine-node')));
