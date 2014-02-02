@@ -5,7 +5,7 @@
  * MIT Licensed
  */
 
-(function (_, utils) {
+(function (_, storageInterface, utils) {
 	"use strict";
 
 	module.exports = {
@@ -17,17 +17,7 @@
 			return this.settings[key];
 		},
 		interfaces: {
-			storage: {
-				set: function (type, key, value, callback) {
-					callback();
-				},
-				get: function (type, key, callback) {
-					callback(undefined, 'this is the value');
-				},
-				remove: function (type, key, callback) {
-					callback();
-				}
-			}
+			storage: storageInterface()
 		}
 	};
-}(require('lodash'), require('../../../lib/utils')));
+}(require('lodash'), require('./storageInterface'), require('../../../lib/utils')));

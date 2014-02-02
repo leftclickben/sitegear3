@@ -6,7 +6,7 @@
  * MIT Licensed
  */
 
-(function (_, sitegear3) {
+(function (_, sitegear3, mockStorageInterface) {
 	"use strict";
 	require('../setupTests');
 
@@ -15,8 +15,10 @@
 			var app;
 			describe('Works correctly with correct configuration', function () {
 				beforeEach(function () {
-					app = sitegear3();
-					app.initialise(require('../settings.json'));
+					app = sitegear3().initialise(require('../settings.json'));
+					app.interfaces = {
+						storage: mockStorageInterface()
+					};
 					app.mapRoutes({
 						'/': {},
 						'/about': {},
@@ -157,8 +159,10 @@
 			});
 			describe('Throws correct errors on misconfiguration', function () {
 				beforeEach(function () {
-					app = sitegear3();
-					app.initialise(require('../settings.json'));
+					app = sitegear3().initialise(require('../settings.json'));
+					app.interfaces = {
+						storage: mockStorageInterface()
+					};
 				});
 				it('Throws an error when invalid module is specified', function () {
 					try {
@@ -191,4 +195,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../index')));
+}(require('lodash'), require('../../../index'), require('../_mock/storageInterface')));
