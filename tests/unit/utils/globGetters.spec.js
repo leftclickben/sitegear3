@@ -167,5 +167,40 @@
 				});
 			});
 		});
+		describe('Matches deep glob patterns', function () {
+			it('Loads all .js files in specified directory and unpacks them as getters', function (done) {
+				utils.globGetters(path.join(__dirname, '_gettersNested', '**', '*.js'), /\/([a-zA-Z0-9_\-\.]+)\/getter\.js/, function (error, returnedObject) {
+					expect(returnedObject.m).toBeTruthy();
+					expect(_.isFunction(returnedObject.m)).toBeTruthy();
+					expect(returnedObject.n).toBeTruthy();
+					expect(_.isFunction(returnedObject.n)).toBeTruthy();
+					done();
+				});
+			});
+			it('Doesn\'t define properties based on non-js files', function (done) {
+				utils.globGetters(path.join(__dirname, '_gettersNested', '**', '*.js'), /\/([a-zA-Z0-9_\-\.]+)\/getter\.js/, function (error, returnedObject) {
+					expect(returnedObject.x).toBeUndefined();
+					done();
+				});
+			});
+			it('Doesn\'t define any additional properties', function (done) {
+				utils.globGetters(path.join(__dirname, '_gettersNested', '**', '*.js'), /\/([a-zA-Z0-9_\-\.]+)\/getter\.js/, function (error, returnedObject) {
+					expect(_.size(returnedObject)).toBe(2);
+					done();
+				});
+			});
+			it('Defines getters that work as expected', function (done) {
+				utils.globGetters(path.join(__dirname, '_gettersNested', '**', '*.js'), /\/([a-zA-Z0-9_\-\.]+)\/getter\.js/, function (error, returnedObject) {
+					var m = returnedObject.m(),
+						n = returnedObject.n();
+					expect(_.isFunction(m)).toBeTruthy();
+					expect(m()).toBe('This is "m"');
+					expect(_.isFunction(n)).toBeTruthy();
+					expect(n('a parameter')).toBe('This is "n", parameter is "a parameter"');
+					expect(n('another parameter')).toBe('This is "n", parameter is "another parameter"');
+					done();
+				});
+			});
+		});
 	});
 }(require('lodash'), require('../../../lib/utils'), require('path')));
