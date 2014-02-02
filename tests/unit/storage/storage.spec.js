@@ -59,6 +59,25 @@
 					expect(returnValue).toBe(collection);
 				});
 			});
+			describe('When keys() is called on the interface', function () {
+				var callbackSpy;
+				beforeEach(function () {
+					spyOn(collection, 'emit');
+					callbackSpy = jasmine.createSpy('keys callback');
+					returnValue = collection.keys(callbackSpy);
+				});
+				it('Calls keys() on the driver', function () {
+					expect(callbackSpy).toHaveBeenCalledWith(undefined, [ 'key1', 'key2' ]);
+					expect(callbackSpy.callCount).toBe(1);
+				});
+				it('Emits a "keys" event', function () {
+					expect(collection.emit).toHaveBeenCalledWith('keys', 'test-type', null, [ 'key1', 'key2' ]);
+					expect(collection.emit.callCount).toBe(1);
+				});
+				it('Returns the collection instance for chaining', function () {
+					expect(returnValue).toBe(collection);
+				});
+			});
 			describe('When remove() is called on the interface', function () {
 				var callbackSpy;
 				beforeEach(function () {
@@ -118,6 +137,25 @@
 					expect(callbackSpy.callCount).toBe(1);
 				});
 				it('Emits an "error" event', function () {
+					expect(collection.emit).toHaveBeenCalledWith('error', error);
+					expect(collection.emit.callCount).toBe(1);
+				});
+				it('Returns the collection instance for chaining', function () {
+					expect(returnValue).toBe(collection);
+				});
+			});
+			describe('When keys() is called on the interface', function () {
+				var callbackSpy;
+				beforeEach(function () {
+					spyOn(collection, 'emit');
+					callbackSpy = jasmine.createSpy('keys callback');
+					returnValue = collection.keys(callbackSpy);
+				});
+				it('Calls keys() on the driver', function () {
+					expect(callbackSpy).toHaveBeenCalledWith(error, undefined);
+					expect(callbackSpy.callCount).toBe(1);
+				});
+				it('Emits a "keys" event', function () {
 					expect(collection.emit).toHaveBeenCalledWith('error', error);
 					expect(collection.emit.callCount).toBe(1);
 				});

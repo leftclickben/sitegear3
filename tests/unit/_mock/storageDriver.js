@@ -18,6 +18,10 @@
 				callback(undefined, 'this is the value');
 			},
 
+			keys: function (type, callback) {
+				callback(undefined, [ 'key1', 'key2' ]);
+			},
+
 			remove: function (type, key, callback) {
 				callback();
 			}
