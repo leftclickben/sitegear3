@@ -164,4 +164,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../../lib/storage/drivers/filesystem'), require('os'), require('fs')));
+}(require('lodash'), require('../../../../lib/storage/drivers/filesystem/driver'), require('os'), require('fs')));
