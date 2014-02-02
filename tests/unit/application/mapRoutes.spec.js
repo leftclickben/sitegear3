@@ -19,139 +19,77 @@
 					app.interfaces = {
 						storage: mockStorageInterface()
 					};
-					app.mapRoutes({
-						'/': {},
-						'/about': {},
-						'/about/history': {},
-						'/about/history/early-days': {},
-						'/products': {
+					app.mapRoutes([
+						{
+							path: '/products',
 							module: 'products'
 						},
-						'/products/:product': {
+						{
+							path: '/products/:item',
 							module: 'products',
-							action: 'product'
+							action: 'item'
+						},
+						{
+							path: '*'
 						}
-					});
+					]);
 				});
 				it('Adds all expected routes', function () {
-					expect(_.size(app.routes.get)).toBe(6);
+					expect(_.size(app.routes.get)).toBe(3);
 					expect(_.size(app.routes.post)).toBe(0);
 					expect(_.size(app.routes.put)).toBe(0);
 					expect(_.size(app.routes.dele)).toBe(0);
 				});
-				it('Correctly configures the home page route', function () {
-					expect(app.routes.get[0].path).toBe('/');
+				it('Correctly configures static routes to non-default modules', function () {
+					expect(app.routes.get[0].path).toBe('/products');
+					expect(app.routes.get[0].method).toBe('get');
 					expect(app.routes.get[0].callbacks.length).toBe(1);
 					expect(_.isFunction(app.routes.get[0].callbacks[0])).toBeTruthy();
-					expect(app.routes.get[0].regexp.test('/')).toBeTruthy();
-					expect(app.routes.get[0].regexp.test('//')).toBeTruthy();
+					expect(app.routes.get[0].keys.length).toBe(0);
+					expect(app.routes.get[0].regexp.test('/products')).toBeTruthy();
+					expect(app.routes.get[0].regexp.test('/products/')).toBeTruthy();
+					expect(app.routes.get[0].regexp.test('/products/widgets')).toBeFalsy();
+					expect(app.routes.get[0].regexp.test('/products/widgets/')).toBeFalsy();
+					expect(app.routes.get[0].regexp.test('/')).toBeFalsy();
+					expect(app.routes.get[0].regexp.test('//')).toBeFalsy();
 					expect(app.routes.get[0].regexp.test('/about')).toBeFalsy();
 					expect(app.routes.get[0].regexp.test('/about/')).toBeFalsy();
 					expect(app.routes.get[0].regexp.test('/about/history')).toBeFalsy();
 					expect(app.routes.get[0].regexp.test('/about/history/')).toBeFalsy();
-					expect(app.routes.get[0].regexp.test('/about/history/early-days')).toBeFalsy();
-					expect(app.routes.get[0].regexp.test('/about/history/early-days/')).toBeFalsy();
-					expect(app.routes.get[0].regexp.test('/products')).toBeFalsy();
-					expect(app.routes.get[0].regexp.test('/products/')).toBeFalsy();
-					expect(app.routes.get[0].regexp.test('/products/widget-abc')).toBeFalsy();
-					expect(app.routes.get[0].regexp.test('/products/widget-abc/')).toBeFalsy();
-					expect(app.routes.get[0].regexp.test('/products/widget-xyz')).toBeFalsy();
-					expect(app.routes.get[0].regexp.test('/products/widget-xyz/')).toBeFalsy();
 				});
-				it('Correctly configures routes at the top level', function () {
-					expect(app.routes.get[1].path).toBe('/about');
+				it('Correctly configures slug routes', function () {
+					expect(app.routes.get[1].path).toBe('/products/:item');
+					expect(app.routes.get[1].method).toBe('get');
 					expect(app.routes.get[1].callbacks.length).toBe(1);
 					expect(_.isFunction(app.routes.get[1].callbacks[0])).toBeTruthy();
-					expect(app.routes.get[1].regexp.test('/about')).toBeTruthy();
-					expect(app.routes.get[1].regexp.test('/about/')).toBeTruthy();
-					expect(app.routes.get[1].regexp.test('/')).toBeFalsy();
-					expect(app.routes.get[1].regexp.test('//')).toBeFalsy();
-					expect(app.routes.get[1].regexp.test('/about/history')).toBeFalsy();
-					expect(app.routes.get[1].regexp.test('/about/history/')).toBeFalsy();
-					expect(app.routes.get[1].regexp.test('/about/history/early-days')).toBeFalsy();
-					expect(app.routes.get[1].regexp.test('/about/history/early-days/')).toBeFalsy();
+					expect(app.routes.get[1].keys.length).toBe(1);
 					expect(app.routes.get[1].regexp.test('/products')).toBeFalsy();
 					expect(app.routes.get[1].regexp.test('/products/')).toBeFalsy();
-					expect(app.routes.get[1].regexp.test('/products/widget-abc')).toBeFalsy();
-					expect(app.routes.get[1].regexp.test('/products/widget-abc/')).toBeFalsy();
-					expect(app.routes.get[1].regexp.test('/products/widget-xyz')).toBeFalsy();
-					expect(app.routes.get[1].regexp.test('/products/widget-xyz/')).toBeFalsy();
+					expect(app.routes.get[1].regexp.test('/products/widgets')).toBeTruthy();
+					expect(app.routes.get[1].regexp.test('/products/widgets/')).toBeTruthy();
+					expect(app.routes.get[1].regexp.test('/')).toBeFalsy();
+					expect(app.routes.get[1].regexp.test('//')).toBeFalsy();
+					expect(app.routes.get[1].regexp.test('/about')).toBeFalsy();
+					expect(app.routes.get[1].regexp.test('/about/')).toBeFalsy();
+					expect(app.routes.get[1].regexp.test('/about/history')).toBeFalsy();
+					expect(app.routes.get[1].regexp.test('/about/history/')).toBeFalsy();
 				});
-				it('Correctly configures routes at the second level', function () {
-					expect(app.routes.get[2].path).toBe('/about/history');
+				it('Correctly configures the fallback route', function () {
+					expect(app.routes.get[2].path).toBe('*');
+					expect(app.routes.get[2].method).toBe('get');
 					expect(app.routes.get[2].callbacks.length).toBe(1);
 					expect(_.isFunction(app.routes.get[2].callbacks[0])).toBeTruthy();
+					expect(app.routes.get[2].keys.length).toBe(0);
+					expect(app.routes.get[2].regexp.test('/products')).toBeTruthy();
+					expect(app.routes.get[2].regexp.test('/products/')).toBeTruthy();
+					expect(app.routes.get[2].regexp.test('/products/widgets')).toBeTruthy();
+					expect(app.routes.get[2].regexp.test('/products/widgets/')).toBeTruthy();
+					expect(app.routes.get[2].regexp.test('/')).toBeTruthy();
+					expect(app.routes.get[2].regexp.test('//')).toBeTruthy();
+					expect(app.routes.get[2].regexp.test('/about')).toBeTruthy();
+					expect(app.routes.get[2].regexp.test('/about/')).toBeTruthy();
 					expect(app.routes.get[2].regexp.test('/about/history')).toBeTruthy();
 					expect(app.routes.get[2].regexp.test('/about/history/')).toBeTruthy();
-					expect(app.routes.get[2].regexp.test('/')).toBeFalsy();
-					expect(app.routes.get[2].regexp.test('//')).toBeFalsy();
-					expect(app.routes.get[2].regexp.test('/about')).toBeFalsy();
-					expect(app.routes.get[2].regexp.test('/about/')).toBeFalsy();
-					expect(app.routes.get[2].regexp.test('/about/history/early-days')).toBeFalsy();
-					expect(app.routes.get[2].regexp.test('/about/history/early-days/')).toBeFalsy();
-					expect(app.routes.get[2].regexp.test('/products')).toBeFalsy();
-					expect(app.routes.get[2].regexp.test('/products/')).toBeFalsy();
-					expect(app.routes.get[2].regexp.test('/products/widget-abc')).toBeFalsy();
-					expect(app.routes.get[2].regexp.test('/products/widget-abc/')).toBeFalsy();
-					expect(app.routes.get[2].regexp.test('/products/widget-xyz')).toBeFalsy();
-					expect(app.routes.get[2].regexp.test('/products/widget-xyz/')).toBeFalsy();
-				});
-				it('Correctly configures routes at the third level', function () {
-					expect(app.routes.get[3].path).toBe('/about/history/early-days');
-					expect(app.routes.get[3].callbacks.length).toBe(1);
-					expect(_.isFunction(app.routes.get[3].callbacks[0])).toBeTruthy();
-					expect(app.routes.get[3].regexp.test('/about/history/early-days')).toBeTruthy();
-					expect(app.routes.get[3].regexp.test('/about/history/early-days/')).toBeTruthy();
-					expect(app.routes.get[3].regexp.test('/')).toBeFalsy();
-					expect(app.routes.get[3].regexp.test('//')).toBeFalsy();
-					expect(app.routes.get[3].regexp.test('/about')).toBeFalsy();
-					expect(app.routes.get[3].regexp.test('/about/')).toBeFalsy();
-					expect(app.routes.get[3].regexp.test('/about/history')).toBeFalsy();
-					expect(app.routes.get[3].regexp.test('/about/history/')).toBeFalsy();
-					expect(app.routes.get[3].regexp.test('/products')).toBeFalsy();
-					expect(app.routes.get[3].regexp.test('/products/')).toBeFalsy();
-					expect(app.routes.get[3].regexp.test('/products/widget-abc')).toBeFalsy();
-					expect(app.routes.get[3].regexp.test('/products/widget-abc/')).toBeFalsy();
-					expect(app.routes.get[3].regexp.test('/products/widget-xyz')).toBeFalsy();
-					expect(app.routes.get[3].regexp.test('/products/widget-xyz/')).toBeFalsy();
-				});
-				it('Correctly configures routes for a non-default module', function () {
-					expect(app.routes.get[4].path).toBe('/products');
-					expect(app.routes.get[4].callbacks.length).toBe(1);
-					expect(_.isFunction(app.routes.get[4].callbacks[0])).toBeTruthy();
-					expect(app.routes.get[4].regexp.test('/products')).toBeTruthy();
-					expect(app.routes.get[4].regexp.test('/products/')).toBeTruthy();
-					expect(app.routes.get[4].regexp.test('/')).toBeFalsy();
-					expect(app.routes.get[4].regexp.test('//')).toBeFalsy();
-					expect(app.routes.get[4].regexp.test('/about')).toBeFalsy();
-					expect(app.routes.get[4].regexp.test('/about/')).toBeFalsy();
-					expect(app.routes.get[4].regexp.test('/about/history')).toBeFalsy();
-					expect(app.routes.get[4].regexp.test('/about/history/')).toBeFalsy();
-					expect(app.routes.get[4].regexp.test('/about/history/early-days')).toBeFalsy();
-					expect(app.routes.get[4].regexp.test('/about/history/early-days/')).toBeFalsy();
-					expect(app.routes.get[4].regexp.test('/products/widget-abc')).toBeFalsy();
-					expect(app.routes.get[4].regexp.test('/products/widget-abc/')).toBeFalsy();
-					expect(app.routes.get[4].regexp.test('/products/widget-xyz')).toBeFalsy();
-					expect(app.routes.get[4].regexp.test('/products/widget-xyz/')).toBeFalsy();
-				});
-				it('Correctly configures routes with slugs', function () {
-					expect(app.routes.get[5].path).toBe('/products/:product');
-					expect(app.routes.get[5].callbacks.length).toBe(1);
-					expect(_.isFunction(app.routes.get[5].callbacks[0])).toBeTruthy();
-					expect(app.routes.get[5].regexp.test('/products/widget-abc')).toBeTruthy();
-					expect(app.routes.get[5].regexp.test('/products/widget-abc/')).toBeTruthy();
-					expect(app.routes.get[5].regexp.test('/products/widget-xyz')).toBeTruthy();
-					expect(app.routes.get[5].regexp.test('/products/widget-xyz/')).toBeTruthy();
-					expect(app.routes.get[5].regexp.test('/')).toBeFalsy();
-					expect(app.routes.get[5].regexp.test('//')).toBeFalsy();
-					expect(app.routes.get[5].regexp.test('/about')).toBeFalsy();
-					expect(app.routes.get[5].regexp.test('/about/')).toBeFalsy();
-					expect(app.routes.get[5].regexp.test('/about/history')).toBeFalsy();
-					expect(app.routes.get[5].regexp.test('/about/history/')).toBeFalsy();
-					expect(app.routes.get[5].regexp.test('/about/history/early-days')).toBeFalsy();
-					expect(app.routes.get[5].regexp.test('/about/history/early-days/')).toBeFalsy();
-					expect(app.routes.get[5].regexp.test('/products')).toBeFalsy();
-					expect(app.routes.get[5].regexp.test('/products/')).toBeFalsy();
 				});
 				afterEach(function () {
 					app.stop();
@@ -166,11 +104,12 @@
 				});
 				it('Throws an error when invalid module is specified', function () {
 					try {
-						app.mapRoutes({
-							'/some/path': {
+						app.mapRoutes([
+							{
+								path: '/some/path',
 								module: 'INVALID'
 							}
-						});
+						]);
 						expect('This code should not execute').toBeFalsy();
 					} catch (error) {
 						expect(error.toString()).toBe('Error: Unknown module "INVALID" specified for route at URL "/some/path"');
@@ -178,12 +117,12 @@
 				});
 				it('Throws an error when invalid action is specified in a valid module', function () {
 					try {
-						app.mapRoutes({
-							'/another/path': {
-								module: 'default',
+						app.mapRoutes([
+							{
+								path: '/another/path',
 								action: 'INVALID'
 							}
-						});
+						]);
 						expect('This code should not execute').toBeFalsy();
 					} catch (error) {
 						expect(error.toString()).toBe('Error: Unknown action "INVALID" specified for route at URL "/another/path"');
