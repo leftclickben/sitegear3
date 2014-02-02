@@ -22,6 +22,10 @@
 				callback(options.error);
 			},
 
+			all: function (type, callback) {
+				callback(options.error);
+			},
+
 			remove: function (type, key, callback) {
 				callback(options.error);
 			}

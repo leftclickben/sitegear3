@@ -93,6 +93,36 @@
 					});
 				});
 			});
+			describe('The all() method', function () {
+				beforeEach(function () {
+					spyOn(fs, 'readdir').andCallFake(function (path, callback) {
+						callback(undefined, [ 'foo.json', 'bar.json', 'baz_xyzzy.json' ]);
+					});
+					spyOn(fs, 'readFile').andCallFake(function (path, options, callback) {
+						callback(undefined, '"this is ' + path + '"');
+					});
+				});
+				it('Calls fs.readdir() and fs.readFile()', function (done) {
+					filesystem.all('type', function () {
+						expect(fs.readdir).toHaveBeenCalled();
+						expect(fs.readdir.callCount).toBe(1);
+						expect(fs.readFile).toHaveBeenCalled();
+						expect(fs.readFile.callCount).toBe(3);
+						done();
+					});
+				});
+				it('Calls the callback with correct values', function (done) {
+					filesystem.all('type', function (error, data) {
+						expect(error).toBeUndefined();
+						expect(_.isPlainObject(data)).toBeTruthy();
+						expect(_.size(data)).toBe(3);
+						expect(data.foo).toBe('this is /tmp/type/foo.json');
+						expect(data.bar).toBe('this is /tmp/type/bar.json');
+						expect(data['baz/xyzzy']).toBe('this is /tmp/type/baz_xyzzy.json');
+						done();
+					});
+				});
+			});
 			describe('The remove() method', function () {
 				beforeEach(function () {
 					spyOn(fs, 'unlink').andCallFake(function (path, callback) {
@@ -182,6 +212,30 @@
 				});
 				it('Calls the callback with the error', function (done) {
 					filesystem.keys('type', function (error) {
+						expect(error).toBe(thrownError);
+						done();
+					});
+				});
+			});
+			describe('The all() method', function () {
+				beforeEach(function () {
+					spyOn(fs, 'readdir').andCallFake(function (path, callback) {
+						callback(thrownError);
+					});
+					spyOn(fs, 'readFile').andCallFake(function (path, options, callback) {
+						callback(thrownError);
+					});
+				});
+				it('Calls fs.readdir()', function (done) {
+					filesystem.all('type', function () {
+						expect(fs.readdir).toHaveBeenCalled();
+						expect(fs.readdir.callCount).toBe(1);
+						expect(fs.readFile).not.toHaveBeenCalled();
+						done();
+					});
+				});
+				it('Calls the callback with the error', function (done) {
+					filesystem.all('type', function (error) {
 						expect(error).toBe(thrownError);
 						done();
 					});

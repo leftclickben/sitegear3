@@ -22,6 +22,10 @@
 				callback(undefined, [ 'key1', 'key2' ]);
 			},
 
+			all: function (type, callback) {
+				callback(undefined, { key1: 'This is key1', key2: 'This is key2' });
+			},
+
 			remove: function (type, key, callback) {
 				callback();
 			}
