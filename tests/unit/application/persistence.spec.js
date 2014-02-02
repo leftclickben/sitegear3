@@ -25,9 +25,14 @@
 				it('Instantiates the storage interface', function () {
 					expect(app.interfaces.storage).not.toBeUndefined();
 				});
-				it('Instantiates the specified driver', function () {
-					expect(sitegear3.storageDrivers.test).toHaveBeenCalledWith({ foo: 'foo', bar: 'baz' });
-					expect(sitegear3.storageDrivers.test.callCount).toBe(1);
+				describe('When creating a collection', function () {
+					beforeEach(function () {
+						app.interfaces.storage.collection('test-collection');
+					});
+					it('Instantiates the specified driver', function () {
+						expect(sitegear3.storageDrivers.test).toHaveBeenCalledWith({ foo: 'foo', bar: 'baz' });
+						expect(sitegear3.storageDrivers.test.callCount).toBe(1);
+					});
 				});
 			});
 			describe('When called with an unknown driver', function () {

@@ -24,17 +24,18 @@
 				expect(_.isFunction(module.index)).toBeTruthy();
 			});
 			describe('The index() action', function () {
-				var mockRequest, mockResponse;
+				var collection, mockRequest, mockResponse;
 				describe('By default', function () {
 					beforeEach(function () {
+						collection = app.interfaces.storage.collection('page');
 						mockRequest = require('../_mock/request');
 						mockResponse = require('../_mock/response');
-						spyOn(app.interfaces.storage, 'get').andCallThrough();
+						spyOn(collection, 'get').andCallThrough();
 						module.index()(mockRequest, mockResponse);
 					});
 					it('Makes the correct number of calls to persistence', function () {
-						expect(app.interfaces.storage.get).toHaveBeenCalled();
-						expect(app.interfaces.storage.get.callCount).toBe(1);
+						expect(collection.get).toHaveBeenCalled();
+						expect(collection.get.callCount).toBe(1);
 					});
 				});
 				describe('When persistence is returning data normally', function () {
@@ -57,7 +58,7 @@
 						mockResponse = require('../_mock/response');
 						spyOn(mockResponse, 'render');
 						next = jasmine.createSpy('next');
-						app.interfaces.storage.get = function (type, key, callback) {
+						app.interfaces.storage.collection('page').get = function (key, callback) {
 							callback(error);
 						};
 						module.index()(mockRequest, mockResponse, next);
