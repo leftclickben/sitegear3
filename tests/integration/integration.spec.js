@@ -63,14 +63,6 @@
 					});
 				});
 			});
-			it('Serves a 500 page for misconfigured routes', function (done) {
-				fs.readFile(__dirname + '/expectations/internal_server_error.txt', { encoding: 'utf8' }, function (readFileError, expectedData) {
-					request('http://localhost:8888/internal/server/error', function (requestError, response, data) {
-						expect(data).toBe(expectedData);
-						done();
-					});
-				});
-			});
 			it('Serves a 500 page when invalid syntax encountered in data file', function (done) {
 				fs.readFile(__dirname + '/expectations/internal_server_error.txt', { encoding: 'utf8' }, function (readFileError, expectedData) {
 					request('http://localhost:8888/bad/data', function (requestError, response, data) {
