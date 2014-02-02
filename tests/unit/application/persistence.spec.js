@@ -72,4 +72,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../index'), require('../../../lib/storage/interface')));
+}(require('lodash'), require('../../../index'), require('../../../lib/storage')));
