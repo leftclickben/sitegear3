@@ -73,4 +73,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../index'), require('../../../lib/modules/default'), require('jasmine-node')));
+}(require('lodash'), require('../../../index'), require('../../../lib/modules/default/module'), require('jasmine-node')));
