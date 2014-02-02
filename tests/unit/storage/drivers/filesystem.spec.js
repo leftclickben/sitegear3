@@ -68,6 +68,31 @@
 					});
 				});
 			});
+			describe('The keys() method', function () {
+				beforeEach(function () {
+					spyOn(fs, 'readdir').andCallFake(function (path, callback) {
+						callback(undefined, [ 'foo', 'bar', 'baz' ]);
+					});
+				});
+				it('Calls fs.readdir()', function (done) {
+					filesystem.keys('type', function () {
+						expect(fs.readdir).toHaveBeenCalled();
+						expect(fs.readdir.callCount).toBe(1);
+						done();
+					});
+				});
+				it('Calls the callback with correct values', function (done) {
+					filesystem.keys('type', function (error, keys) {
+						expect(error).toBeUndefined();
+						expect(_.isArray(keys)).toBeTruthy();
+						expect(keys.length).toBe(3);
+						expect(keys[0]).toBe('foo');
+						expect(keys[1]).toBe('bar');
+						expect(keys[2]).toBe('baz');
+						done();
+					});
+				});
+			});
 			describe('The remove() method', function () {
 				beforeEach(function () {
 					spyOn(fs, 'unlink').andCallFake(function (path, callback) {
@@ -111,7 +136,7 @@
 						done();
 					});
 				});
-				it('Calls the callback with correct values', function (done) {
+				it('Calls the callback with the error', function (done) {
 					filesystem.set('type', 'key', { title: 'title', main: 'body content' }, function (error) {
 						expect(error).toBe(thrownError);
 						done();
@@ -134,10 +159,30 @@
 						done();
 					});
 				});
-				it('Calls the callback with correct values', function (done) {
+				it('Calls the callback with the error', function (done) {
 					filesystem.get('type', 'key', function (error, value) {
 						expect(error).toBe(thrownError);
 						expect(value).toBeUndefined();
+						done();
+					});
+				});
+			});
+			describe('The keys() method', function () {
+				beforeEach(function () {
+					spyOn(fs, 'readdir').andCallFake(function (path, callback) {
+						callback(thrownError);
+					});
+				});
+				it('Calls fs.readdir()', function (done) {
+					filesystem.keys('type', function () {
+						expect(fs.readdir).toHaveBeenCalled();
+						expect(fs.readdir.callCount).toBe(1);
+						done();
+					});
+				});
+				it('Calls the callback with the error', function (done) {
+					filesystem.keys('type', function (error) {
+						expect(error).toBe(thrownError);
 						done();
 					});
 				});
@@ -155,7 +200,7 @@
 						done();
 					});
 				});
-				it('Calls the callback with correct values', function (done) {
+				it('Calls the callback with the error', function (done) {
 					filesystem.remove('type', 'key', function (error) {
 						expect(error).toBe(thrownError);
 						done();
