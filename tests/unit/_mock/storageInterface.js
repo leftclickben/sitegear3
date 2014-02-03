@@ -8,13 +8,13 @@
 (function () {
 	"use strict";
 
-	var collections = {};
+	var repositories = {};
 
 	module.exports = function () {
 		return {
-			collection: function (type) {
-				if (!collections[type]) {
-					collections[type] = {
+			repository: function (type) {
+				if (!repositories[type]) {
+					repositories[type] = {
 						set: function (key, value, callback) {
 							callback();
 						},
@@ -26,7 +26,7 @@
 						}
 					};
 				}
-				return collections[type];
+				return repositories[type];
 			}
 		};
 	};

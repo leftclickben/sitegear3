@@ -25,9 +25,9 @@
 				it('Instantiates the storage interface', function () {
 					expect(app.storage).not.toBeUndefined();
 				});
-				describe('When creating a collection', function () {
+				describe('When creating a repository', function () {
 					beforeEach(function () {
-						app.storage.collection('test-collection');
+						app.storage.repository('test-repository');
 					});
 					it('Instantiates the specified driver', function () {
 						expect(sitegear3.storageDrivers.test).toHaveBeenCalledWith({ foo: 'foo', bar: 'baz' });
