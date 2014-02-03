@@ -11,7 +11,7 @@
 	require('../setupTests');
 
 	sitegear3.ready(function () {
-		describe('Sitegear3 application lifecycle: mapRoutes()', function () {
+		describe('Application lifecycle: mapRoutes()', function () {
 			var app;
 			describe('Works correctly with correct configuration', function () {
 				beforeEach(function () {

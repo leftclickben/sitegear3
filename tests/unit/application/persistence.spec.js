@@ -11,7 +11,7 @@
 	require('../setupTests');
 
 	sitegear3.ready(function () {
-		describe('Sitegear3 application lifecycle: persistence()', function () {
+		describe('Application lifecycle: persistence()', function () {
 			var app;
 			beforeEach(function () {
 				app = sitegear3().initialise(require('../settings.json'));
@@ -27,7 +27,7 @@
 				});
 				describe('When creating a repository', function () {
 					beforeEach(function () {
-						app.storage.repository('test-repository');
+						app.storage.define('test-repository');
 					});
 					it('Instantiates the specified driver', function () {
 						expect(sitegear3.storageDrivers.test).toHaveBeenCalledWith({ foo: 'foo', bar: 'baz' });

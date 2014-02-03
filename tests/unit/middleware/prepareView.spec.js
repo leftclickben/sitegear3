@@ -13,7 +13,7 @@
 	describe('Helper: prepareView', function () {
 		var app, helper;
 		beforeEach(function () {
-			app = require('../_mock/app');
+			app = require('../_mock/app')();
 			helper = prepareView(app);
 		});
 		it('Exports a function', function () {
