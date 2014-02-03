@@ -8,7 +8,7 @@
 
 (function (_, filesystemDriver, os, fs) {
 	"use strict";
-	require('../../setupTests');
+	require('../setupTests');
 
 	describe('Storage driver: filesystem', function () {
 		it('Exports a function', function () {
@@ -263,4 +263,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../../lib/storage/drivers/filesystem/driver'), require('os'), require('fs')));
+}(require('lodash'), require('../../../lib/storageDrivers/filesystem/driver'), require('os'), require('fs')));

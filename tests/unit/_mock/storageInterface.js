@@ -8,24 +8,31 @@
 (function () {
 	"use strict";
 
-	// The mock caches repositories as app.storage.repository('blah') is called in the module code and in the test.
-	// TODO This doesn't smell right FIXME
-	var repositories = {};
 	module.exports = function () {
+		var repositories = {};
+
 		return {
+			define: function (type) {
+				if (repositories[type]) {
+					throw new Error('Attempting to create repository "' + type + '" twice');
+				}
+				repositories[type] = {
+					set: function (key, value, callback) {
+						callback();
+					},
+					get: function (key, callback) {
+						callback(undefined, 'this is the value');
+					},
+					remove: function (key, callback) {
+						callback();
+					}
+				};
+				return repositories[type];
+			},
+
 			repository: function (type) {
-				if (!repositories[type]) {
-					repositories[type] = {
-						set: function (key, value, callback) {
-							callback();
-						},
-						get: function (key, callback) {
-							callback(undefined, 'this is the value');
-						},
-						remove: function (key, callback) {
-							callback();
-						}
-					};
+				if (!type) {
+					throw new Error('Attempting to retrieve unregistered repository "' + type + '"');
 				}
 				return repositories[type];
 			}

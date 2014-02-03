@@ -8,18 +8,52 @@
 
 (function (_, storageInterface, jasmine) {
 	"use strict";
-	require('../setupTests');
+	require('./setupTests');
 
 	describe('Storage interface', function () {
 		it('Exports a function', function () {
 			expect(_.isFunction(storageInterface)).toBeTruthy();
 		});
+		describe('Caches repositories', function () {
+			var storage, driver, repository, repository2;
+			beforeEach(function () {
+				driver = require('./_mock/storageDriver');
+				storage = storageInterface(driver());
+				repository = storage.define('test-type');
+				repository2 = storage.define('test-type-2');
+			});
+			it('Returns a different repository for each key', function () {
+				expect(repository).not.toBe(repository2);
+				expect(storage.repository('test-type')).not.toBe(repository2);
+				expect(storage.repository('test-type-2')).not.toBe(repository);
+			});
+			it('Returns the same repository from repository() as it did from define(), when passed the same keys', function () {
+				expect(storage.repository('test-type')).toBe(repository);
+				expect(storage.repository('test-type-2')).toBe(repository2);
+			});
+			it('Throws an error trying to retrieve a repository that has not been created', function () {
+				try {
+					storage.repository('does-not-exist');
+					expect('This code should not execute').toBeFalsy();
+				} catch (error) {
+					expect(error.toString()).toBe('Error: Attempting to retrieve unregistered repository "does-not-exist"');
+				}
+			});
+			it('Throws an error trying to create the same repository twice', function () {
+				try {
+					storage.define('test-type');
+					expect('This code should not execute').toBeFalsy();
+				} catch (error) {
+					expect(error.toString()).toBe('Error: Repository "test-type" already exists.');
+				}
+			});
+		});
 		describe('When driver is not generating errors', function () {
 			var storage, driver, repository, returnValue;
 			beforeEach(function () {
-				driver = require('../_mock/storageDriver');
+				driver = require('./_mock/storageDriver');
 				storage = storageInterface(driver());
-				repository = storage.repository('test-type');
+				repository = storage.define('test-type');
 			});
 			describe('When set() is called on the interface', function () {
 				var callbackSpy;
@@ -121,9 +155,9 @@
 			var storage, driver, repository, returnValue,
 				error = new Error('something went wrong');
 			beforeEach(function () {
-				driver = require('../_mock/storageDriverWithErrors');
+				driver = require('./_mock/storageDriverWithErrors');
 				storage = storageInterface(driver({ error: error }));
-				repository = storage.repository('test-type');
+				repository = storage.define('test-type');
 			});
 			describe('When set() is called on the interface', function () {
 				var callbackSpy;
@@ -222,4 +256,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../lib/storage'), require('jasmine-node')));
+}(require('lodash'), require('../../lib/storage'), require('jasmine-node')));
