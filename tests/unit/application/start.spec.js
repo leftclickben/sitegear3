@@ -11,7 +11,7 @@
 	require('../setupTests');
 
 	sitegear3.ready(function () {
-		describe('Sitegear3 application lifecycle: start()', function () {
+		describe('Application lifecycle: start()', function () {
 			var app,
 				mockServer = require('../_mock/server');
 			beforeEach(function () {

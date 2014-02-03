@@ -7,5 +7,5 @@
 
 (function () {
 	"use strict";
-	module.exports = require('./lib/sitegear3.js');
+	module.exports = require('./lib/application.js');
 }());

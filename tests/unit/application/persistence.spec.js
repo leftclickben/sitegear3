@@ -11,7 +11,7 @@
 	require('../setupTests');
 
 	sitegear3.ready(function () {
-		describe('Sitegear3 application lifecycle: persistence()', function () {
+		describe('Application lifecycle: persistence()', function () {
 			var app;
 			beforeEach(function () {
 				app = sitegear3().initialise(require('../settings.json'));

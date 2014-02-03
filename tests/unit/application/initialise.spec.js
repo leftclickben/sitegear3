@@ -11,7 +11,7 @@
 	require('../setupTests');
 
 	sitegear3.ready(function () {
-		describe('Sitegear3 application lifecycle: initialise()', function () {
+		describe('Application lifecycle: initialise()', function () {
 			var app;
 			describe('With no parameters', function () {
 				beforeEach(function () {
