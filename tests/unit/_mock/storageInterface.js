@@ -1,4 +1,4 @@
-/*jslint node: true, nomen: true, white: true, unparam: true*/
+/*jslint node: true, nomen: true, white: true, unparam: true, todo: true*/
 /*!
  * Sitegear3
  * Copyright(c) 2014 Ben New, Sitegear.org
@@ -8,8 +8,9 @@
 (function () {
 	"use strict";
 
+	// The mock caches repositories as app.storage.repository('blah') is called in the module code and in the test.
+	// TODO This doesn't smell right FIXME
 	var repositories = {};
-
 	module.exports = function () {
 		return {
 			repository: function (type) {
