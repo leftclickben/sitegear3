@@ -130,4 +130,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../index'), require('../_mock/storageInterface')));
+}(require('lodash'), require('../../../index'), require('../_mock/storage')));

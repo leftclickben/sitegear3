@@ -17,7 +17,7 @@
 			get: function (key) {
 				return this.settings[key];
 			},
-			storage: require('./storageInterface')()
+			storage: require('./storage')()
 		};
 	};
 }(require('lodash'), require('../../../lib/utils')));
