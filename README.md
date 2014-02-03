@@ -27,6 +27,8 @@ Sitegear3 is agnostic to persistence layers.  You can store your data directly i
 
 Data is accessed through a standard API, and the engine takes care of knowing which storage driver is being used, as well as providing some standardised functionality such as event emission.
 
+Repositories are key-value document / object stores created by modules to store a specific type of data.  A JSON schema is (optionally) specified for the objects stored in the repository.
+
 ## Middleware
 
 Some middleware is provided by Sitegear3 and is recommended for it to operate correctly.  See the demo site for details (http://github.com/sitegear3/sitegear3-demo)
