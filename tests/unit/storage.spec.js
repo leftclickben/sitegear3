@@ -48,6 +48,57 @@
 				}
 			});
 		});
+		describe('When validator is not generating errors', function () {
+			var storage, driver, validator, repository, returnValue;
+			beforeEach(function () {
+				driver = require('./_mock/storageDriver');
+				storage = storageInterface(driver());
+				validator = require('./_mock/validator')();
+				repository = storage.define('test-type', validator);
+			});
+			describe('When validate() is called', function () {
+				var callbackSpy;
+				beforeEach(function (done) {
+					callbackSpy = jasmine.createSpy('callback spy').andCallFake(function () {
+						done();
+					});
+					returnValue = repository.validate({ some: 'data' }, callbackSpy);
+				});
+				it('Calls the callback with no error', function () {
+					expect(callbackSpy).toHaveBeenCalledWith();
+					expect(callbackSpy.callCount).toBe(1);
+				});
+				it('Returns the repository instance for chaining', function () {
+					expect(returnValue).toBe(repository);
+				});
+			});
+		});
+		describe('When validator is generating errors', function () {
+			var storage, driver, validator, repository, error, returnValue;
+			beforeEach(function () {
+				driver = require('./_mock/storageDriver');
+				storage = storageInterface(driver());
+				error = new Error('This is the error');
+				validator = require('./_mock/validator')(error);
+				repository = storage.define('test-type', validator);
+			});
+			describe('When validate() is called', function () {
+				var callbackSpy;
+				beforeEach(function (done) {
+					callbackSpy = jasmine.createSpy('callback spy').andCallFake(function () {
+						done();
+					});
+					returnValue = repository.validate({ some: 'data' }, callbackSpy);
+				});
+				it('Calls the callback with error', function () {
+					expect(callbackSpy).toHaveBeenCalledWith(error);
+					expect(callbackSpy.callCount).toBe(1);
+				});
+				it('Returns the repository instance for chaining', function () {
+					expect(returnValue).toBe(repository);
+				});
+			});
+		});
 		describe('When driver is not generating errors', function () {
 			var storage, driver, repository, returnValue;
 			beforeEach(function () {
