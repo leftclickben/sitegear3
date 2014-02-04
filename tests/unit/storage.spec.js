@@ -57,9 +57,11 @@
 			});
 			describe('When set() is called on the interface', function () {
 				var callbackSpy;
-				beforeEach(function () {
+				beforeEach(function (done) {
 					spyOn(repository, 'emit');
-					callbackSpy = jasmine.createSpy('set callback');
+					callbackSpy = jasmine.createSpy('set callback').andCallFake(function () {
+						done();
+					});
 					returnValue = repository.set('test-key', 'this is the value', callbackSpy);
 				});
 				it('Calls set() on the driver', function () {
@@ -76,9 +78,11 @@
 			});
 			describe('When get() is called on the interface', function () {
 				var callbackSpy;
-				beforeEach(function () {
+				beforeEach(function (done) {
 					spyOn(repository, 'emit');
-					callbackSpy = jasmine.createSpy('get callback');
+					callbackSpy = jasmine.createSpy('get callback').andCallFake(function () {
+						done();
+					});
 					returnValue = repository.get('test-key', callbackSpy);
 				});
 				it('Calls get() on the driver', function () {
@@ -95,9 +99,11 @@
 			});
 			describe('When keys() is called on the interface', function () {
 				var callbackSpy;
-				beforeEach(function () {
+				beforeEach(function (done) {
 					spyOn(repository, 'emit');
-					callbackSpy = jasmine.createSpy('keys callback');
+					callbackSpy = jasmine.createSpy('keys callback').andCallFake(function () {
+						done();
+					});
 					returnValue = repository.keys(callbackSpy);
 				});
 				it('Calls keys() on the driver', function () {
@@ -114,9 +120,11 @@
 			});
 			describe('When all() is called on the interface', function () {
 				var callbackSpy;
-				beforeEach(function () {
+				beforeEach(function (done) {
 					spyOn(repository, 'emit');
-					callbackSpy = jasmine.createSpy('all callback');
+					callbackSpy = jasmine.createSpy('all callback').andCallFake(function () {
+						done();
+					});
 					returnValue = repository.all(callbackSpy);
 				});
 				it('Calls all() on the driver', function () {
@@ -133,9 +141,11 @@
 			});
 			describe('When remove() is called on the interface', function () {
 				var callbackSpy;
-				beforeEach(function () {
+				beforeEach(function (done) {
 					spyOn(repository, 'emit');
-					callbackSpy = jasmine.createSpy('remove callback');
+					callbackSpy = jasmine.createSpy('remove callback').andCallFake(function () {
+						done();
+					});
 					returnValue = repository.remove('test-key', callbackSpy);
 				});
 				it('Calls remove() on the driver', function () {
@@ -161,9 +171,11 @@
 			});
 			describe('When set() is called on the interface', function () {
 				var callbackSpy;
-				beforeEach(function () {
+				beforeEach(function (done) {
 					spyOn(repository, 'emit');
-					callbackSpy = jasmine.createSpy('set callback');
+					callbackSpy = jasmine.createSpy('set callback').andCallFake(function () {
+						done();
+					});
 					returnValue = repository.set('test-key', 'this is the value', callbackSpy);
 				});
 				it('Calls set() on the driver, passing an error', function () {
@@ -180,9 +192,11 @@
 			});
 			describe('When get() is called on the interface', function () {
 				var callbackSpy;
-				beforeEach(function () {
+				beforeEach(function (done) {
 					spyOn(repository, 'emit');
-					callbackSpy = jasmine.createSpy('get callback');
+					callbackSpy = jasmine.createSpy('get callback').andCallFake(function () {
+						done();
+					});
 					returnValue = repository.get('test-key', callbackSpy);
 				});
 				it('Calls get() on the driver, passing an error', function () {
@@ -199,9 +213,11 @@
 			});
 			describe('When keys() is called on the interface', function () {
 				var callbackSpy;
-				beforeEach(function () {
+				beforeEach(function (done) {
 					spyOn(repository, 'emit');
-					callbackSpy = jasmine.createSpy('keys callback');
+					callbackSpy = jasmine.createSpy('keys callback').andCallFake(function () {
+						done();
+					});
 					returnValue = repository.keys(callbackSpy);
 				});
 				it('Calls keys() on the driver', function () {
@@ -218,9 +234,11 @@
 			});
 			describe('When all() is called on the interface', function () {
 				var callbackSpy;
-				beforeEach(function () {
+				beforeEach(function (done) {
 					spyOn(repository, 'emit');
-					callbackSpy = jasmine.createSpy('all callback');
+					callbackSpy = jasmine.createSpy('all callback').andCallFake(function () {
+						done();
+					});
 					returnValue = repository.all(callbackSpy);
 				});
 				it('Calls all() on the driver', function () {
@@ -237,9 +255,11 @@
 			});
 			describe('When remove() is called on the interface', function () {
 				var callbackSpy;
-				beforeEach(function () {
+				beforeEach(function (done) {
 					spyOn(repository, 'emit');
-					callbackSpy = jasmine.createSpy('remove callback');
+					callbackSpy = jasmine.createSpy('remove callback').andCallFake(function () {
+						done();
+					});
 					returnValue = repository.remove('test-key', callbackSpy);
 				});
 				it('Calls remove() on the driver, passing an error', function () {
