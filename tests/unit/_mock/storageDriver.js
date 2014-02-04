@@ -8,26 +8,26 @@
 (function () {
 	"use strict";
 
-	module.exports = function () {
+	module.exports = function (options) {
 		return {
 			set: function (type, key, value, callback) {
-				callback();
+				callback(options.error);
 			},
 
 			get: function (type, key, callback) {
-				callback(undefined, 'this is the value');
+				callback(options.error, options.value);
 			},
 
 			keys: function (type, callback) {
-				callback(undefined, [ 'key1', 'key2' ]);
+				callback(options.error, options.keys);
 			},
 
 			all: function (type, callback) {
-				callback(undefined, { key1: 'This is key1', key2: 'This is key2' });
+				callback(options.error, options.all);
 			},
 
 			remove: function (type, key, callback) {
-				callback();
+				callback(options.error);
 			}
 		};
 	};
