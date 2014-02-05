@@ -18,7 +18,11 @@
 			var storage, driver, repository, repository2;
 			beforeEach(function () {
 				driver = require('./_mock/storageDriver');
-				storage = storageInterface(driver());
+				storage = storageInterface(driver({
+					value: 'this is the value',
+					keys: [ 'key1', 'key2'],
+					all: { key1: 'This is key1', key2: 'This is key2' }
+				}));
 				repository = storage.define('test-type');
 				repository2 = storage.define('test-type-2');
 			});
@@ -48,11 +52,74 @@
 				}
 			});
 		});
+		describe('When validator is not generating errors', function () {
+			var storage, driver, validator, repository, returnValue;
+			beforeEach(function () {
+				driver = require('./_mock/storageDriver');
+				storage = storageInterface(driver({
+					value: 'this is the value',
+					keys: [ 'key1', 'key2'],
+					all: { key1: 'This is key1', key2: 'This is key2' }
+				}));
+				validator = require('./_mock/validator')();
+				repository = storage.define('test-type', validator);
+			});
+			describe('When validate() is called', function () {
+				var callbackSpy;
+				beforeEach(function (done) {
+					callbackSpy = jasmine.createSpy('callback spy').andCallFake(function () {
+						done();
+					});
+					returnValue = repository.validate({ some: 'data' }, callbackSpy);
+				});
+				it('Calls the callback with no error', function () {
+					expect(callbackSpy).toHaveBeenCalledWith();
+					expect(callbackSpy.callCount).toBe(1);
+				});
+				it('Returns the repository instance for chaining', function () {
+					expect(returnValue).toBe(repository);
+				});
+			});
+		});
+		describe('When validator is generating errors', function () {
+			var storage, driver, validator, repository, error, returnValue;
+			beforeEach(function () {
+				driver = require('./_mock/storageDriver');
+				storage = storageInterface(driver({
+					value: 'this is the value',
+					keys: [ 'key1', 'key2'],
+					all: { key1: 'This is key1', key2: 'This is key2' }
+				}));
+				error = new Error('This is the error');
+				validator = require('./_mock/validator')(error);
+				repository = storage.define('test-type', validator);
+			});
+			describe('When validate() is called', function () {
+				var callbackSpy;
+				beforeEach(function (done) {
+					callbackSpy = jasmine.createSpy('callback spy').andCallFake(function () {
+						done();
+					});
+					returnValue = repository.validate({ some: 'data' }, callbackSpy);
+				});
+				it('Calls the callback with error', function () {
+					expect(callbackSpy).toHaveBeenCalledWith(error);
+					expect(callbackSpy.callCount).toBe(1);
+				});
+				it('Returns the repository instance for chaining', function () {
+					expect(returnValue).toBe(repository);
+				});
+			});
+		});
 		describe('When driver is not generating errors', function () {
 			var storage, driver, repository, returnValue;
 			beforeEach(function () {
 				driver = require('./_mock/storageDriver');
-				storage = storageInterface(driver());
+				storage = storageInterface(driver({
+					value: 'this is the value',
+					keys: [ 'key1', 'key2'],
+					all: { key1: 'This is key1', key2: 'This is key2' }
+				}));
 				repository = storage.define('test-type');
 			});
 			describe('When set() is called on the interface', function () {
@@ -165,7 +232,7 @@
 			var storage, driver, repository, returnValue,
 				error = new Error('something went wrong');
 			beforeEach(function () {
-				driver = require('./_mock/storageDriverWithErrors');
+				driver = require('./_mock/storageDriver');
 				storage = storageInterface(driver({ error: error }));
 				repository = storage.define('test-type');
 			});
