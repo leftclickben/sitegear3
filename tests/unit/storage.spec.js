@@ -169,6 +169,27 @@
 						expect(returnValue).toBe(repository);
 					});
 				});
+				describe('When clear() is called on the interface', function () {
+					var callbackSpy;
+					beforeEach(function (done) {
+						spyOn(repository, 'emit');
+						callbackSpy = jasmine.createSpy('clear callback').andCallFake(function () {
+							done();
+						});
+						returnValue = repository.clear(callbackSpy);
+					});
+					it('Calls clear() on the driver', function () {
+						expect(callbackSpy).toHaveBeenCalledWith(undefined);
+						expect(callbackSpy.callCount).toBe(1);
+					});
+					it('Emits a "clear" event', function () {
+						expect(repository.emit).toHaveBeenCalledWith('clear', 'test-type');
+						expect(repository.emit.callCount).toBe(1);
+					});
+					it('Returns the repository instance for chaining', function () {
+						expect(returnValue).toBe(repository);
+					});
+				});
 			});
 			describe('When driver is generating errors', function () {
 				var storage, driver, repository, returnValue,
@@ -272,6 +293,27 @@
 						returnValue = repository.remove('test-key', callbackSpy);
 					});
 					it('Calls remove() on the driver, passing an error', function () {
+						expect(callbackSpy).toHaveBeenCalledWith(error);
+						expect(callbackSpy.callCount).toBe(1);
+					});
+					it('Emits an "error" event', function () {
+						expect(repository.emit).toHaveBeenCalledWith('error', error);
+						expect(repository.emit.callCount).toBe(1);
+					});
+					it('Returns the repository instance for chaining', function () {
+						expect(returnValue).toBe(repository);
+					});
+				});
+				describe('When clear() is called on the interface', function () {
+					var callbackSpy;
+					beforeEach(function (done) {
+						spyOn(repository, 'emit');
+						callbackSpy = jasmine.createSpy('clear callback').andCallFake(function () {
+							done();
+						});
+						returnValue = repository.remove('test-key', callbackSpy);
+					});
+					it('Calls clear() on the driver, passing an error', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(error);
 						expect(callbackSpy.callCount).toBe(1);
 					});
