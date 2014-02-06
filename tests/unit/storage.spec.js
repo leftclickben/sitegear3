@@ -54,26 +54,32 @@
 		});
 		describe('Uses drivers correctly', function () {
 			describe('When driver is not generating errors', function () {
-				var storage, driver, repository, returnValue;
+				var storage, mockDriver, driver, repository, returnValue;
 				beforeEach(function () {
-					driver = require('./_mock/storageDriver');
-					storage = storageInterface(driver({
+					mockDriver = require('./_mock/storageDriver');
+					driver = mockDriver({
 						value: { value: 'this is the value' },
 						keys: [ 'key1', 'key2'],
 						all: { key1: 'This is key1', key2: 'This is key2' }
-					}));
+					});
+					storage = storageInterface(driver);
 					repository = storage.define('test-type');
 				});
 				describe('When set() is called on the interface', function () {
 					var callbackSpy;
 					beforeEach(function (done) {
 						spyOn(repository, 'emit');
+						spyOn(driver, 'set').andCallThrough();
 						callbackSpy = jasmine.createSpy('set callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repository.set('test-key', { value: 'this is the new value' }, callbackSpy);
 					});
 					it('Calls set() on the driver', function () {
+						expect(driver.set).toHaveBeenCalled();
+						expect(driver.set.callCount).toBe(1);
+					});
+					it('Calls the callback', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(undefined);
 						expect(callbackSpy.callCount).toBe(1);
 					});
@@ -89,12 +95,17 @@
 					var callbackSpy;
 					beforeEach(function (done) {
 						spyOn(repository, 'emit');
+						spyOn(driver, 'get').andCallThrough();
 						callbackSpy = jasmine.createSpy('get callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repository.get('test-key', callbackSpy);
 					});
 					it('Calls get() on the driver', function () {
+						expect(driver.get).toHaveBeenCalled();
+						expect(driver.get.callCount).toBe(1);
+					});
+					it('Calls the callback', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(undefined, { value: 'this is the value' });
 						expect(callbackSpy.callCount).toBe(1);
 					});
@@ -110,12 +121,17 @@
 					var callbackSpy;
 					beforeEach(function (done) {
 						spyOn(repository, 'emit');
+						spyOn(driver, 'keys').andCallThrough();
 						callbackSpy = jasmine.createSpy('keys callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repository.keys(callbackSpy);
 					});
 					it('Calls keys() on the driver', function () {
+						expect(driver.keys).toHaveBeenCalled();
+						expect(driver.keys.callCount).toBe(1);
+					});
+					it('Calls the callback', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(undefined, [ 'key1', 'key2' ]);
 						expect(callbackSpy.callCount).toBe(1);
 					});
@@ -131,12 +147,17 @@
 					var callbackSpy;
 					beforeEach(function (done) {
 						spyOn(repository, 'emit');
+						spyOn(driver, 'all').andCallThrough();
 						callbackSpy = jasmine.createSpy('all callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repository.all(callbackSpy);
 					});
 					it('Calls all() on the driver', function () {
+						expect(driver.all).toHaveBeenCalled();
+						expect(driver.all.callCount).toBe(1);
+					});
+					it('Calls the callback', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(undefined, { key1: 'This is key1', key2: 'This is key2' });
 						expect(callbackSpy.callCount).toBe(1);
 					});
@@ -152,12 +173,17 @@
 					var callbackSpy;
 					beforeEach(function (done) {
 						spyOn(repository, 'emit');
+						spyOn(driver, 'remove').andCallThrough();
 						callbackSpy = jasmine.createSpy('remove callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repository.remove('test-key', callbackSpy);
 					});
 					it('Calls remove() on the driver', function () {
+						expect(driver.remove).toHaveBeenCalled();
+						expect(driver.remove.callCount).toBe(1);
+					});
+					it('Calls the callback', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(undefined);
 						expect(callbackSpy.callCount).toBe(1);
 					});
@@ -169,25 +195,57 @@
 						expect(returnValue).toBe(repository);
 					});
 				});
+				describe('When clear() is called on the interface', function () {
+					var callbackSpy;
+					beforeEach(function (done) {
+						spyOn(repository, 'emit');
+						spyOn(driver, 'clear').andCallThrough();
+						callbackSpy = jasmine.createSpy('clear callback').andCallFake(function () {
+							done();
+						});
+						returnValue = repository.clear(callbackSpy);
+					});
+					it('Calls clear() on the driver', function () {
+						expect(driver.clear).toHaveBeenCalled();
+						expect(driver.clear.callCount).toBe(1);
+					});
+					it('Calls the callback', function () {
+						expect(callbackSpy).toHaveBeenCalledWith(undefined);
+						expect(callbackSpy.callCount).toBe(1);
+					});
+					it('Emits a "clear" event', function () {
+						expect(repository.emit).toHaveBeenCalledWith('clear', 'test-type');
+						expect(repository.emit.callCount).toBe(1);
+					});
+					it('Returns the repository instance for chaining', function () {
+						expect(returnValue).toBe(repository);
+					});
+				});
 			});
 			describe('When driver is generating errors', function () {
-				var storage, driver, repository, returnValue,
+				var storage, mockDriver, driver, repository, returnValue,
 					error = new Error('something went wrong');
 				beforeEach(function () {
-					driver = require('./_mock/storageDriver');
-					storage = storageInterface(driver({ error: error }));
+					mockDriver = require('./_mock/storageDriver');
+					driver = mockDriver({ error: error });
+					storage = storageInterface(driver);
 					repository = storage.define('test-type');
 				});
 				describe('When set() is called on the interface', function () {
 					var callbackSpy;
 					beforeEach(function (done) {
 						spyOn(repository, 'emit');
+						spyOn(driver, 'set').andCallThrough();
 						callbackSpy = jasmine.createSpy('set callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repository.set('test-key', { value: 'this is the new value' }, callbackSpy);
 					});
 					it('Calls set() on the driver, passing an error', function () {
+						expect(driver.set).toHaveBeenCalled();
+						expect(driver.set.callCount).toBe(1);
+					});
+					it('Calls the callback, passing an error', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(error);
 						expect(callbackSpy.callCount).toBe(1);
 					});
@@ -203,12 +261,17 @@
 					var callbackSpy;
 					beforeEach(function (done) {
 						spyOn(repository, 'emit');
+						spyOn(driver, 'get').andCallThrough();
 						callbackSpy = jasmine.createSpy('get callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repository.get('test-key', callbackSpy);
 					});
 					it('Calls get() on the driver, passing an error', function () {
+						expect(driver.get).toHaveBeenCalled();
+						expect(driver.get.callCount).toBe(1);
+					});
+					it('Calls the callback, passing an error', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(error, undefined);
 						expect(callbackSpy.callCount).toBe(1);
 					});
@@ -224,12 +287,17 @@
 					var callbackSpy;
 					beforeEach(function (done) {
 						spyOn(repository, 'emit');
+						spyOn(driver, 'keys').andCallThrough();
 						callbackSpy = jasmine.createSpy('keys callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repository.keys(callbackSpy);
 					});
 					it('Calls keys() on the driver', function () {
+						expect(driver.keys).toHaveBeenCalled();
+						expect(driver.keys.callCount).toBe(1);
+					});
+					it('Calls the callback, passing an error', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(error, undefined);
 						expect(callbackSpy.callCount).toBe(1);
 					});
@@ -245,12 +313,17 @@
 					var callbackSpy;
 					beforeEach(function (done) {
 						spyOn(repository, 'emit');
+						spyOn(driver, 'all').andCallThrough();
 						callbackSpy = jasmine.createSpy('all callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repository.all(callbackSpy);
 					});
 					it('Calls all() on the driver', function () {
+						expect(driver.all).toHaveBeenCalled();
+						expect(driver.all.callCount).toBe(1);
+					});
+					it('Calls the callback, passing an error', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(error, undefined);
 						expect(callbackSpy.callCount).toBe(1);
 					});
@@ -266,12 +339,43 @@
 					var callbackSpy;
 					beforeEach(function (done) {
 						spyOn(repository, 'emit');
+						spyOn(driver, 'remove').andCallThrough();
 						callbackSpy = jasmine.createSpy('remove callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repository.remove('test-key', callbackSpy);
 					});
 					it('Calls remove() on the driver, passing an error', function () {
+						expect(driver.remove).toHaveBeenCalled();
+						expect(driver.remove.callCount).toBe(1);
+					});
+					it('Calls the callback, passing an error', function () {
+						expect(callbackSpy).toHaveBeenCalledWith(error);
+						expect(callbackSpy.callCount).toBe(1);
+					});
+					it('Emits an "error" event', function () {
+						expect(repository.emit).toHaveBeenCalledWith('error', error);
+						expect(repository.emit.callCount).toBe(1);
+					});
+					it('Returns the repository instance for chaining', function () {
+						expect(returnValue).toBe(repository);
+					});
+				});
+				describe('When clear() is called on the interface', function () {
+					var callbackSpy;
+					beforeEach(function (done) {
+						spyOn(repository, 'emit');
+						spyOn(driver, 'clear').andCallThrough();
+						callbackSpy = jasmine.createSpy('clear callback').andCallFake(function () {
+							done();
+						});
+						returnValue = repository.clear(callbackSpy);
+					});
+					it('Calls clear() on the driver, passing an error', function () {
+						expect(driver.clear).toHaveBeenCalled();
+						expect(driver.clear.callCount).toBe(1);
+					});
+					it('Calls the callback, passing an error', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(error);
 						expect(callbackSpy.callCount).toBe(1);
 					});

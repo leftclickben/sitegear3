@@ -28,6 +28,10 @@
 
 			remove: function (type, key, callback) {
 				callback(options.error);
+			},
+
+			clear: function (type, callback) {
+				callback(options.error);
 			}
 		};
 	};
