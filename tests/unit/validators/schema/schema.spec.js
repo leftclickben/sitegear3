@@ -1,4 +1,4 @@
-/*jslint node: true, nomen: true, white: true, unparam: true*/
+/*jslint node: true, nomen: true, white: true, unparam: true, plusplus: true, stupid: true*/
 /*globals describe, beforeEach, afterEach, it, expect, spyOn*/
 /*!
  * Sitegear3
@@ -11,78 +11,58 @@
 	require('../../setupTests');
 
 	describe('Validator: schemaValidator', function () {
-		var inputRoot = path.join(__dirname, '_input');
 		it('Exports a function', function () {
 			expect(_.isFunction(schemaValidator)).toBeTruthy();
 		});
-		it('Returns a function', function () {
-			var validator = schemaValidator();
-			expect(_.isFunction(validator)).toBeTruthy();
+		it('Returns a function when invoked', function () {
+			expect(_.isFunction(schemaValidator())).toBeTruthy();
 		});
-		_.each([ 'example1' ], function (group) {
-			var groupRoot = path.join(inputRoot, group),
-				schemaFile = path.join(groupRoot,  group + '.schema.json');
-			describe('When invoked with schema definition "' + group + '"', function () {
-				var validator;
+		describe('When invoked with various schema and data', function () {
+			var inputRoot = path.join(__dirname, '_input'),
+				errorMessageRegex = /Received \d+ errors? from JSON schema validator: \[\[ [a-z0-9"',.\/\-_\+<>\$\s]* \]\](?:; \[\[ [a-z0-9"',.\/\-_\+<>\$] \]\])*/i;
+			_.each(fs.readdirSync(inputRoot), function (dirname) {
+				var callbackSpy, validator,
+					schemaFilename = path.join(inputRoot, dirname, dirname + '.schema.json'),
+					validDataRoot = path.join(inputRoot, dirname, 'valid-data'),
+					invalidDataRoot = path.join(inputRoot, dirname, 'invalid-data');
 				beforeEach(function () {
-					validator = schemaValidator(require(schemaFile));
+					validator = schemaValidator(require(schemaFilename));
 				});
-				describe('When invoked on valid data', function () {
-					var validRoot, validFilenames;
-					beforeEach(function (done) {
-						validRoot = path.join(groupRoot, 'valid-data');
-						fs.readdir(validRoot, function (error, valid) {
-							validFilenames = valid;
-							done();
+				describe('When data set "' + dirname + '" is invoked with valid data', function () {
+					_.each(fs.readdirSync(validDataRoot), function (filename) {
+						describe('When invoked with "' + filename + '"', function () {
+							beforeEach(function (done) {
+								callbackSpy = jasmine.createSpy().andCallFake(function () {
+									done();
+								});
+								validator(require(path.join(validDataRoot, filename)), callbackSpy);
+							});
+							it('Calls the callback without any errors', function () {
+								expect(callbackSpy).toHaveBeenCalledWith();
+								expect(callbackSpy.callCount).toBe(1);
+							});
 						});
 					});
-					_.each(validFilenames, function (filename) {
-						if (/\.json$/.test(filename)) {
-							describe('Filename "' + filename + '"', function () {
-								var callbackSpy;
-								beforeEach(function (done) {
-									callbackSpy = jasmine.createSpy('callback spy');
-									validator(require(path.join(validRoot, filename)), function (errors) {
-										callbackSpy(errors);
-										done();
-									});
-								});
-								it('Calls the callback without errors [' + filename + ']', function () {
-									expect(callbackSpy).toHaveBeenCalledWith(undefined);
-									expect(callbackSpy.callCount).toBe(1);
-								});
-							});
-						}
-					});
 				});
-				describe('When invoked on invalid data', function () {
-					var invalidRoot, invalidFilenames;
-					beforeEach(function (done) {
-						invalidRoot = path.join(groupRoot, 'invalid-data');
-						fs.readdir(invalidRoot, function (error, invalid) {
-							invalidFilenames = invalid;
-							done();
-						});
-					});
-					_.each(invalidFilenames, function (filename) {
-						if (/\.json$/.test(filename)) {
-							describe('Filename "' + filename + '"', function () {
-								var callbackSpy;
-								beforeEach(function (done) {
-									callbackSpy = jasmine.createSpy('callback spy');
-									validator(require(path.join(invalidRoot, filename)), function (errors) {
-										callbackSpy(errors);
-										done();
-									});
+				describe('When data set "' + dirname + '" is invoked with invalid data', function () {
+					_.each(fs.readdirSync(invalidDataRoot), function (filename) {
+						describe('When invoked with "' + filename + '"', function () {
+							beforeEach(function (done) {
+								callbackSpy = jasmine.createSpy().andCallFake(function () {
+									done();
 								});
-								it('Calls the callback with an error [' + filename + ']', function () {
-									expect(callbackSpy).toHaveBeenCalled();
-									expect(callbackSpy.callCount).toBe(1);
-									expect(callbackSpy.mostRecentCall.args.length).toBe(1);
-									expect(callbackSpy.mostRecentCall.args[0] instanceof Error).toBeTruthy();
-								});
+								console.log(path.join(invalidDataRoot, filename));
+								validator(require(path.join(invalidDataRoot, filename)), callbackSpy);
 							});
-						}
+							it('Calls the callback with error', function () {
+								expect(callbackSpy).toHaveBeenCalled();
+								expect(callbackSpy.callCount).toBe(1);
+								expect(callbackSpy.mostRecentCall.args.length).toBe(1);
+								expect(callbackSpy.mostRecentCall.args[0] instanceof Error).toBeTruthy();
+								console.log(callbackSpy.mostRecentCall.args[0].message);
+								expect(errorMessageRegex.test(callbackSpy.mostRecentCall.args[0].message)).toBeTruthy();
+							});
+						});
 					});
 				});
 			});
