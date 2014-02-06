@@ -53,7 +53,7 @@
 			});
 		});
 		describe('Uses drivers correctly', function () {
-			describe('When driver is not generating errors', function () {
+			describe('When driver is operating normally', function () {
 				var storage, mockDriver, driver, repository, returnValue;
 				beforeEach(function () {
 					mockDriver = require('./_mock/storageDriver');
