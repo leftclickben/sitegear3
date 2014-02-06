@@ -11,18 +11,18 @@
 	require('./setupTests');
 
 	describe('Storage interface', function () {
+		var storage, callbackSpy, driver, repository, returnValue,
+			newValue = { value: 'this is the new value' },
+			driverConfig = { value: { value: 'this is the value' }, keys: [ 'key1', 'key2'], all: { key1: 'This is key1', key2: 'This is key2' } },
+			error = new Error('something went wrong');
 		it('Exports a function', function () {
 			expect(_.isFunction(storageInterface)).toBeTruthy();
 		});
 		describe('Caches repositories', function () {
-			var storage, driver, repository, repository2;
+			var repository2;
 			beforeEach(function () {
 				driver = require('./_mock/storageDriver');
-				storage = storageInterface(driver({
-					value: { value: 'this is the value' },
-					keys: [ 'key1', 'key2'],
-					all: { key1: 'This is key1', key2: 'This is key2' }
-				}));
+				storage = storageInterface(driver(driverConfig));
 				repository = storage.define('test-type');
 				repository2 = storage.define('test-type-2');
 			});
@@ -39,41 +39,45 @@
 				try {
 					storage.repository('does-not-exist');
 					expect('This code should not execute').toBeFalsy();
-				} catch (error) {
-					expect(error.toString()).toBe('Error: Attempting to retrieve unregistered repository "does-not-exist"');
+				} catch (e) {
+					expect(e.toString()).toBe('Error: Attempting to retrieve unregistered repository "does-not-exist"');
 				}
 			});
 			it('Throws an error trying to create the same repository twice', function () {
 				try {
 					storage.define('test-type');
 					expect('This code should not execute').toBeFalsy();
-				} catch (error) {
-					expect(error.toString()).toBe('Error: Repository "test-type" already exists.');
+				} catch (e) {
+					expect(e.toString()).toBe('Error: Repository "test-type" already exists.');
 				}
 			});
 		});
 		describe('Uses drivers correctly', function () {
+			var mockDriver;
 			describe('When driver is operating normally', function () {
-				var storage, mockDriver, driver, repository, returnValue;
 				beforeEach(function () {
 					mockDriver = require('./_mock/storageDriver');
-					driver = mockDriver({
-						value: { value: 'this is the value' },
-						keys: [ 'key1', 'key2'],
-						all: { key1: 'This is key1', key2: 'This is key2' }
-					});
+					driver = mockDriver(driverConfig);
 					storage = storageInterface(driver);
 					repository = storage.define('test-type');
 				});
 				describe('When set() is called on the interface', function () {
-					var callbackSpy;
 					beforeEach(function (done) {
+						spyOn(repository, 'validate').andCallThrough();
 						spyOn(repository, 'emit');
 						spyOn(driver, 'set').andCallThrough();
 						callbackSpy = jasmine.createSpy('set callback').andCallFake(function () {
 							done();
 						});
-						returnValue = repository.set('test-key', { value: 'this is the new value' }, callbackSpy);
+						returnValue = repository.set('test-key', newValue, callbackSpy);
+					});
+					it('Calls validate() on the repository', function () {
+						expect(repository.validate).toHaveBeenCalled();
+						expect(repository.validate.callCount).toBe(1);
+						expect(repository.validate.mostRecentCall.args.length).toBe(2);
+						expect(_.isPlainObject(repository.validate.mostRecentCall.args[0])).toBeTruthy();
+						expect(repository.validate.mostRecentCall.args[0].value).toBe('this is the new value');
+						expect(_.isFunction(repository.validate.mostRecentCall.args[1])).toBeTruthy();
 					});
 					it('Calls set() on the driver', function () {
 						expect(driver.set).toHaveBeenCalled();
@@ -84,7 +88,7 @@
 						expect(callbackSpy.callCount).toBe(1);
 					});
 					it('Emits a "set" event', function () {
-						expect(repository.emit).toHaveBeenCalledWith('set', 'test-type', 'test-key', { value: 'this is the new value' });
+						expect(repository.emit).toHaveBeenCalledWith('set', 'test-type', 'test-key', newValue);
 						expect(repository.emit.callCount).toBe(1);
 					});
 					it('Returns the repository instance for chaining', function () {
@@ -92,7 +96,6 @@
 					});
 				});
 				describe('When get() is called on the interface', function () {
-					var callbackSpy;
 					beforeEach(function (done) {
 						spyOn(repository, 'emit');
 						spyOn(driver, 'get').andCallThrough();
@@ -118,7 +121,6 @@
 					});
 				});
 				describe('When keys() is called on the interface', function () {
-					var callbackSpy;
 					beforeEach(function (done) {
 						spyOn(repository, 'emit');
 						spyOn(driver, 'keys').andCallThrough();
@@ -144,7 +146,6 @@
 					});
 				});
 				describe('When all() is called on the interface', function () {
-					var callbackSpy;
 					beforeEach(function (done) {
 						spyOn(repository, 'emit');
 						spyOn(driver, 'all').andCallThrough();
@@ -170,7 +171,6 @@
 					});
 				});
 				describe('When remove() is called on the interface', function () {
-					var callbackSpy;
 					beforeEach(function (done) {
 						spyOn(repository, 'emit');
 						spyOn(driver, 'remove').andCallThrough();
@@ -196,7 +196,6 @@
 					});
 				});
 				describe('When clear() is called on the interface', function () {
-					var callbackSpy;
 					beforeEach(function (done) {
 						spyOn(repository, 'emit');
 						spyOn(driver, 'clear').andCallThrough();
@@ -223,8 +222,6 @@
 				});
 			});
 			describe('When driver is generating errors', function () {
-				var storage, mockDriver, driver, repository, returnValue,
-					error = new Error('something went wrong');
 				beforeEach(function () {
 					mockDriver = require('./_mock/storageDriver');
 					driver = mockDriver({ error: error });
@@ -232,14 +229,22 @@
 					repository = storage.define('test-type');
 				});
 				describe('When set() is called on the interface', function () {
-					var callbackSpy;
 					beforeEach(function (done) {
+						spyOn(repository, 'validate').andCallThrough();
 						spyOn(repository, 'emit');
 						spyOn(driver, 'set').andCallThrough();
 						callbackSpy = jasmine.createSpy('set callback').andCallFake(function () {
 							done();
 						});
-						returnValue = repository.set('test-key', { value: 'this is the new value' }, callbackSpy);
+						returnValue = repository.set('test-key', newValue, callbackSpy);
+					});
+					it('Calls validate() on the repository', function () {
+						expect(repository.validate).toHaveBeenCalled();
+						expect(repository.validate.callCount).toBe(1);
+						expect(repository.validate.mostRecentCall.args.length).toBe(2);
+						expect(_.isPlainObject(repository.validate.mostRecentCall.args[0])).toBeTruthy();
+						expect(repository.validate.mostRecentCall.args[0].value).toBe('this is the new value');
+						expect(_.isFunction(repository.validate.mostRecentCall.args[1])).toBeTruthy();
 					});
 					it('Calls set() on the driver, passing an error', function () {
 						expect(driver.set).toHaveBeenCalled();
@@ -258,7 +263,6 @@
 					});
 				});
 				describe('When get() is called on the interface', function () {
-					var callbackSpy;
 					beforeEach(function (done) {
 						spyOn(repository, 'emit');
 						spyOn(driver, 'get').andCallThrough();
@@ -284,7 +288,6 @@
 					});
 				});
 				describe('When keys() is called on the interface', function () {
-					var callbackSpy;
 					beforeEach(function (done) {
 						spyOn(repository, 'emit');
 						spyOn(driver, 'keys').andCallThrough();
@@ -310,7 +313,6 @@
 					});
 				});
 				describe('When all() is called on the interface', function () {
-					var callbackSpy;
 					beforeEach(function (done) {
 						spyOn(repository, 'emit');
 						spyOn(driver, 'all').andCallThrough();
@@ -336,7 +338,6 @@
 					});
 				});
 				describe('When remove() is called on the interface', function () {
-					var callbackSpy;
 					beforeEach(function (done) {
 						spyOn(repository, 'emit');
 						spyOn(driver, 'remove').andCallThrough();
@@ -362,7 +363,6 @@
 					});
 				});
 				describe('When clear() is called on the interface', function () {
-					var callbackSpy;
 					beforeEach(function (done) {
 						spyOn(repository, 'emit');
 						spyOn(driver, 'clear').andCallThrough();
@@ -390,14 +390,10 @@
 			});
 		});
 		describe('Applies model methods', function () {
-			var storage, driver, repository, entity;
+			var entity;
 			beforeEach(function (done) {
 				driver = require('./_mock/storageDriver');
-				storage = storageInterface(driver({
-					value: { value: 'this is the value' },
-					keys: [ 'key1', 'key2'],
-					all: { key1: 'This is key1', key2: 'This is key2' }
-				}));
+				storage = storageInterface(driver(driverConfig));
 				repository = storage.define('test-type', {
 					foo: function () {
 						return 'bar';
@@ -414,19 +410,13 @@
 			});
 		});
 		describe('Applies validation correctly', function () {
-			var storage, driver, repository, returnValue, error,
-				data = { some: 'data' };
 			describe('When using a single validator', function () {
 				var mockValidator, validator;
 				beforeEach(function () {
 					driver = require('./_mock/storageDriver');
-					storage = storageInterface(driver({
-						value: { value: 'this is the value' },
-						keys: [ 'key1', 'key2'],
-						all: { key1: 'This is key1', key2: 'This is key2' }
-					}));
+					storage = storageInterface(driver(driverConfig));
 				});
-				describe('When validator is not generating errors', function () {
+				describe('When validator is operating normally', function () {
 					beforeEach(function () {
 						mockValidator = require('./_mock/validator')();
 						validator = jasmine.createSpy('mock validator').andCallFake(function (data, callback) {
@@ -435,19 +425,18 @@
 						repository = storage.define('test-type', validator);
 					});
 					describe('When validate() is called', function () {
-						var callbackSpy;
 						beforeEach(function (done) {
 							callbackSpy = jasmine.createSpy('callback spy').andCallFake(function () {
 								done();
 							});
-							returnValue = repository.validate(data, callbackSpy);
+							returnValue = repository.validate(newValue, callbackSpy);
 						});
 						it('Calls the validator', function () {
 							expect(validator).toHaveBeenCalled();
 							expect(validator.callCount).toBe(1);
 							expect(validator.mostRecentCall.args.length).toBe(2);
 							expect(_.isPlainObject(validator.mostRecentCall.args[0])).toBeTruthy();
-							expect(validator.mostRecentCall.args[0].some).toBe('data');
+							expect(validator.mostRecentCall.args[0].value).toBe('this is the new value');
 							expect(_.isFunction(validator.mostRecentCall.args[1])).toBeTruthy();
 						});
 						it('Calls the callback with no error', function () {
@@ -458,10 +447,25 @@
 							expect(returnValue).toBe(repository);
 						});
 					});
+					describe('When set() is called', function () {
+						beforeEach(function (done) {
+							callbackSpy = jasmine.createSpy('callback spy').andCallFake(function () {
+								done();
+							});
+							returnValue = repository.set('test-key', newValue, callbackSpy);
+						});
+						it('Calls the validator', function () {
+							expect(validator).toHaveBeenCalled();
+							expect(validator.callCount).toBe(1);
+							expect(validator.mostRecentCall.args.length).toBe(2);
+							expect(_.isPlainObject(validator.mostRecentCall.args[0])).toBeTruthy();
+							expect(validator.mostRecentCall.args[0].value).toBe('this is the new value');
+							expect(_.isFunction(validator.mostRecentCall.args[1])).toBeTruthy();
+						});
+					});
 				});
 				describe('When validator is generating errors', function () {
 					beforeEach(function () {
-						error = new Error('This is the error');
 						mockValidator = require('./_mock/validator')(error);
 						validator = jasmine.createSpy('mock validator').andCallFake(function (data, callback) {
 							return mockValidator(data, callback);
@@ -469,19 +473,18 @@
 						repository = storage.define('test-type', validator);
 					});
 					describe('When validate() is called', function () {
-						var callbackSpy;
 						beforeEach(function (done) {
 							callbackSpy = jasmine.createSpy('callback spy').andCallFake(function () {
 								done();
 							});
-							returnValue = repository.validate({ some: 'data' }, callbackSpy);
+							returnValue = repository.validate(newValue, callbackSpy);
 						});
 						it('Calls the validator', function () {
 							expect(validator).toHaveBeenCalled();
 							expect(validator.callCount).toBe(1);
 							expect(validator.mostRecentCall.args.length).toBe(2);
 							expect(_.isPlainObject(validator.mostRecentCall.args[0])).toBeTruthy();
-							expect(validator.mostRecentCall.args[0].some).toBe('data');
+							expect(validator.mostRecentCall.args[0].value).toBe('this is the new value');
 							expect(_.isFunction(validator.mostRecentCall.args[1])).toBeTruthy();
 						});
 						it('Calls the callback with error', function () {
@@ -492,21 +495,33 @@
 							expect(returnValue).toBe(repository);
 						});
 					});
+					describe('When set() is called', function () {
+						beforeEach(function (done) {
+							callbackSpy = jasmine.createSpy('callback spy').andCallFake(function () {
+								done();
+							});
+							returnValue = repository.set('test-key', newValue, callbackSpy);
+						});
+						it('Calls the validator', function () {
+							expect(validator).toHaveBeenCalled();
+							expect(validator.callCount).toBe(1);
+							expect(validator.mostRecentCall.args.length).toBe(2);
+							expect(_.isPlainObject(validator.mostRecentCall.args[0])).toBeTruthy();
+							expect(validator.mostRecentCall.args[0].value).toBe('this is the new value');
+							expect(_.isFunction(validator.mostRecentCall.args[1])).toBeTruthy();
+						});
+					});
 				});
 			});
 			describe('When using multiple validators', function () {
 				var mockValidators, validators;
 				beforeEach(function () {
 					driver = require('./_mock/storageDriver');
-					storage = storageInterface(driver({
-						value: { value: 'this is the value' },
-						keys: [ 'key1', 'key2'],
-						all: { key1: 'This is key1', key2: 'This is key2' }
-					}));
+					storage = storageInterface(driver(driverConfig));
 					mockValidators = [];
 					validators = [];
 				});
-				describe('When validator is not generating errors', function () {
+				describe('When validator is operating normally', function () {
 					beforeEach(function () {
 						_.each(_.range(3), function (i) {
 							mockValidators.push(require('./_mock/validator')());
@@ -517,12 +532,11 @@
 						repository = storage.define.apply(storage, [ 'test-type' ].concat(validators));
 					});
 					describe('When validate() is called', function () {
-						var callbackSpy;
 						beforeEach(function (done) {
 							callbackSpy = jasmine.createSpy('callback spy').andCallFake(function () {
 								done();
 							});
-							returnValue = repository.validate(data, callbackSpy);
+							returnValue = repository.validate(newValue, callbackSpy);
 						});
 						it('Calls all validators', function () {
 							_.each(validators, function (validator) {
@@ -530,7 +544,7 @@
 								expect(validator.callCount).toBe(1);
 								expect(validator.mostRecentCall.args.length).toBe(2);
 								expect(_.isPlainObject(validator.mostRecentCall.args[0])).toBeTruthy();
-								expect(validator.mostRecentCall.args[0].some).toBe('data');
+								expect(validator.mostRecentCall.args[0].value).toBe('this is the new value');
 								expect(_.isFunction(validator.mostRecentCall.args[1])).toBeTruthy();
 							});
 						});
@@ -545,7 +559,6 @@
 				});
 				describe('When validator is generating errors', function () {
 					beforeEach(function () {
-						error = new Error('This is the error');
 						_.each(_.range(3), function (i) {
 							mockValidators.push(require('./_mock/validator')(error));
 							validators.push(jasmine.createSpy('mock validator').andCallFake(function (data, callback) {
@@ -555,19 +568,18 @@
 						repository = storage.define('test-type', validators[0], validators[1], validators[2]);
 					});
 					describe('When validate() is called', function () {
-						var callbackSpy;
 						beforeEach(function (done) {
 							callbackSpy = jasmine.createSpy('callback spy').andCallFake(function () {
 								done();
 							});
-							returnValue = repository.validate({ some: 'data' }, callbackSpy);
+							returnValue = repository.validate(newValue, callbackSpy);
 						});
 						it('Calls the first validator', function () {
 							expect(validators[0]).toHaveBeenCalled();
 							expect(validators[0].callCount).toBe(1);
 							expect(validators[0].mostRecentCall.args.length).toBe(2);
 							expect(_.isPlainObject(validators[0].mostRecentCall.args[0])).toBeTruthy();
-							expect(validators[0].mostRecentCall.args[0].some).toBe('data');
+							expect(validators[0].mostRecentCall.args[0].value).toBe('this is the new value');
 							expect(_.isFunction(validators[0].mostRecentCall.args[1])).toBeTruthy();
 						});
 						it('Does not call other validators', function () {
