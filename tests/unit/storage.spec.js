@@ -389,6 +389,30 @@
 				});
 			});
 		});
+		describe('Applies model methods', function () {
+			var storage, driver, repository, entity;
+			beforeEach(function (done) {
+				driver = require('./_mock/storageDriver');
+				storage = storageInterface(driver({
+					value: { value: 'this is the value' },
+					keys: [ 'key1', 'key2'],
+					all: { key1: 'This is key1', key2: 'This is key2' }
+				}));
+				repository = storage.define('test-type', {
+					foo: function () {
+						return 'bar';
+					}
+				});
+				repository.get('test-key', function (error, value) {
+					entity = value;
+					done();
+				});
+			});
+			it('Allows model methods to be called on generated entities', function () {
+				expect(_.isFunction(entity.foo)).toBeTruthy();
+				expect(entity.foo()).toBe('bar');
+			});
+		});
 		describe('Applies validation correctly', function () {
 			var storage, driver, repository, returnValue, error,
 				data = { some: 'data' };
