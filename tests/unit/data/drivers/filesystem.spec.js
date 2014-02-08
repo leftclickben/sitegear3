@@ -8,9 +8,9 @@
 
 (function (_, filesystemDriver, os, fs) {
 	"use strict";
-	require('../setupTests');
+	require('../../setupTests');
 
-	describe('Storage driver: filesystem', function () {
+	describe('Data driver: filesystem', function () {
 		it('Exports a function', function () {
 			expect(_.isFunction(filesystemDriver)).toBeTruthy();
 		});
@@ -263,4 +263,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../lib/storageDrivers/filesystem/driver'), require('os'), require('fs')));
+}(require('lodash'), require('../../../../lib/data/drivers/filesystem/driver'), require('os'), require('fs')));

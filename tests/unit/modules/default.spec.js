@@ -6,7 +6,7 @@
  * MIT Licensed
  */
 
-(function (_, sitegear3, defaultModule, jasmine) {
+(function (_, defaultModule, jasmine, mockApplication) {
 	"use strict";
 	require('../setupTests');
 
@@ -17,7 +17,7 @@
 		describe('Operates correctly', function () {
 			var app, module, action;
 			beforeEach(function () {
-				app = require('../_mock/app')();
+				app = mockApplication();
 				module = defaultModule(app);
 				action = module.index();
 			});
@@ -28,7 +28,7 @@
 				var repository, mockRequest, mockResponse;
 				describe('By default', function () {
 					beforeEach(function () {
-						repository = app.storage.repository('page');
+						repository = app.data.repository('page');
 						mockRequest = require('../_mock/request');
 						mockResponse = require('../_mock/response');
 						spyOn(repository, 'get').andCallThrough();
@@ -53,13 +53,13 @@
 				});
 				describe('When persistence is throwing errors', function () {
 					var next,
-						error = new Error('This is an error from storage interface');
+						error = new Error('This is an error from data provider');
 					beforeEach(function () {
 						mockRequest = require('../_mock/request');
 						mockResponse = require('../_mock/response');
 						spyOn(mockResponse, 'render');
 						next = jasmine.createSpy('next');
-						app.storage.repository('page').get = function (key, callback) {
+						app.data.repository('page').get = function (key, callback) {
 							callback(error);
 						};
 						action(mockRequest, mockResponse, next);
@@ -75,4 +75,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../index'), require('../../../lib/modules/default/module'), require('jasmine-node')));
+}(require('lodash'), require('../../../lib/modules/default/module'), require('jasmine-node'), require('../_mock/application')));

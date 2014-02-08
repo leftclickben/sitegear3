@@ -6,14 +6,14 @@
  * MIT Licensed
  */
 
-(function (_, jasmine, fs, path, sitegear3, prepareView) {
+(function (_, jasmine, fs, path, prepareView, mockApplication) {
 	"use strict";
 	require('../setupTests');
 
 	describe('Helper: prepareView', function () {
 		var app, helper;
 		beforeEach(function () {
-			app = require('../_mock/app')();
+			app = mockApplication();
 			helper = prepareView(app);
 		});
 		it('Exports a function', function () {
@@ -70,4 +70,4 @@
 //			});
 		});
 	});
-}(require('lodash'), require('jasmine-node'), require('fs'), require('path'), require('../../../index.js'), require('../../../lib/middleware/prepareView')));
+}(require('lodash'), require('jasmine-node'), require('fs'), require('path'), require('../../../lib/middleware/prepareView'), require('../_mock/application')));
