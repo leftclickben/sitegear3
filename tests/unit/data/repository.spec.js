@@ -6,7 +6,7 @@
  * MIT Licensed
  */
 
-(function (_, repository, mockDriver, mockValidator, jasmine) {
+(function (_, repository, mockConnector, mockValidator, jasmine) {
 	"use strict";
 	require('../setupTests');
 
@@ -14,10 +14,10 @@
 		var callbackSpy, repo, returnValue,
 			newValue = { value: 'this is the new value' },
 			error = new Error('something went wrong'),
-			errorDriver = mockDriver({
+			errorConnector = mockConnector({
 				error: error
 			}),
-			driver  = mockDriver({
+			connector  = mockConnector({
 				value: { value: 'this is the value' },
 				keys: [ 'key1', 'key2'],
 				all: { key1: 'This is key1', key2: 'This is key2' }
@@ -25,16 +25,16 @@
 		it('Exports a function', function () {
 			expect(_.isFunction(repository)).toBeTruthy();
 		});
-		describe('Uses drivers correctly', function () {
-			describe('When driver is operating normally', function () {
+		describe('Uses connectors correctly', function () {
+			describe('When connector is operating normally', function () {
 				beforeEach(function () {
-					repo = repository(driver, 'test-type');
+					repo = repository(connector, 'test-type');
 				});
 				describe('When set() is called on the interface', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'validate').andCallThrough();
 						spyOn(repo, 'emit');
-						spyOn(driver, 'set').andCallThrough();
+						spyOn(connector, 'set').andCallThrough();
 						callbackSpy = jasmine.createSpy('set callback').andCallFake(function () {
 							done();
 						});
@@ -48,9 +48,9 @@
 						expect(repo.validate.mostRecentCall.args[0].value).toBe('this is the new value');
 						expect(_.isFunction(repo.validate.mostRecentCall.args[1])).toBeTruthy();
 					});
-					it('Calls set() on the driver', function () {
-						expect(driver.set).toHaveBeenCalled();
-						expect(driver.set.callCount).toBe(1);
+					it('Calls set() on the connector', function () {
+						expect(connector.set).toHaveBeenCalled();
+						expect(connector.set.callCount).toBe(1);
 					});
 					it('Calls the callback', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(undefined);
@@ -67,15 +67,15 @@
 				describe('When get() is called on the interface', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'emit');
-						spyOn(driver, 'get').andCallThrough();
+						spyOn(connector, 'get').andCallThrough();
 						callbackSpy = jasmine.createSpy('get callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repo.get('test-key', callbackSpy);
 					});
-					it('Calls get() on the driver', function () {
-						expect(driver.get).toHaveBeenCalled();
-						expect(driver.get.callCount).toBe(1);
+					it('Calls get() on the connector', function () {
+						expect(connector.get).toHaveBeenCalled();
+						expect(connector.get.callCount).toBe(1);
 					});
 					it('Calls the callback', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(undefined, { value: 'this is the value' });
@@ -92,15 +92,15 @@
 				describe('When keys() is called on the interface', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'emit');
-						spyOn(driver, 'keys').andCallThrough();
+						spyOn(connector, 'keys').andCallThrough();
 						callbackSpy = jasmine.createSpy('keys callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repo.keys(callbackSpy);
 					});
-					it('Calls keys() on the driver', function () {
-						expect(driver.keys).toHaveBeenCalled();
-						expect(driver.keys.callCount).toBe(1);
+					it('Calls keys() on the connector', function () {
+						expect(connector.keys).toHaveBeenCalled();
+						expect(connector.keys.callCount).toBe(1);
 					});
 					it('Calls the callback', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(undefined, [ 'key1', 'key2' ]);
@@ -117,15 +117,15 @@
 				describe('When all() is called on the interface', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'emit');
-						spyOn(driver, 'all').andCallThrough();
+						spyOn(connector, 'all').andCallThrough();
 						callbackSpy = jasmine.createSpy('all callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repo.all(callbackSpy);
 					});
-					it('Calls all() on the driver', function () {
-						expect(driver.all).toHaveBeenCalled();
-						expect(driver.all.callCount).toBe(1);
+					it('Calls all() on the connector', function () {
+						expect(connector.all).toHaveBeenCalled();
+						expect(connector.all.callCount).toBe(1);
 					});
 					it('Calls the callback', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(undefined, { key1: 'This is key1', key2: 'This is key2' });
@@ -142,15 +142,15 @@
 				describe('When remove() is called on the interface', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'emit');
-						spyOn(driver, 'remove').andCallThrough();
+						spyOn(connector, 'remove').andCallThrough();
 						callbackSpy = jasmine.createSpy('remove callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repo.remove('test-key', callbackSpy);
 					});
-					it('Calls remove() on the driver', function () {
-						expect(driver.remove).toHaveBeenCalled();
-						expect(driver.remove.callCount).toBe(1);
+					it('Calls remove() on the connectors', function () {
+						expect(connector.remove).toHaveBeenCalled();
+						expect(connector.remove.callCount).toBe(1);
 					});
 					it('Calls the callback', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(undefined);
@@ -167,15 +167,15 @@
 				describe('When clear() is called on the interface', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'emit');
-						spyOn(driver, 'clear').andCallThrough();
+						spyOn(connector, 'clear').andCallThrough();
 						callbackSpy = jasmine.createSpy('clear callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repo.clear(callbackSpy);
 					});
-					it('Calls clear() on the driver', function () {
-						expect(driver.clear).toHaveBeenCalled();
-						expect(driver.clear.callCount).toBe(1);
+					it('Calls clear() on the connector', function () {
+						expect(connector.clear).toHaveBeenCalled();
+						expect(connector.clear.callCount).toBe(1);
 					});
 					it('Calls the callback', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(undefined);
@@ -190,15 +190,15 @@
 					});
 				});
 			});
-			describe('When driver is generating errors', function () {
+			describe('When connector is generating errors', function () {
 				beforeEach(function () {
-					repo = repository(errorDriver, 'test-type');
+					repo = repository(errorConnector, 'test-type');
 				});
 				describe('When set() is called on the interface', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'validate').andCallThrough();
 						spyOn(repo, 'emit');
-						spyOn(errorDriver, 'set').andCallThrough();
+						spyOn(errorConnector, 'set').andCallThrough();
 						callbackSpy = jasmine.createSpy('set callback').andCallFake(function () {
 							done();
 						});
@@ -212,9 +212,9 @@
 						expect(repo.validate.mostRecentCall.args[0].value).toBe('this is the new value');
 						expect(_.isFunction(repo.validate.mostRecentCall.args[1])).toBeTruthy();
 					});
-					it('Calls set() on the driver, passing an error', function () {
-						expect(errorDriver.set).toHaveBeenCalled();
-						expect(errorDriver.set.callCount).toBe(1);
+					it('Calls set() on the connector, passing an error', function () {
+						expect(errorConnector.set).toHaveBeenCalled();
+						expect(errorConnector.set.callCount).toBe(1);
 					});
 					it('Calls the callback, passing an error', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(error);
@@ -231,15 +231,15 @@
 				describe('When get() is called on the interface', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'emit');
-						spyOn(errorDriver, 'get').andCallThrough();
+						spyOn(errorConnector, 'get').andCallThrough();
 						callbackSpy = jasmine.createSpy('get callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repo.get('test-key', callbackSpy);
 					});
-					it('Calls get() on the driver, passing an error', function () {
-						expect(errorDriver.get).toHaveBeenCalled();
-						expect(errorDriver.get.callCount).toBe(1);
+					it('Calls get() on the connector, passing an error', function () {
+						expect(errorConnector.get).toHaveBeenCalled();
+						expect(errorConnector.get.callCount).toBe(1);
 					});
 					it('Calls the callback, passing an error', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(error, undefined);
@@ -256,15 +256,15 @@
 				describe('When keys() is called on the interface', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'emit');
-						spyOn(errorDriver, 'keys').andCallThrough();
+						spyOn(errorConnector, 'keys').andCallThrough();
 						callbackSpy = jasmine.createSpy('keys callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repo.keys(callbackSpy);
 					});
-					it('Calls keys() on the driver', function () {
-						expect(errorDriver.keys).toHaveBeenCalled();
-						expect(errorDriver.keys.callCount).toBe(1);
+					it('Calls keys() on the connector', function () {
+						expect(errorConnector.keys).toHaveBeenCalled();
+						expect(errorConnector.keys.callCount).toBe(1);
 					});
 					it('Calls the callback, passing an error', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(error, undefined);
@@ -281,15 +281,15 @@
 				describe('When all() is called on the interface', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'emit');
-						spyOn(errorDriver, 'all').andCallThrough();
+						spyOn(errorConnector, 'all').andCallThrough();
 						callbackSpy = jasmine.createSpy('all callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repo.all(callbackSpy);
 					});
-					it('Calls all() on the driver', function () {
-						expect(errorDriver.all).toHaveBeenCalled();
-						expect(errorDriver.all.callCount).toBe(1);
+					it('Calls all() on the connector', function () {
+						expect(errorConnector.all).toHaveBeenCalled();
+						expect(errorConnector.all.callCount).toBe(1);
 					});
 					it('Calls the callback, passing an error', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(error, undefined);
@@ -306,15 +306,15 @@
 				describe('When remove() is called on the interface', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'emit');
-						spyOn(errorDriver, 'remove').andCallThrough();
+						spyOn(errorConnector, 'remove').andCallThrough();
 						callbackSpy = jasmine.createSpy('remove callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repo.remove('test-key', callbackSpy);
 					});
-					it('Calls remove() on the driver, passing an error', function () {
-						expect(errorDriver.remove).toHaveBeenCalled();
-						expect(errorDriver.remove.callCount).toBe(1);
+					it('Calls remove() on the connector, passing an error', function () {
+						expect(errorConnector.remove).toHaveBeenCalled();
+						expect(errorConnector.remove.callCount).toBe(1);
 					});
 					it('Calls the callback, passing an error', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(error);
@@ -331,15 +331,15 @@
 				describe('When clear() is called on the interface', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'emit');
-						spyOn(errorDriver, 'clear').andCallThrough();
+						spyOn(errorConnector, 'clear').andCallThrough();
 						callbackSpy = jasmine.createSpy('clear callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repo.clear(callbackSpy);
 					});
-					it('Calls clear() on the driver, passing an error', function () {
-						expect(errorDriver.clear).toHaveBeenCalled();
-						expect(errorDriver.clear.callCount).toBe(1);
+					it('Calls clear() on the connector, passing an error', function () {
+						expect(errorConnector.clear).toHaveBeenCalled();
+						expect(errorConnector.clear.callCount).toBe(1);
 					});
 					it('Calls the callback, passing an error', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(error);
@@ -358,7 +358,7 @@
 		describe('Applies model methods', function () {
 			var entity;
 			beforeEach(function () {
-				repo = repository(driver, 'test-type', {
+				repo = repository(connector, 'test-type', {
 					foo: function () {
 						return 'bar';
 					}
@@ -382,7 +382,7 @@
 						validatorSpy = jasmine.createSpy('mock validator').andCallFake(function (data, callback) {
 							return mockValidator()(data, callback);
 						});
-						repo = repository(driver, 'test-type', null, [ validatorSpy ]);
+						repo = repository(connector, 'test-type', null, [ validatorSpy ]);
 					});
 					describe('When validate() is called', function () {
 						beforeEach(function (done) {
@@ -429,7 +429,7 @@
 						validatorSpy = jasmine.createSpy('mock validator').andCallFake(function (data, callback) {
 							return mockValidator(error)(data, callback);
 						});
-						repo = repository(driver, 'test-type', null, [ validatorSpy ]);
+						repo = repository(connector, 'test-type', null, [ validatorSpy ]);
 					});
 					describe('When validate() is called', function () {
 						beforeEach(function (done) {
@@ -484,7 +484,7 @@
 								return mockValidator()(data, callback);
 							}));
 						});
-						repo = repository(driver, 'test-type', null, validatorSpies);
+						repo = repository(connector, 'test-type', null, validatorSpies);
 					});
 					describe('When validate() is called', function () {
 						beforeEach(function (done) {
@@ -519,7 +519,7 @@
 								return mockValidator(error)(data, callback);
 							}));
 						});
-						repo = repository(driver, 'test-type', null, validatorSpies);
+						repo = repository(connector, 'test-type', null, validatorSpies);
 					});
 					describe('When validate() is called', function () {
 						beforeEach(function (done) {
@@ -554,4 +554,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../lib/data/repository'), require('../_mock/data/driver'), require('../_mock/data/validator'), require('jasmine-node')));
+}(require('lodash'), require('../../../lib/data/repository'), require('../_mock/data/connector'), require('../_mock/data/validator'), require('jasmine-node')));

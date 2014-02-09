@@ -6,7 +6,7 @@
  * MIT Licensed
  */
 
-(function (_, engine, mockDriver, mockModel, mockValidator) {
+(function (_, engine, mockConnector, mockModel, mockValidator) {
 	"use strict";
 	require('../setupTests');
 
@@ -16,13 +16,13 @@
 		});
 		describe('Operates correctly', function () {
 			var provider,
-				driver = mockDriver({
+				connector = mockConnector({
 					value: { value: 'this is the value' },
 					keys: [ 'key1', 'key2'],
 					all: { key1: 'This is key1', key2: 'This is key2' }
 				});
 			beforeEach(function () {
-				provider = engine(driver);
+				provider = engine(connector);
 			});
 			describe('Caches repositories', function () {
 				var repository, repository2;
@@ -135,4 +135,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../lib/data/provider'), require('../_mock/data/driver'), require('../_mock/data/model'), require('../_mock/data/validator')));
+}(require('lodash'), require('../../../lib/data/provider'), require('../_mock/data/connector'), require('../_mock/data/model'), require('../_mock/data/validator')));

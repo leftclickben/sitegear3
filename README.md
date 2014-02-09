@@ -25,7 +25,7 @@ A module's external interface consists of:
 
 Sitegear3 is agnostic to persistence layers.  You can store your data directly in JSON files, which is not very scalable but does not have many dependencies, or any kind of database or data storage mechanism that you choose.
 
-Data is accessed through a standard API, and the engine takes care of knowing which driver is being used, as well as providing some standardised functionality such as event emission.
+Data is accessed through a standard API, and the engine takes care of knowing which connector is being used, as well as providing some standardised functionality such as event emission.
 
 Repositories are key-value document / object stores created by modules to store a specific type of data.  A JSON schema is (optionally) specified for the objects stored in the repository.
 

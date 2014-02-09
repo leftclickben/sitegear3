@@ -6,18 +6,18 @@
  * MIT Licensed
  */
 
-(function (_, filesystemDriver, os, fs) {
+(function (_, filesystemConnector, os, fs) {
 	"use strict";
 	require('../../setupTests');
 
-	describe('Data driver: filesystem', function () {
+	describe('Data connector: filesystem', function () {
 		it('Exports a function', function () {
-			expect(_.isFunction(filesystemDriver)).toBeTruthy();
+			expect(_.isFunction(filesystemConnector)).toBeTruthy();
 		});
 		describe('When underlying filesystem is working and accessible', function () {
 			var filesystem;
 			beforeEach(function () {
-				filesystem = filesystemDriver({ root: os.tmpdir() });
+				filesystem = filesystemConnector({ root: os.tmpdir() });
 			});
 			describe('The set() method', function () {
 				beforeEach(function () {
@@ -148,7 +148,7 @@
 			var filesystem,
 				thrownError = new Error('This is an error');
 			beforeEach(function () {
-				filesystem = filesystemDriver({ root: os.tmpdir() });
+				filesystem = filesystemConnector({ root: os.tmpdir() });
 			});
 			describe('The set() method', function () {
 				beforeEach(function () {
@@ -263,4 +263,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../../lib/data/drivers/filesystem/driver'), require('os'), require('fs')));
+}(require('lodash'), require('../../../../lib/data/connectors/filesystem/connector'), require('os'), require('fs')));
