@@ -51,7 +51,6 @@
 								callbackSpy = jasmine.createSpy().andCallFake(function () {
 									done();
 								});
-								console.log(path.join(invalidDataRoot, filename));
 								validator(require(path.join(invalidDataRoot, filename)), callbackSpy);
 							});
 							it('Calls the callback with error', function () {
