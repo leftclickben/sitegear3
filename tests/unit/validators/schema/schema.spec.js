@@ -59,7 +59,6 @@
 								expect(callbackSpy.callCount).toBe(1);
 								expect(callbackSpy.mostRecentCall.args.length).toBe(1);
 								expect(callbackSpy.mostRecentCall.args[0] instanceof Error).toBeTruthy();
-								console.log(callbackSpy.mostRecentCall.args[0].message);
 								expect(errorMessageRegex.test(callbackSpy.mostRecentCall.args[0].message)).toBeTruthy();
 							});
 						});
