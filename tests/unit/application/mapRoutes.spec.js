@@ -110,7 +110,7 @@
 					]);
 					expect('This code should not execute').toBeFalsy();
 				} catch (error) {
-					expect(error.toString()).toBe('Error: Unknown module "INVALID" specified for route at URL "/some/path"');
+					expect(error.toString()).toBe('Error: Attempting to retrieve unknown module "INVALID"');
 				}
 			});
 			it('Throws an error when invalid action is specified in a valid module', function () {
