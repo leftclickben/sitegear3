@@ -5,11 +5,11 @@
  * MIT Licensed
  */
 
-(function () {
+(function (_, events) {
 	"use strict";
 
 	module.exports = function () {
-		return {
+		return _.extend(new events.EventEmitter(), {
 			validate: function (value, callback) {
 				callback();
 			},
@@ -25,6 +25,6 @@
 			remove: function (key, callback) {
 				callback();
 			}
-		};
+		});
 	};
-}());
+}(require('lodash'), require('events')));
