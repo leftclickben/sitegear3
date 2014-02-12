@@ -8,7 +8,7 @@
 
 (function (_, jasmine, path, fs, schemaValidator) {
 	"use strict";
-	require('../../setupTests');
+	require('../../../setupTests');
 
 	describe('Validator: schemaValidator', function () {
 		it('Exports a function', function () {
@@ -66,4 +66,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('jasmine-node'), require('path'), require('fs'), require('../../../../lib/data/validators/schema')));
+}(require('lodash'), require('jasmine-node'), require('path'), require('fs'), require('../../../../../lib/data/validators/schema')));
