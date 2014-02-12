@@ -263,4 +263,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../../lib/data/connectors/filesystem/connector'), require('os'), require('fs')));
+}(require('lodash'), require('../../../../lib/data/connectors/filesystem/connector'), require('os'), require('graceful-fs')));

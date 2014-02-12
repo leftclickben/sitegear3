@@ -66,4 +66,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('jasmine-node'), require('path'), require('fs'), require('../../../../../lib/data/validators/schema')));
+}(require('lodash'), require('jasmine-node'), require('path'), require('graceful-fs'), require('../../../../../lib/data/validators/schema')));

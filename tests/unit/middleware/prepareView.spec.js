@@ -70,4 +70,4 @@
 //			});
 		});
 	});
-}(require('lodash'), require('jasmine-node'), require('fs'), require('path'), require('../../../lib/middleware/prepareView'), require('../_mock/application')));
+}(require('lodash'), require('jasmine-node'), require('graceful-fs'), require('path'), require('../../../lib/middleware/prepareView'), require('../_mock/application')));

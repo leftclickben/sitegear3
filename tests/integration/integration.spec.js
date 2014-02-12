@@ -77,4 +77,4 @@
 			app.stop();
 		});
 	});
-}(require('../../index'), require('./sut/site'), require('fs'), require('request')));
+}(require('../../index'), require('./sut/site'), require('graceful-fs'), require('request')));
