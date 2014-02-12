@@ -19,7 +19,7 @@
 				connector = mockConnector({
 					value: { value: 'this is the value' },
 					keys: [ 'key1', 'key2'],
-					all: { key1: 'This is key1', key2: 'This is key2' }
+					all: { key1: { value: 'This is the value' }, key2: { value: 'This is the value' } }
 				});
 			beforeEach(function () {
 				provider = engine(connector);

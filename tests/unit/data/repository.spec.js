@@ -20,7 +20,7 @@
 			connector  = mockConnector({
 				value: { value: 'this is the value' },
 				keys: [ 'key1', 'key2'],
-				all: { key1: 'This is key1', key2: 'This is key2' }
+				all: { key1: { value: 'This is the value' }, key2: { value: 'This is the value' } }
 			});
 		it('Exports a function', function () {
 			expect(_.isFunction(repository)).toBeTruthy();
@@ -128,11 +128,11 @@
 						expect(connector.all.callCount).toBe(1);
 					});
 					it('Calls the callback', function () {
-						expect(callbackSpy).toHaveBeenCalledWith(undefined, { key1: 'This is key1', key2: 'This is key2' });
+						expect(callbackSpy).toHaveBeenCalledWith(undefined, { key1: { value: 'This is the value' }, key2: { value: 'This is the value' } });
 						expect(callbackSpy.callCount).toBe(1);
 					});
 					it('Emits a "all" event', function () {
-						expect(repo.emit).toHaveBeenCalledWith('all', 'test-type', null, { key1: 'This is key1', key2: 'This is key2' });
+						expect(repo.emit).toHaveBeenCalledWith('all', 'test-type', null, { key1: { value: 'This is the value' }, key2: { value: 'This is the value' } });
 						expect(repo.emit.callCount).toBe(1);
 					});
 					it('Returns the repository instance for chaining', function () {
