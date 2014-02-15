@@ -110,7 +110,7 @@
 					]);
 					expect('This code should not execute').toBeFalsy();
 				} catch (error) {
-					expect(error.toString()).toBe('Error: Attempting to retrieve unknown module "INVALID"');
+					expect(error.toString()).toBe("Error: Cannot find module '/home/ben/workspace-node/sitegear3/lib/modules/INVALID/module.js'");
 				}
 			});
 			it('Throws an error when invalid action is specified in a valid module', function () {
