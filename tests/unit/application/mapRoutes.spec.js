@@ -8,13 +8,10 @@
 
 (function (_, sitegear3, mockDataProvider) {
 	"use strict";
-//	require('../setupTests');
+	require('../setupTests');
 
 	describe('Application lifecycle: mapRoutes()', function () {
 		var app;
-		beforeEach(function (done) {
-			sitegear3.ready(done);
-		});
 		describe('Works correctly with correct configuration', function () {
 			beforeEach(function () {
 				app = sitegear3().initialise(require('../settings.json'));
@@ -110,7 +107,7 @@
 					]);
 					expect('This code should not execute').toBeFalsy();
 				} catch (error) {
-					expect(error.toString()).toBe('Error: Attempting to retrieve unknown module "INVALID"');
+					expect(error.toString()).toBe("Error: Cannot find module '/home/ben/workspace-node/sitegear3/lib/modules/INVALID/module.js'");
 				}
 			});
 			it('Throws an error when invalid action is specified in a valid module', function () {

@@ -12,9 +12,6 @@
 
 	describe('Application lifecycle: persistence()', function () {
 		var app;
-		beforeEach(function (done) {
-			sitegear3.ready(done);
-		});
 		describe('When called with a valid connector', function () {
 			beforeEach(function () {
 				sitegear3.connectors = { test: _.noop };

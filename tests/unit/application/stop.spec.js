@@ -12,10 +12,9 @@
 
 	describe('Application lifecycle: stop()', function () {
 		var app;
-		beforeEach(function (done) {
+		beforeEach(function () {
 			spyOn(http, 'createServer').andReturn(mockServer());
 			spyOn(https, 'createServer').andReturn(mockServer());
-			sitegear3.ready(done);
 		});
 		describe('When start() is called with no parameters', function () {
 			beforeEach(function () {
