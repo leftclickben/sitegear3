@@ -79,8 +79,8 @@
 				}
 			}
 		});
-		grunt.registerTask('qa', ['jslint', 'jasmine_node']);
-		grunt.registerTask('default', ['qa']);
+		grunt.registerTask('qa', [ 'jslint', 'jasmine_node' ]);
+		grunt.registerTask('default', [ 'qa' ]);
 		grunt.event.on('watch', function(action, filepath, target) {
 			grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
 		});

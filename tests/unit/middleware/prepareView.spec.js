@@ -1,4 +1,4 @@
-/*jslint node: true, nomen: true, white: true, unparam: true, todo: true*/
+/*jslint node: true, nomen: true, white: true, unparam: true*/
 /*globals describe, beforeEach, afterEach, it, expect, spyOn*/
 /*!
  * Sitegear3
@@ -6,14 +6,14 @@
  * MIT Licensed
  */
 
-(function (_, jasmine, fs, path, sitegear3, prepareView) {
+(function (_, jasmine, fs, path, prepareView, mockApplication) {
 	"use strict";
 	require('../setupTests');
 
 	describe('Helper: prepareView', function () {
 		var app, helper;
 		beforeEach(function () {
-			app = require('../_mock/app')();
+			app = mockApplication();
 			helper = prepareView(app);
 		});
 		it('Exports a function', function () {
@@ -21,11 +21,14 @@
 		});
 		describe('By default', function () {
 			var mockRequest, mockResponse, next;
-			beforeEach(function () {
+			beforeEach(function (done) {
 				mockRequest = require('../_mock/request');
 				mockResponse = require('../_mock/response');
 				next = jasmine.createSpy('next');
-				helper(mockRequest, mockResponse, next);
+				helper(mockRequest, mockResponse, function () {
+					next();
+					done();
+				});
 			});
 			it('Sets site info from settings into app.locals', function () {
 				expect(app.locals.siteName).toBe(app.get('site name'));
@@ -46,28 +49,29 @@
 					});
 				});
 			});
-			// TODO This doesn't work because of the asynchronous readdir()
-//			it('Calls next()', function () {
-//				expect(next).toHaveBeenCalled();
-//			});
+			it('Calls next()', function () {
+				expect(next).toHaveBeenCalled();
+			});
 		});
 		describe('On https', function () {
 			var mockRequest, mockResponse, next;
-			beforeEach(function () {
+			beforeEach(function (done) {
 				mockRequest = require('../_mock/request');
 				mockRequest.secure = true;
 				mockResponse = require('../_mock/response');
 				next = jasmine.createSpy('next');
-				helper(mockRequest, mockResponse, next);
+				helper(mockRequest, mockResponse, function () {
+					done();
+					next();
+				});
 			});
 			it('Sets site info from settings into app.locals', function () {
 				expect(app.locals.siteName).toBe(app.get('site name'));
 				expect(app.locals.baseUrl).toBe(app.get('https url'));
 			});
-			// TODO This doesn't work because of the asynchronous readdir()
-//			it('Calls next()', function () {
-//				expect(next).toHaveBeenCalled();
-//			});
+			it('Calls next()', function () {
+				expect(next).toHaveBeenCalled();
+			});
 		});
 	});
-}(require('lodash'), require('jasmine-node'), require('fs'), require('path'), require('../../../index.js'), require('../../../lib/middleware/prepareView')));
+}(require('lodash'), require('jasmine-node'), require('graceful-fs'), require('path'), require('../../../lib/middleware/prepareView'), require('../_mock/application')));

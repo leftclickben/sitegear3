@@ -5,7 +5,7 @@
  * MIT Licensed
  */
 
-(function (_, utils) {
+(function (_, utils, mockDataProvider) {
 	"use strict";
 
 	module.exports = function () {
@@ -17,7 +17,7 @@
 			get: function (key) {
 				return this.settings[key];
 			},
-			storage: require('./storage')()
+			data: mockDataProvider()
 		};
 	};
-}(require('lodash'), require('../../../lib/utils')));
+}(require('lodash'), require('../../../lib/utils'), require('./data/provider')));

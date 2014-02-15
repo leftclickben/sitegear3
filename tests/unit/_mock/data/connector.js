@@ -9,6 +9,7 @@
 	"use strict";
 
 	module.exports = function (options) {
+		options = options || {};
 		return {
 			set: function (type, key, value, callback) {
 				callback(options.error);
