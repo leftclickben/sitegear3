@@ -8,20 +8,20 @@
 
 	module.exports = function () {
 		// Create the application instance
-		var app = sitegear3();
+		var app = sitegear3(require('./settings.json'));
 
 		// Pre-configure
 		swig.setDefaults({ cache: false });
 
 		// Generic startup code
-		return app.initialise(require('./settings.json'))
+		return app
 			.use(sitegear3.connect.static(__dirname + '/static'))
 			.use(sitegear3.middleware.prepareView(app))
 			.use(app.router)
 			.use(sitegear3.middleware.notFound())
 			.use(sitegear3.middleware.internalServerError())
-			.persistence('filesystem', { root: __dirname + '/data' })
-			.mapRoutes(require('./routes.json'))
+			.connect('filesystem', { root: __dirname + '/data' })
+			.configureRoutes(require('./routes.json'))
 			.engine('html', swig.renderFile)
 			.set('views', __dirname + '/templates')
 			.start(8888);
