@@ -15,12 +15,6 @@
 		describe('With no parameters', function () {
 			beforeEach(function () {
 				app = sitegear3();
-				spyOn(app, 'init').andCallThrough();
-				app.initialise();
-			});
-			it('Calls app.init()', function () {
-				expect(app.init).toHaveBeenCalled();
-				expect(app.init.callCount).toBe(1);
 			});
 			it('Exposes all defaults as settings', function () {
 				expect(app.get('site name')).toBe('Anonymous Website');
@@ -38,14 +32,8 @@
 		describe('With object parameter', function () {
 			var settings = require('../settings.json');
 			beforeEach(function () {
-				app = sitegear3();
-				spyOn(app, 'init').andCallThrough();
 				spyOn(utils, 'expandSettings').andCallThrough();
-				app.initialise(settings);
-			});
-			it('Calls app.init()', function () {
-				expect(app.init).toHaveBeenCalled();
-				expect(app.init.callCount).toBe(1);
+				app = sitegear3(settings);
 			});
 			it('Applies settings over defaults', function () {
 				expect(app.get('site name')).toBe('Test Spec');

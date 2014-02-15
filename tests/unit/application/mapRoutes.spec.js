@@ -14,7 +14,7 @@
 		var app;
 		describe('Works correctly with correct configuration', function () {
 			beforeEach(function () {
-				app = sitegear3().initialise(require('../settings.json'));
+				app = sitegear3(require('../settings.json'));
 				app.data = mockDataProvider();
 				app.mapRoutes([
 					{
@@ -94,7 +94,7 @@
 		});
 		describe('Throws correct errors on misconfiguration', function () {
 			beforeEach(function () {
-				app = sitegear3().initialise(require('../settings.json'));
+				app = sitegear3(require('../settings.json'));
 				app.data = mockDataProvider();
 			});
 			it('Throws an error when invalid module is specified', function () {
