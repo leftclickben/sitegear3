@@ -20,127 +20,125 @@
 				filesystem = filesystemConnector({ root: os.tmpdir() });
 			});
 			describe('The set() method', function () {
-				beforeEach(function () {
+				var error;
+				beforeEach(function (done) {
 					spyOn(fs, 'writeFile').andCallFake(function (path, value, options, callback) {
 						if (!_.isFunction(callback) && _.isFunction(options)) {
 							callback = options;
 						}
 						callback();
 					});
-				});
-				it('Calls fs.writeFile()', function (done) {
-					filesystem.set('type', 'key', { title: 'title', main: 'body content' }, function () {
-						expect(fs.writeFile).toHaveBeenCalled();
-						expect(fs.writeFile.callCount).toBe(1);
+					filesystem.set('type', 'key', { title: 'title', main: 'body content' }, function (e) {
+						error = e;
 						done();
 					});
 				});
-				it('Calls the callback with correct values', function (done) {
-					filesystem.set('type', 'key', { title: 'title', main: 'body content' }, function (error) {
-						expect(error).toBeUndefined();
-						done();
-					});
+				it('Calls fs.writeFile()', function () {
+					expect(fs.writeFile).toHaveBeenCalled();
+					expect(fs.writeFile.callCount).toBe(1);
+				});
+				it('Calls the callback with correct values', function () {
+					expect(error).toBeUndefined();
 				});
 			});
 			describe('The get() method', function () {
-				beforeEach(function () {
+				var error, value;
+				beforeEach(function (done) {
 					spyOn(fs, 'readFile').andCallFake(function (path, options, callback) {
 						if (!_.isFunction(callback) && _.isFunction(options)) {
 							callback = options;
 						}
 						callback(undefined, '{ "title": "title", "main": "body content" }');
 					});
-				});
-				it('Calls fs.readFile()', function (done) {
-					filesystem.get('type', 'key', function () {
-						expect(fs.readFile).toHaveBeenCalled();
-						expect(fs.readFile.callCount).toBe(1);
+					filesystem.get('type', 'key', function (e, v) {
+						error = e;
+						value = v;
 						done();
 					});
 				});
-				it('Calls the callback with correct values', function (done) {
-					filesystem.get('type', 'key', function (error, value) {
-						expect(error).toBeUndefined();
-						expect(_.isPlainObject(value)).toBeTruthy();
-						expect(value.title).toBe('title');
-						expect(value.main).toBe('body content');
-						done();
-					});
+				it('Calls fs.readFile()', function () {
+					expect(fs.readFile).toHaveBeenCalled();
+					expect(fs.readFile.callCount).toBe(1);
+				});
+				it('Calls the callback with correct values', function () {
+					expect(error).toBeUndefined();
+					expect(_.isPlainObject(value)).toBeTruthy();
+					expect(value.title).toBe('title');
+					expect(value.main).toBe('body content');
 				});
 			});
 			describe('The keys() method', function () {
-				beforeEach(function () {
+				var error, keys;
+				beforeEach(function (done) {
 					spyOn(fs, 'readdir').andCallFake(function (path, callback) {
 						callback(undefined, [ 'foo', 'bar', 'baz' ]);
 					});
-				});
-				it('Calls fs.readdir()', function (done) {
-					filesystem.keys('type', function () {
-						expect(fs.readdir).toHaveBeenCalled();
-						expect(fs.readdir.callCount).toBe(1);
+					filesystem.keys('type', function (e, k) {
+						error = e;
+						keys = k;
 						done();
 					});
 				});
-				it('Calls the callback with correct values', function (done) {
-					filesystem.keys('type', function (error, keys) {
-						expect(error).toBeUndefined();
-						expect(_.isArray(keys)).toBeTruthy();
-						expect(keys.length).toBe(3);
-						expect(keys[0]).toBe('foo');
-						expect(keys[1]).toBe('bar');
-						expect(keys[2]).toBe('baz');
-						done();
-					});
+				it('Calls fs.readdir()', function () {
+					expect(fs.readdir).toHaveBeenCalled();
+					expect(fs.readdir.callCount).toBe(1);
+				});
+				it('Calls the callback with correct values', function () {
+					expect(error).toBeUndefined();
+					expect(_.isArray(keys)).toBeTruthy();
+					expect(keys.length).toBe(3);
+					expect(keys[0]).toBe('foo');
+					expect(keys[1]).toBe('bar');
+					expect(keys[2]).toBe('baz');
 				});
 			});
 			describe('The all() method', function () {
-				beforeEach(function () {
+				var error, data;
+				beforeEach(function (done) {
 					spyOn(fs, 'readdir').andCallFake(function (path, callback) {
 						callback(undefined, [ 'foo.json', 'bar.json', 'baz_xyzzy.json' ]);
 					});
 					spyOn(fs, 'readFile').andCallFake(function (path, options, callback) {
 						callback(undefined, '"this is ' + path + '"');
 					});
-				});
-				it('Calls fs.readdir() and fs.readFile()', function (done) {
-					filesystem.all('type', function () {
-						expect(fs.readdir).toHaveBeenCalled();
-						expect(fs.readdir.callCount).toBe(1);
-						expect(fs.readFile).toHaveBeenCalled();
-						expect(fs.readFile.callCount).toBe(3);
+					filesystem.all('type', function (e, d) {
+						error = e;
+						data = d;
 						done();
 					});
 				});
-				it('Calls the callback with correct values', function (done) {
-					filesystem.all('type', function (error, data) {
-						expect(error).toBeUndefined();
-						expect(_.isPlainObject(data)).toBeTruthy();
-						expect(_.size(data)).toBe(3);
-						expect(data.foo).toBe('this is /tmp/type/foo.json');
-						expect(data.bar).toBe('this is /tmp/type/bar.json');
-						expect(data['baz/xyzzy']).toBe('this is /tmp/type/baz_xyzzy.json');
-						done();
-					});
+				it('Calls fs.readdir() and fs.readFile()', function () {
+					expect(fs.readdir).toHaveBeenCalled();
+					expect(fs.readdir.callCount).toBe(1);
+					expect(fs.readFile).toHaveBeenCalled();
+					expect(fs.readFile.callCount).toBe(3);
+				});
+				it('Calls the callback with correct values', function () {
+					expect(error).toBeUndefined();
+					expect(_.isPlainObject(data)).toBeTruthy();
+					expect(_.size(data)).toBe(3);
+					expect(data.foo).toBe('this is /tmp/type/foo.json');
+					expect(data.bar).toBe('this is /tmp/type/bar.json');
+					expect(data['baz/xyzzy']).toBe('this is /tmp/type/baz_xyzzy.json');
 				});
 			});
 			describe('The remove() method', function () {
-				beforeEach(function () {
+				var error;
+				beforeEach(function (done) {
 					spyOn(fs, 'unlink').andCallFake(function (path, callback) {
 						callback(undefined);
 					});
-				});
-				it('Calls fs.unlink()', function (done) {
-					filesystem.remove('type', 'key', function () {
-						expect(fs.unlink).toHaveBeenCalled();
-						expect(fs.unlink.callCount).toBe(1);
+					filesystem.remove('type', 'key', function (e) {
+						error = e;
 						done();
 					});
 				});
-				it('Calls the callback with correct values', function (done) {
-					filesystem.remove('type', 'key', function (error) {
-						expect(error).toBeUndefined();
-						done();
-					});
+				it('Calls fs.unlink()', function () {
+					expect(fs.unlink).toHaveBeenCalled();
+					expect(fs.unlink.callCount).toBe(1);
+				});
+				it('Calls the callback with correct values', function () {
+					expect(error).toBeUndefined();
 				});
 			});
 		});
@@ -151,114 +149,110 @@
 				filesystem = filesystemConnector({ root: os.tmpdir() });
 			});
 			describe('The set() method', function () {
-				beforeEach(function () {
+				var error;
+				beforeEach(function (done) {
 					spyOn(fs, 'writeFile').andCallFake(function (path, value, options, callback) {
 						if (!_.isFunction(callback) && _.isFunction(options)) {
 							callback = options;
 						}
 						callback(thrownError);
 					});
-				});
-				it('Calls fs.writeFile()', function (done) {
-					filesystem.set('type', 'key', { title: 'title', main: 'body content' }, function () {
-						expect(fs.writeFile).toHaveBeenCalled();
-						expect(fs.writeFile.callCount).toBe(1);
+					filesystem.set('type', 'key', { title: 'title', main: 'body content' }, function (e) {
+						error = e;
 						done();
 					});
 				});
-				it('Calls the callback with the error', function (done) {
-					filesystem.set('type', 'key', { title: 'title', main: 'body content' }, function (error) {
-						expect(error).toBe(thrownError);
-						done();
-					});
+				it('Calls fs.writeFile()', function () {
+					expect(fs.writeFile).toHaveBeenCalled();
+					expect(fs.writeFile.callCount).toBe(1);
+				});
+				it('Calls the callback with the error', function () {
+					expect(error).toBe(thrownError);
 				});
 			});
 			describe('The get() method', function () {
-				beforeEach(function () {
+				var error, value;
+				beforeEach(function (done) {
 					spyOn(fs, 'readFile').andCallFake(function (path, options, callback) {
 						if (!_.isFunction(callback) && _.isFunction(options)) {
 							callback = options;
 						}
 						callback(thrownError);
 					});
-				});
-				it('Calls fs.readFile()', function (done) {
-					filesystem.get('type', 'key', function () {
-						expect(fs.readFile).toHaveBeenCalled();
-						expect(fs.readFile.callCount).toBe(1);
+					filesystem.get('type', 'key', function (e, v) {
+						error = e;
+						value = v;
 						done();
 					});
 				});
-				it('Calls the callback with the error', function (done) {
-					filesystem.get('type', 'key', function (error, value) {
-						expect(error).toBe(thrownError);
-						expect(value).toBeUndefined();
-						done();
-					});
+				it('Calls fs.readFile()', function () {
+					expect(fs.readFile).toHaveBeenCalled();
+					expect(fs.readFile.callCount).toBe(1);
+				});
+				it('Calls the callback with the error', function () {
+					expect(error).toBe(thrownError);
+					expect(value).toBeUndefined();
 				});
 			});
 			describe('The keys() method', function () {
-				beforeEach(function () {
+				var error;
+				beforeEach(function (done) {
 					spyOn(fs, 'readdir').andCallFake(function (path, callback) {
 						callback(thrownError);
 					});
-				});
-				it('Calls fs.readdir()', function (done) {
-					filesystem.keys('type', function () {
-						expect(fs.readdir).toHaveBeenCalled();
-						expect(fs.readdir.callCount).toBe(1);
+					filesystem.keys('type', function (e) {
+						error = e;
 						done();
 					});
 				});
-				it('Calls the callback with the error', function (done) {
-					filesystem.keys('type', function (error) {
-						expect(error).toBe(thrownError);
-						done();
-					});
+				it('Calls fs.readdir()', function () {
+					expect(fs.readdir).toHaveBeenCalled();
+					expect(fs.readdir.callCount).toBe(1);
+				});
+				it('Calls the callback with the error', function () {
+					expect(error).toBe(thrownError);
 				});
 			});
 			describe('The all() method', function () {
-				beforeEach(function () {
+				var error;
+				beforeEach(function (done) {
 					spyOn(fs, 'readdir').andCallFake(function (path, callback) {
 						callback(thrownError);
 					});
 					spyOn(fs, 'readFile').andCallFake(function (path, options, callback) {
 						callback(thrownError);
 					});
-				});
-				it('Calls fs.readdir()', function (done) {
-					filesystem.all('type', function () {
-						expect(fs.readdir).toHaveBeenCalled();
-						expect(fs.readdir.callCount).toBe(1);
-						expect(fs.readFile).not.toHaveBeenCalled();
+					filesystem.all('type', function (e) {
+						error = e;
 						done();
 					});
 				});
-				it('Calls the callback with the error', function (done) {
-					filesystem.all('type', function (error) {
-						expect(error).toBe(thrownError);
-						done();
-					});
+				it('Calls fs.readdir()', function () {
+					expect(fs.readdir).toHaveBeenCalled();
+					expect(fs.readdir.callCount).toBe(1);
+					expect(fs.readFile).not.toHaveBeenCalled();
+				});
+				it('Calls the callback with the error', function () {
+					expect(error).toBe(thrownError);
 				});
 			});
 			describe('The remove() method', function () {
-				beforeEach(function () {
+				var error;
+				beforeEach(function (done) {
 					spyOn(fs, 'unlink').andCallFake(function (path, callback) {
 						callback(thrownError);
 					});
-				});
-				it('Calls fs.unlink()', function (done) {
-					filesystem.remove('type', 'key', function () {
-						expect(fs.unlink).toHaveBeenCalled();
-						expect(fs.unlink.callCount).toBe(1);
+					filesystem.remove('type', 'key', function (e) {
+						error = e;
 						done();
 					});
 				});
-				it('Calls the callback with the error', function (done) {
-					filesystem.remove('type', 'key', function (error) {
-						expect(error).toBe(thrownError);
-						done();
-					});
+				it('Calls fs.unlink()', function () {
+					expect(fs.unlink).toHaveBeenCalled();
+					expect(fs.unlink.callCount).toBe(1);
+				});
+				it('Calls the callback with the error', function () {
+					expect(error).toBe(thrownError);
 				});
 			});
 		});
