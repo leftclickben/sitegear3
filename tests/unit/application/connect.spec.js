@@ -6,33 +6,38 @@
  * MIT Licensed
  */
 
-(function (_, sitegear3) {
+(function (_, sitegear3, jasmine) {
 	"use strict";
 	require('../setupTests');
 
-	describe('Application lifecycle: persistence()', function () {
-		var app;
+	describe('Application lifecycle: connect()', function () {
 		describe('When called with a valid connector', function () {
+			var app, connectorSpy;
 			beforeEach(function () {
-				sitegear3.connectors = { test: _.noop };
-				spyOn(sitegear3.connectors, 'test');
-				app = sitegear3(require('../settings.json')).connect('test', { foo: 'foo', bar: 'baz' });
+				connectorSpy = jasmine.createSpy('connector');
+				app = sitegear3(require('../settings.json'));
+				spyOn(app, 'connector').andReturn(connectorSpy);
+				app.connect('test', { foo: 'foo', bar: 'baz' });
 			});
 			it('Instantiates the data provider', function () {
 				expect(app.data).not.toBeUndefined();
+			});
+			it('Invokes the connector() method', function () {
+				expect(app.connector).toHaveBeenCalledWith('test');
+				expect(app.connector.callCount).toBe(1);
 			});
 			describe('When creating a repository', function () {
 				beforeEach(function () {
 					app.data.define('test-repository');
 				});
 				it('Instantiates the specified connectors', function () {
-					expect(sitegear3.connectors.test).toHaveBeenCalledWith({ foo: 'foo', bar: 'baz' });
-					expect(sitegear3.connectors.test.callCount).toBe(1);
+					expect(connectorSpy).toHaveBeenCalledWith({ foo: 'foo', bar: 'baz' });
+					expect(connectorSpy.callCount).toBe(1);
 				});
 			});
 		});
 		describe('When called with an unknown connector', function () {
-			var error;
+			var app, error;
 			beforeEach(function () {
 				app = sitegear3(require('../settings.json'));
 				try {
@@ -46,14 +51,14 @@
 			});
 			it('Throws the relevant exception', function () {
 				expect(error).not.toBeUndefined();
-				expect(error.message).toBe('Unknown data connector specified: unknown');
+				expect(error.message).toBe("Cannot find module '/home/ben/workspace-node/sitegear3/lib/data/connectors/unknown/connector.js'");
 			});
 		});
-		describe('When called with an unknown connector', function () {
-			var error;
+		describe('When called with an invalid connector', function () {
+			var app, error;
 			beforeEach(function () {
-				sitegear3.connectors = { test: 'this should be a function, not a string' };
 				app = sitegear3(require('../settings.json'));
+				spyOn(app, 'connector').andReturn('this should be a function, not a string');
 				try {
 					app.connect('test');
 				} catch (e) {
@@ -69,4 +74,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../index')));
+}(require('lodash'), require('../../../index'), require('jasmine-node')));
