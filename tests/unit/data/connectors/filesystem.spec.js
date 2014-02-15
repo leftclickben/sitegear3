@@ -34,10 +34,6 @@
 					});
 					filesystem.set('type', 'key', { title: 'title', main: 'body content' }, callbackSpy);
 				});
-				it('Calls fs.writeFile()', function () {
-					expect(fs.writeFile).toHaveBeenCalled();
-					expect(fs.writeFile.callCount).toBe(1);
-				});
 				it('Calls the callback', function () {
 					expect(callbackSpy).toHaveBeenCalled();
 					expect(callbackSpy.callCount).toBe(1);
@@ -61,10 +57,6 @@
 						done();
 					});
 					filesystem.get('type', 'key', callbackSpy);
-				});
-				it('Calls fs.readFile()', function () {
-					expect(fs.readFile).toHaveBeenCalled();
-					expect(fs.readFile.callCount).toBe(1);
 				});
 				it('Calls the callback', function () {
 					expect(callbackSpy).toHaveBeenCalled();
@@ -91,10 +83,6 @@
 						done();
 					});
 					filesystem.keys('type', callbackSpy);
-				});
-				it('Calls fs.readdir()', function () {
-					expect(fs.readdir).toHaveBeenCalled();
-					expect(fs.readdir.callCount).toBe(1);
 				});
 				it('Calls the callback', function () {
 					expect(callbackSpy).toHaveBeenCalled();
@@ -127,12 +115,6 @@
 					});
 					filesystem.all('type', callbackSpy);
 				});
-				it('Calls fs.readdir() and fs.readFile()', function () {
-					expect(fs.readdir).toHaveBeenCalled();
-					expect(fs.readdir.callCount).toBe(1);
-					expect(fs.readFile).toHaveBeenCalled();
-					expect(fs.readFile.callCount).toBe(3);
-				});
 				it('Calls the callback', function () {
 					expect(callbackSpy).toHaveBeenCalled();
 					expect(callbackSpy.callCount).toBe(1);
@@ -159,10 +141,6 @@
 						done();
 					});
 					filesystem.remove('type', 'key', callbackSpy);
-				});
-				it('Calls fs.unlink()', function () {
-					expect(fs.unlink).toHaveBeenCalled();
-					expect(fs.unlink.callCount).toBe(1);
 				});
 				it('Calls the callback', function () {
 					expect(callbackSpy).toHaveBeenCalled();
@@ -194,10 +172,6 @@
 					});
 					filesystem.set('type', 'key', { title: 'title', main: 'body content' }, callbackSpy);
 				});
-				it('Calls fs.writeFile()', function () {
-					expect(fs.writeFile).toHaveBeenCalled();
-					expect(fs.writeFile.callCount).toBe(1);
-				});
 				it('Calls the callback', function () {
 					expect(callbackSpy).toHaveBeenCalled();
 					expect(callbackSpy.callCount).toBe(1);
@@ -222,10 +196,6 @@
 					});
 					filesystem.get('type', 'key', callbackSpy);
 				});
-				it('Calls fs.readFile()', function () {
-					expect(fs.readFile).toHaveBeenCalled();
-					expect(fs.readFile.callCount).toBe(1);
-				});
 				it('Calls the callback', function () {
 					expect(callbackSpy).toHaveBeenCalled();
 					expect(callbackSpy.callCount).toBe(1);
@@ -246,10 +216,6 @@
 						done();
 					});
 					filesystem.keys('type', callbackSpy);
-				});
-				it('Calls fs.readdir()', function () {
-					expect(fs.readdir).toHaveBeenCalled();
-					expect(fs.readdir.callCount).toBe(1);
 				});
 				it('Calls the callback', function () {
 					expect(callbackSpy).toHaveBeenCalled();
@@ -274,11 +240,6 @@
 					});
 					filesystem.all('type', callbackSpy);
 				});
-				it('Calls fs.readdir()', function () {
-					expect(fs.readdir).toHaveBeenCalled();
-					expect(fs.readdir.callCount).toBe(1);
-					expect(fs.readFile).not.toHaveBeenCalled();
-				});
 				it('Calls the callback', function () {
 					expect(callbackSpy).toHaveBeenCalled();
 					expect(callbackSpy.callCount).toBe(1);
@@ -298,10 +259,6 @@
 						done();
 					});
 					filesystem.remove('type', 'key', callbackSpy);
-				});
-				it('Calls fs.unlink()', function () {
-					expect(fs.unlink).toHaveBeenCalled();
-					expect(fs.unlink.callCount).toBe(1);
 				});
 				it('Calls the callback', function () {
 					expect(callbackSpy).toHaveBeenCalled();
