@@ -20,8 +20,8 @@
 			.use(app.router)
 			.use(sitegear3.middleware.notFound())
 			.use(sitegear3.middleware.internalServerError())
-			.persistence('filesystem', { root: __dirname + '/data' })
-			.mapRoutes(require('./routes.json'))
+			.connect('filesystem', { root: __dirname + '/data' })
+			.configureRoutes(require('./routes.json'))
 			.engine('html', swig.renderFile)
 			.set('views', __dirname + '/templates')
 			.start(8888);

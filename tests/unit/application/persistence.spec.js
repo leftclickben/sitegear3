@@ -16,7 +16,7 @@
 			beforeEach(function () {
 				sitegear3.connectors = { test: _.noop };
 				spyOn(sitegear3.connectors, 'test');
-				app = sitegear3(require('../settings.json')).persistence('test', { foo: 'foo', bar: 'baz' });
+				app = sitegear3(require('../settings.json')).connect('test', { foo: 'foo', bar: 'baz' });
 			});
 			it('Instantiates the data provider', function () {
 				expect(app.data).not.toBeUndefined();
@@ -36,7 +36,7 @@
 			beforeEach(function () {
 				app = sitegear3(require('../settings.json'));
 				try {
-					app.persistence('unknown');
+					app.connect('unknown');
 				} catch (e) {
 					error = e;
 				}
@@ -55,7 +55,7 @@
 				sitegear3.connectors = { test: 'this should be a function, not a string' };
 				app = sitegear3(require('../settings.json'));
 				try {
-					app.persistence('test');
+					app.connect('test');
 				} catch (e) {
 					error = e;
 				}

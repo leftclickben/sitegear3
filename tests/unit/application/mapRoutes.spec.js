@@ -10,13 +10,13 @@
 	"use strict";
 	require('../setupTests');
 
-	describe('Application lifecycle: mapRoutes()', function () {
+	describe('Application lifecycle: configureRoutes()', function () {
 		var app;
 		describe('Works correctly with correct configuration', function () {
 			beforeEach(function () {
 				app = sitegear3(require('../settings.json'));
 				app.data = mockDataProvider();
-				app.mapRoutes([
+				app.configureRoutes([
 					{
 						path: '/products',
 						module: 'products'
@@ -99,7 +99,7 @@
 			});
 			it('Throws an error when invalid module is specified', function () {
 				try {
-					app.mapRoutes([
+					app.configureRoutes([
 						{
 							path: '/some/path',
 							module: 'INVALID'
@@ -112,7 +112,7 @@
 			});
 			it('Throws an error when invalid action is specified in a valid module', function () {
 				try {
-					app.mapRoutes([
+					app.configureRoutes([
 						{
 							path: '/another/path',
 							action: 'INVALID'
