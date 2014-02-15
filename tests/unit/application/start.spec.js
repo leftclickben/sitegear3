@@ -12,13 +12,10 @@
 
 	describe('Application lifecycle: start()', function () {
 		var app;
-		beforeEach(function (done) {
-			sitegear3.ready(function () {
-				app = sitegear3().initialise(require('../settings.json'));
-				spyOn(http, 'createServer').andReturn(mockServer());
-				spyOn(https, 'createServer').andReturn(mockServer());
-				done();
-			});
+		beforeEach(function () {
+			app = sitegear3().initialise(require('../settings.json'));
+			spyOn(http, 'createServer').andReturn(mockServer());
+			spyOn(https, 'createServer').andReturn(mockServer());
 		});
 		describe('With no parameters', function () {
 			beforeEach(function () {

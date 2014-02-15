@@ -8,13 +8,10 @@
 
 (function (_, sitegear3, mockDataProvider) {
 	"use strict";
-//	require('../setupTests');
+	require('../setupTests');
 
 	describe('Application lifecycle: mapRoutes()', function () {
 		var app;
-		beforeEach(function (done) {
-			sitegear3.ready(done);
-		});
 		describe('Works correctly with correct configuration', function () {
 			beforeEach(function () {
 				app = sitegear3().initialise(require('../settings.json'));

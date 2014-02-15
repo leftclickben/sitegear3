@@ -12,9 +12,6 @@
 
 	describe('Application lifecycle: initialise()', function () {
 		var app;
-		beforeEach(function (done) {
-			sitegear3.ready(done);
-		});
 		describe('With no parameters', function () {
 			beforeEach(function () {
 				app = sitegear3();

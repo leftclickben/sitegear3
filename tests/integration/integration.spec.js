@@ -12,11 +12,8 @@
 	describe('Sitegear3 integration test', function () {
 		var app,
 			readFileOptions = { encoding: 'utf8' };
-		beforeEach(function (done) {
-			sitegear3.ready(function () {
-				app = siteBootstrap();
-				done();
-			});
+		beforeEach(function () {
+			app = siteBootstrap();
 		});
 		it('Serves the home page', function (done) {
 			fs.readFile(__dirname + '/expectations/index.txt', readFileOptions, function (readFileError, expectedData) {
