@@ -15,11 +15,10 @@
 			expect(_.isFunction(defaultModule)).toBeTruthy();
 		});
 		describe('Operates correctly', function () {
-			var app, module, action;
+			var app, module;
 			beforeEach(function () {
 				app = mockApplication();
 				module = defaultModule(app);
-				action = module.index();
 			});
 			it('Exposes all required action methods', function () {
 				expect(_.isFunction(module.index)).toBeTruthy();
@@ -32,7 +31,7 @@
 						mockRequest = require('../_mock/request');
 						mockResponse = require('../_mock/response');
 						spyOn(repository, 'get').andCallThrough();
-						action(mockRequest, mockResponse);
+						module.index(mockRequest, mockResponse);
 					});
 					it('Makes the correct number of calls to persistence', function () {
 						expect(repository.get).toHaveBeenCalled();
@@ -44,7 +43,7 @@
 						mockRequest = require('../_mock/request');
 						mockResponse = require('../_mock/response');
 						spyOn(mockResponse, 'render');
-						action(mockRequest, mockResponse);
+						module.index(mockRequest, mockResponse);
 					});
 					it('Calls response.render()', function () {
 						expect(mockResponse.render).toHaveBeenCalled();
@@ -62,7 +61,7 @@
 						app.data.repository('page').get = function (key, callback) {
 							callback(error);
 						};
-						action(mockRequest, mockResponse, next);
+						module.index(mockRequest, mockResponse, next);
 					});
 					it('Calls next() with the error', function () {
 						expect(next).toHaveBeenCalledWith(error);
