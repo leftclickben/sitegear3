@@ -6,7 +6,7 @@
  * MIT Licensed
  */
 
-(function (_, filesystemConnector, os, fs) {
+(function (_, filesystemConnector, os, fs, jasmine) {
 	"use strict";
 	require('../../setupTests');
 
@@ -15,7 +15,7 @@
 			expect(_.isFunction(filesystemConnector)).toBeTruthy();
 		});
 		describe('When underlying filesystem is working and accessible', function () {
-			var filesystem;
+			var filesystem, callbackSpy;
 			beforeEach(function () {
 				filesystem = filesystemConnector({ root: os.tmpdir() });
 			});
@@ -28,16 +28,21 @@
 						}
 						callback();
 					});
-					filesystem.set('type', 'key', { title: 'title', main: 'body content' }, function (e) {
+					callbackSpy = jasmine.createSpy('callback').andCallFake(function (e) {
 						error = e;
 						done();
 					});
+					filesystem.set('type', 'key', { title: 'title', main: 'body content' }, callbackSpy);
 				});
 				it('Calls fs.writeFile()', function () {
 					expect(fs.writeFile).toHaveBeenCalled();
 					expect(fs.writeFile.callCount).toBe(1);
 				});
-				it('Calls the callback with correct values', function () {
+				it('Calls the callback', function () {
+					expect(callbackSpy).toHaveBeenCalled();
+					expect(callbackSpy.callCount).toBe(1);
+				});
+				it('Does not pass an error', function () {
 					expect(error).toBeUndefined();
 				});
 			});
@@ -50,18 +55,25 @@
 						}
 						callback(undefined, '{ "title": "title", "main": "body content" }');
 					});
-					filesystem.get('type', 'key', function (e, v) {
+					callbackSpy = jasmine.createSpy('callback').andCallFake(function (e, v) {
 						error = e;
 						value = v;
 						done();
 					});
+					filesystem.get('type', 'key', callbackSpy);
 				});
 				it('Calls fs.readFile()', function () {
 					expect(fs.readFile).toHaveBeenCalled();
 					expect(fs.readFile.callCount).toBe(1);
 				});
-				it('Calls the callback with correct values', function () {
+				it('Calls the callback', function () {
+					expect(callbackSpy).toHaveBeenCalled();
+					expect(callbackSpy.callCount).toBe(1);
+				});
+				it('Does not pass an error', function () {
 					expect(error).toBeUndefined();
+				});
+				it('Passes the correct value', function () {
 					expect(_.isPlainObject(value)).toBeTruthy();
 					expect(value.title).toBe('title');
 					expect(value.main).toBe('body content');
@@ -73,18 +85,25 @@
 					spyOn(fs, 'readdir').andCallFake(function (path, callback) {
 						callback(undefined, [ 'foo', 'bar', 'baz' ]);
 					});
-					filesystem.keys('type', function (e, k) {
+					callbackSpy = jasmine.createSpy('callback').andCallFake(function (e, k) {
 						error = e;
 						keys = k;
 						done();
 					});
+					filesystem.keys('type', callbackSpy);
 				});
 				it('Calls fs.readdir()', function () {
 					expect(fs.readdir).toHaveBeenCalled();
 					expect(fs.readdir.callCount).toBe(1);
 				});
-				it('Calls the callback with correct values', function () {
+				it('Calls the callback', function () {
+					expect(callbackSpy).toHaveBeenCalled();
+					expect(callbackSpy.callCount).toBe(1);
+				});
+				it('Does not pass an error', function () {
 					expect(error).toBeUndefined();
+				});
+				it('Passes the correct value', function () {
 					expect(_.isArray(keys)).toBeTruthy();
 					expect(keys.length).toBe(3);
 					expect(keys[0]).toBe('foo');
@@ -101,11 +120,12 @@
 					spyOn(fs, 'readFile').andCallFake(function (path, options, callback) {
 						callback(undefined, '"this is ' + path + '"');
 					});
-					filesystem.all('type', function (e, d) {
+					callbackSpy = jasmine.createSpy('callback').andCallFake(function (e, d) {
 						error = e;
 						data = d;
 						done();
 					});
+					filesystem.all('type', callbackSpy);
 				});
 				it('Calls fs.readdir() and fs.readFile()', function () {
 					expect(fs.readdir).toHaveBeenCalled();
@@ -113,8 +133,14 @@
 					expect(fs.readFile).toHaveBeenCalled();
 					expect(fs.readFile.callCount).toBe(3);
 				});
-				it('Calls the callback with correct values', function () {
+				it('Calls the callback', function () {
+					expect(callbackSpy).toHaveBeenCalled();
+					expect(callbackSpy.callCount).toBe(1);
+				});
+				it('Does not pass an error', function () {
 					expect(error).toBeUndefined();
+				});
+				it('Passes the correct value', function () {
 					expect(_.isPlainObject(data)).toBeTruthy();
 					expect(_.size(data)).toBe(3);
 					expect(data.foo).toBe('this is /tmp/type/foo.json');
@@ -128,22 +154,27 @@
 					spyOn(fs, 'unlink').andCallFake(function (path, callback) {
 						callback(undefined);
 					});
-					filesystem.remove('type', 'key', function (e) {
+					callbackSpy = jasmine.createSpy('callback').andCallFake(function (e) {
 						error = e;
 						done();
 					});
+					filesystem.remove('type', 'key', callbackSpy);
 				});
 				it('Calls fs.unlink()', function () {
 					expect(fs.unlink).toHaveBeenCalled();
 					expect(fs.unlink.callCount).toBe(1);
 				});
-				it('Calls the callback with correct values', function () {
+				it('Calls the callback', function () {
+					expect(callbackSpy).toHaveBeenCalled();
+					expect(callbackSpy.callCount).toBe(1);
+				});
+				it('Does not pass an error', function () {
 					expect(error).toBeUndefined();
 				});
 			});
 		});
 		describe('When underlying filesystem is returning errors', function () {
-			var filesystem,
+			var filesystem, callbackSpy,
 				thrownError = new Error('This is an error');
 			beforeEach(function () {
 				filesystem = filesystemConnector({ root: os.tmpdir() });
@@ -157,16 +188,21 @@
 						}
 						callback(thrownError);
 					});
-					filesystem.set('type', 'key', { title: 'title', main: 'body content' }, function (e) {
+					callbackSpy = jasmine.createSpy('callback').andCallFake(function (e) {
 						error = e;
 						done();
 					});
+					filesystem.set('type', 'key', { title: 'title', main: 'body content' }, callbackSpy);
 				});
 				it('Calls fs.writeFile()', function () {
 					expect(fs.writeFile).toHaveBeenCalled();
 					expect(fs.writeFile.callCount).toBe(1);
 				});
-				it('Calls the callback with the error', function () {
+				it('Calls the callback', function () {
+					expect(callbackSpy).toHaveBeenCalled();
+					expect(callbackSpy.callCount).toBe(1);
+				});
+				it('Passes the expected error', function () {
 					expect(error).toBe(thrownError);
 				});
 			});
@@ -179,17 +215,22 @@
 						}
 						callback(thrownError);
 					});
-					filesystem.get('type', 'key', function (e, v) {
+					callbackSpy = jasmine.createSpy('callback').andCallFake(function (e, v) {
 						error = e;
 						value = v;
 						done();
 					});
+					filesystem.get('type', 'key', callbackSpy);
 				});
 				it('Calls fs.readFile()', function () {
 					expect(fs.readFile).toHaveBeenCalled();
 					expect(fs.readFile.callCount).toBe(1);
 				});
-				it('Calls the callback with the error', function () {
+				it('Calls the callback', function () {
+					expect(callbackSpy).toHaveBeenCalled();
+					expect(callbackSpy.callCount).toBe(1);
+				});
+				it('Passes the expected error', function () {
 					expect(error).toBe(thrownError);
 					expect(value).toBeUndefined();
 				});
@@ -200,16 +241,21 @@
 					spyOn(fs, 'readdir').andCallFake(function (path, callback) {
 						callback(thrownError);
 					});
-					filesystem.keys('type', function (e) {
+					callbackSpy = jasmine.createSpy('callback').andCallFake(function (e) {
 						error = e;
 						done();
 					});
+					filesystem.keys('type', callbackSpy);
 				});
 				it('Calls fs.readdir()', function () {
 					expect(fs.readdir).toHaveBeenCalled();
 					expect(fs.readdir.callCount).toBe(1);
 				});
-				it('Calls the callback with the error', function () {
+				it('Calls the callback', function () {
+					expect(callbackSpy).toHaveBeenCalled();
+					expect(callbackSpy.callCount).toBe(1);
+				});
+				it('Passes the expected error', function () {
 					expect(error).toBe(thrownError);
 				});
 			});
@@ -222,17 +268,22 @@
 					spyOn(fs, 'readFile').andCallFake(function (path, options, callback) {
 						callback(thrownError);
 					});
-					filesystem.all('type', function (e) {
+					callbackSpy = jasmine.createSpy('callback').andCallFake(function (e) {
 						error = e;
 						done();
 					});
+					filesystem.all('type', callbackSpy);
 				});
 				it('Calls fs.readdir()', function () {
 					expect(fs.readdir).toHaveBeenCalled();
 					expect(fs.readdir.callCount).toBe(1);
 					expect(fs.readFile).not.toHaveBeenCalled();
 				});
-				it('Calls the callback with the error', function () {
+				it('Calls the callback', function () {
+					expect(callbackSpy).toHaveBeenCalled();
+					expect(callbackSpy.callCount).toBe(1);
+				});
+				it('Passes the expected error', function () {
 					expect(error).toBe(thrownError);
 				});
 			});
@@ -242,19 +293,24 @@
 					spyOn(fs, 'unlink').andCallFake(function (path, callback) {
 						callback(thrownError);
 					});
-					filesystem.remove('type', 'key', function (e) {
+					callbackSpy = jasmine.createSpy('callback').andCallFake(function (e) {
 						error = e;
 						done();
 					});
+					filesystem.remove('type', 'key', callbackSpy);
 				});
 				it('Calls fs.unlink()', function () {
 					expect(fs.unlink).toHaveBeenCalled();
 					expect(fs.unlink.callCount).toBe(1);
 				});
-				it('Calls the callback with the error', function () {
+				it('Calls the callback', function () {
+					expect(callbackSpy).toHaveBeenCalled();
+					expect(callbackSpy.callCount).toBe(1);
+				});
+				it('Passes the expected error', function () {
 					expect(error).toBe(thrownError);
 				});
 			});
 		});
 	});
-}(require('lodash'), require('../../../../lib/data/connectors/filesystem/connector'), require('os'), require('graceful-fs')));
+}(require('lodash'), require('../../../../lib/data/connectors/filesystem/connector'), require('os'), require('graceful-fs'), require('jasmine-node')));
