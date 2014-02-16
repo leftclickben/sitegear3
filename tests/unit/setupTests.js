@@ -9,6 +9,12 @@
 (function (_) {
 	"use strict";
 
-	// Switch off logging for testing purposes.  This doesn't interfere with output of the test runner.
-	console.log = _.noop;
+	beforeEach(function () {
+		console._originalLog = console.log;
+		console.log = _.noop;
+	});
+	afterEach(function () {
+		console.log = console._originalLog;
+		delete console._originalLog;
+	});
 }(require('lodash')));
