@@ -74,4 +74,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../lib/modules/default/module'), require('jasmine-node'), require('../_mock/application')));
+}(require('lodash'), require('../../../lib/modules/default'), require('jasmine-node'), require('../_mock/application')));
