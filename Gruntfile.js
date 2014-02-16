@@ -35,9 +35,6 @@
 					src: [
 						'tests/**/*.js'
 					],
-					exclude: [
-						'tests/unit/setupTests.js'
-					],
 					options: {
 						log: 'build/log/jslint/jslint.tests.log'
 					}
