@@ -51,7 +51,7 @@
 			});
 			it('Throws the relevant exception', function () {
 				expect(error).not.toBeUndefined();
-				expect(error.message).toBe("Cannot find module '/home/ben/workspace-node/sitegear3/lib/data/connectors/unknown/connector.js'");
+				expect(error.message).toBe("Cannot find module '/home/ben/workspace-node/sitegear3/lib/data/connectors/unknown'");
 			});
 		});
 		describe('When called with an invalid connector', function () {
