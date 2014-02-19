@@ -3,7 +3,7 @@
  * This is the bootstrap script for Sitegear3 integration tests.  It is a variation on the default bootstrap template.
  */
 
-(function (sitegear3, swig) {
+(function (sitegear3, filesystemConnector, swig) {
 	"use strict";
 
 	module.exports = function () {
@@ -20,11 +20,11 @@
 			.use(app.router)
 			.use(sitegear3.middleware.notFound())
 			.use(sitegear3.middleware.internalServerError())
-			.connect('filesystem', { root: __dirname + '/data' })
+			.connect(filesystemConnector({ root: __dirname + '/data' }))
 			.configureRoutes(require('./routes.json'))
 			.engine('html', swig.renderFile)
 			.set('views', __dirname + '/templates')
 			.start(8888);
 	};
 
-}(require('../../../index'), require('swig')));
+}(require('../../../index'), require('../../../lib/data/connectors/filesystem'), require('swig')));
