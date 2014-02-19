@@ -6,22 +6,22 @@
  * MIT Licensed
  */
 
-(function (_, defaultDomain, jasmine, mockApplication) {
+(function (_, defaultComponent, jasmine, mockApplication) {
 	"use strict";
 	require('../setupTests');
 
-	describe('Domain: default', function () {
+	describe('Component: default', function () {
 		it('Exports a function', function () {
-			expect(_.isFunction(defaultDomain)).toBeTruthy();
+			expect(_.isFunction(defaultComponent)).toBeTruthy();
 		});
 		describe('Operates correctly', function () {
-			var app, domain;
+			var app, component;
 			beforeEach(function () {
 				app = mockApplication();
-				domain = defaultDomain(app);
+				component = defaultComponent(app);
 			});
 			it('Exposes all required action methods', function () {
-				expect(_.isFunction(domain.index)).toBeTruthy();
+				expect(_.isFunction(component.index)).toBeTruthy();
 			});
 			describe('The index() action', function () {
 				var repository, mockRequest, mockResponse;
@@ -31,7 +31,7 @@
 						mockRequest = require('../_mock/request');
 						mockResponse = require('../_mock/response');
 						spyOn(repository, 'get').andCallThrough();
-						domain.index(mockRequest, mockResponse);
+						component.index(mockRequest, mockResponse);
 					});
 					it('Makes the correct number of calls to persistence', function () {
 						expect(repository.get).toHaveBeenCalled();
@@ -43,7 +43,7 @@
 						mockRequest = require('../_mock/request');
 						mockResponse = require('../_mock/response');
 						spyOn(mockResponse, 'render');
-						domain.index(mockRequest, mockResponse);
+						component.index(mockRequest, mockResponse);
 					});
 					it('Calls response.render()', function () {
 						expect(mockResponse.render).toHaveBeenCalled();
@@ -61,7 +61,7 @@
 						app.data.repository('page').get = function (key, callback) {
 							callback(error);
 						};
-						domain.index(mockRequest, mockResponse, next);
+						component.index(mockRequest, mockResponse, next);
 					});
 					it('Calls next() with the error', function () {
 						expect(next).toHaveBeenCalledWith(error);
@@ -74,4 +74,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../lib/domains/default'), require('jasmine-node'), require('../_mock/application')));
+}(require('lodash'), require('../../../lib/components/default'), require('jasmine-node'), require('../_mock/application')));

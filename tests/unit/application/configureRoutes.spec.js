@@ -19,11 +19,11 @@
 				app.configureRoutes([
 					{
 						path: '/products',
-						domain: 'products'
+						component: 'products'
 					},
 					{
 						path: '/products/:item',
-						domain: 'products',
+						component: 'products',
 						action: 'item'
 					},
 					{
@@ -37,7 +37,7 @@
 				expect(_.size(app.routes.put)).toBe(0);
 				expect(_.size(app.routes.dele)).toBe(0);
 			});
-			it('Correctly configures static routes to non-default domains', function () {
+			it('Correctly configures static routes to non-default components', function () {
 				expect(app.routes.get[0].path).toBe('/products');
 				expect(app.routes.get[0].method).toBe('get');
 				expect(app.routes.get[0].callbacks.length).toBe(1);
@@ -97,20 +97,20 @@
 				app = sitegear3(require('../settings.json'));
 				app.data = mockDataProvider();
 			});
-			it('Throws an error when invalid domain is specified', function () {
+			it('Throws an error when invalid component is specified', function () {
 				try {
 					app.configureRoutes([
 						{
 							path: '/some/path',
-							domain: 'INVALID'
+							component: 'INVALID'
 						}
 					]);
 					expect('This code should not execute').toBeFalsy();
 				} catch (error) {
-					expect(error.toString()).toMatch(/Error: Cannot find module '[a-zA-Z0-9_\-\.\/]*domains\/INVALID'/);
+					expect(error.toString()).toMatch(/Error: Cannot find module '[a-zA-Z0-9_\-\.\/]*components\/INVALID'/);
 				}
 			});
-			it('Throws an error when invalid action is specified in a valid domain', function () {
+			it('Throws an error when invalid action is specified in a valid component', function () {
 				try {
 					app.configureRoutes([
 						{
