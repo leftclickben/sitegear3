@@ -45,10 +45,7 @@
 		"express": "~3.4.8",
 		"lodash": "~2.4.1",
 		"graceful-fs": "~2.0.1",
-		"mkdirp": "~0.3.5",
-		"rimraf": "~2.2.6",
-		"glob": "~3.2.8",
-		"jayschema": "~0.2.3"
+		"glob": "~3.2.8"
 	},
 	"devDependencies": {
 		"jasmine-node": "~1.13.0",
@@ -58,7 +55,11 @@
 		"grunt-jslint": "~1.1.2",
 		"grunt-contrib-watch": "~0.5.3",
 		"swig": "~1.3.2",
-		"request": "~2.33.0"
+		"request": "~2.33.0",
+		"sitegear3-adapter-filesystem": "~0.0.1",
+		"sitegear3-validator-schema": "~0.0.1",
+		"sitegear3-component-default": "~0.0.1",
+		"sitegear3-component-products": "~0.0.1"
 	},
 	"engines": {
 		"node": ">=0.8.0",

@@ -16,6 +16,20 @@
 			beforeEach(function () {
 				app = sitegear3(require('../settings.json'));
 				app.data = mockMediator();
+				app.component = function (name) {
+					if (name === 'products') {
+						return {
+							index: _.noop,
+							item: _.noop
+						};
+					}
+					if (name === 'default') {
+						return {
+							index: _.noop
+						};
+					}
+					return null;
+				};
 				app.configureRoutes([
 					{
 						path: '/products',
@@ -92,7 +106,7 @@
 				app.stop();
 			});
 		});
-		describe('Throws correct errors on misconfiguration', function () {
+		describe('Handles invalid component', function () {
 			beforeEach(function () {
 				app = sitegear3(require('../settings.json'));
 				app.data = mockMediator();
@@ -109,6 +123,23 @@
 				} catch (error) {
 					expect(error.toString()).toMatch(/Error: Cannot find module '[a-zA-Z0-9_\-\.\/]*components\/INVALID'/);
 				}
+			});
+			afterEach(function () {
+				app.stop();
+			});
+		});
+		describe('Handles unknown action', function () {
+			beforeEach(function () {
+				app = sitegear3(require('../settings.json'));
+				app.data = mockMediator();
+				app.component = function (name) {
+					if (name === 'default') {
+						return {
+							index: _.noop
+						};
+					}
+					return null;
+				};
 			});
 			it('Throws an error when invalid action is specified in a valid component', function () {
 				try {
