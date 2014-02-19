@@ -6,22 +6,22 @@
  * MIT Licensed
  */
 
-(function (_, defaultModule, jasmine, mockApplication) {
+(function (_, defaultDomain, jasmine, mockApplication) {
 	"use strict";
 	require('../setupTests');
 
-	describe('Module: default', function () {
+	describe('Domain: default', function () {
 		it('Exports a function', function () {
-			expect(_.isFunction(defaultModule)).toBeTruthy();
+			expect(_.isFunction(defaultDomain)).toBeTruthy();
 		});
 		describe('Operates correctly', function () {
-			var app, module;
+			var app, domain;
 			beforeEach(function () {
 				app = mockApplication();
-				module = defaultModule(app);
+				domain = defaultDomain(app);
 			});
 			it('Exposes all required action methods', function () {
-				expect(_.isFunction(module.index)).toBeTruthy();
+				expect(_.isFunction(domain.index)).toBeTruthy();
 			});
 			describe('The index() action', function () {
 				var repository, mockRequest, mockResponse;
@@ -31,7 +31,7 @@
 						mockRequest = require('../_mock/request');
 						mockResponse = require('../_mock/response');
 						spyOn(repository, 'get').andCallThrough();
-						module.index(mockRequest, mockResponse);
+						domain.index(mockRequest, mockResponse);
 					});
 					it('Makes the correct number of calls to persistence', function () {
 						expect(repository.get).toHaveBeenCalled();
@@ -43,7 +43,7 @@
 						mockRequest = require('../_mock/request');
 						mockResponse = require('../_mock/response');
 						spyOn(mockResponse, 'render');
-						module.index(mockRequest, mockResponse);
+						domain.index(mockRequest, mockResponse);
 					});
 					it('Calls response.render()', function () {
 						expect(mockResponse.render).toHaveBeenCalled();
@@ -61,7 +61,7 @@
 						app.data.repository('page').get = function (key, callback) {
 							callback(error);
 						};
-						module.index(mockRequest, mockResponse, next);
+						domain.index(mockRequest, mockResponse, next);
 					});
 					it('Calls next() with the error', function () {
 						expect(next).toHaveBeenCalledWith(error);
@@ -74,4 +74,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../lib/modules/default'), require('jasmine-node'), require('../_mock/application')));
+}(require('lodash'), require('../../../lib/domains/default'), require('jasmine-node'), require('../_mock/application')));
