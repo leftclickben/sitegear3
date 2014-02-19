@@ -6,7 +6,7 @@
  * MIT Licensed
  */
 
-(function (_, sitegear3, mockDataProvider) {
+(function (_, sitegear3, mockMediator) {
 	"use strict";
 	require('../setupTests');
 
@@ -15,7 +15,7 @@
 		describe('Works correctly with correct configuration', function () {
 			beforeEach(function () {
 				app = sitegear3(require('../settings.json'));
-				app.data = mockDataProvider();
+				app.data = mockMediator();
 				app.configureRoutes([
 					{
 						path: '/products',
@@ -95,7 +95,7 @@
 		describe('Throws correct errors on misconfiguration', function () {
 			beforeEach(function () {
 				app = sitegear3(require('../settings.json'));
-				app.data = mockDataProvider();
+				app.data = mockMediator();
 			});
 			it('Throws an error when invalid component is specified', function () {
 				try {
@@ -128,4 +128,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../index'), require('../_mock/data/provider')));
+}(require('lodash'), require('../../../index'), require('../_mock/data/mediator')));

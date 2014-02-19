@@ -6,7 +6,7 @@
  * MIT Licensed
  */
 
-(function (_, repository, mockConnector, mockValidator, jasmine) {
+(function (_, repository, mockAdapter, mockValidator, jasmine) {
 	"use strict";
 	require('../setupTests');
 
@@ -14,10 +14,10 @@
 		var callbackSpy, repo, returnValue,
 			newValue = { value: 'this is the new value' },
 			error = new Error('something went wrong'),
-			errorConnector = mockConnector({
+			errorAdapter = mockAdapter({
 				error: error
 			}),
-			connector  = mockConnector({
+			adapter  = mockAdapter({
 				value: { value: 'this is the value' },
 				keys: [ 'key1', 'key2'],
 				all: { key1: { value: 'This is the value' }, key2: { value: 'This is the value' } }
@@ -25,16 +25,16 @@
 		it('Exports a function', function () {
 			expect(_.isFunction(repository)).toBeTruthy();
 		});
-		describe('Uses connectors correctly', function () {
-			describe('When connector is operating normally', function () {
+		describe('Uses adapters correctly', function () {
+			describe('When adapter is operating normally', function () {
 				beforeEach(function () {
-					repo = repository(connector, 'test-type');
+					repo = repository(adapter, 'test-type');
 				});
-				describe('When set() is called on the interface', function () {
+				describe('When set() is called on the mediator', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'validate').andCallThrough();
 						spyOn(repo, 'emit');
-						spyOn(connector, 'set').andCallThrough();
+						spyOn(adapter, 'set').andCallThrough();
 						callbackSpy = jasmine.createSpy('set callback').andCallFake(function () {
 							done();
 						});
@@ -48,9 +48,9 @@
 						expect(repo.validate.mostRecentCall.args[0].value).toBe('this is the new value');
 						expect(_.isFunction(repo.validate.mostRecentCall.args[1])).toBeTruthy();
 					});
-					it('Calls set() on the connector', function () {
-						expect(connector.set).toHaveBeenCalled();
-						expect(connector.set.callCount).toBe(1);
+					it('Calls set() on the adapter', function () {
+						expect(adapter.set).toHaveBeenCalled();
+						expect(adapter.set.callCount).toBe(1);
 					});
 					it('Calls the callback', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(undefined);
@@ -64,18 +64,18 @@
 						expect(returnValue).toBe(repo);
 					});
 				});
-				describe('When get() is called on the interface', function () {
+				describe('When get() is called on the mediator', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'emit');
-						spyOn(connector, 'get').andCallThrough();
+						spyOn(adapter, 'get').andCallThrough();
 						callbackSpy = jasmine.createSpy('get callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repo.get('test-key', callbackSpy);
 					});
-					it('Calls get() on the connector', function () {
-						expect(connector.get).toHaveBeenCalled();
-						expect(connector.get.callCount).toBe(1);
+					it('Calls get() on the adapter', function () {
+						expect(adapter.get).toHaveBeenCalled();
+						expect(adapter.get.callCount).toBe(1);
 					});
 					it('Calls the callback', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(undefined, { value: 'this is the value' });
@@ -89,18 +89,18 @@
 						expect(returnValue).toBe(repo);
 					});
 				});
-				describe('When keys() is called on the interface', function () {
+				describe('When keys() is called on the mediator', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'emit');
-						spyOn(connector, 'keys').andCallThrough();
+						spyOn(adapter, 'keys').andCallThrough();
 						callbackSpy = jasmine.createSpy('keys callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repo.keys(callbackSpy);
 					});
-					it('Calls keys() on the connector', function () {
-						expect(connector.keys).toHaveBeenCalled();
-						expect(connector.keys.callCount).toBe(1);
+					it('Calls keys() on the adapter', function () {
+						expect(adapter.keys).toHaveBeenCalled();
+						expect(adapter.keys.callCount).toBe(1);
 					});
 					it('Calls the callback', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(undefined, [ 'key1', 'key2' ]);
@@ -114,18 +114,18 @@
 						expect(returnValue).toBe(repo);
 					});
 				});
-				describe('When all() is called on the interface', function () {
+				describe('When all() is called on the mediator', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'emit');
-						spyOn(connector, 'all').andCallThrough();
+						spyOn(adapter, 'all').andCallThrough();
 						callbackSpy = jasmine.createSpy('all callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repo.all(callbackSpy);
 					});
-					it('Calls all() on the connector', function () {
-						expect(connector.all).toHaveBeenCalled();
-						expect(connector.all.callCount).toBe(1);
+					it('Calls all() on the adapter', function () {
+						expect(adapter.all).toHaveBeenCalled();
+						expect(adapter.all.callCount).toBe(1);
 					});
 					it('Calls the callback', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(undefined, { key1: { value: 'This is the value' }, key2: { value: 'This is the value' } });
@@ -139,18 +139,18 @@
 						expect(returnValue).toBe(repo);
 					});
 				});
-				describe('When remove() is called on the interface', function () {
+				describe('When remove() is called on the mediator', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'emit');
-						spyOn(connector, 'remove').andCallThrough();
+						spyOn(adapter, 'remove').andCallThrough();
 						callbackSpy = jasmine.createSpy('remove callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repo.remove('test-key', callbackSpy);
 					});
-					it('Calls remove() on the connectors', function () {
-						expect(connector.remove).toHaveBeenCalled();
-						expect(connector.remove.callCount).toBe(1);
+					it('Calls remove() on the adapter', function () {
+						expect(adapter.remove).toHaveBeenCalled();
+						expect(adapter.remove.callCount).toBe(1);
 					});
 					it('Calls the callback', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(undefined);
@@ -164,18 +164,18 @@
 						expect(returnValue).toBe(repo);
 					});
 				});
-				describe('When clear() is called on the interface', function () {
+				describe('When clear() is called on the mediator', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'emit');
-						spyOn(connector, 'clear').andCallThrough();
+						spyOn(adapter, 'clear').andCallThrough();
 						callbackSpy = jasmine.createSpy('clear callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repo.clear(callbackSpy);
 					});
-					it('Calls clear() on the connector', function () {
-						expect(connector.clear).toHaveBeenCalled();
-						expect(connector.clear.callCount).toBe(1);
+					it('Calls clear() on the adapter', function () {
+						expect(adapter.clear).toHaveBeenCalled();
+						expect(adapter.clear.callCount).toBe(1);
 					});
 					it('Calls the callback', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(undefined);
@@ -190,15 +190,15 @@
 					});
 				});
 			});
-			describe('When connector is generating errors', function () {
+			describe('When adapter is generating errors', function () {
 				beforeEach(function () {
-					repo = repository(errorConnector, 'test-type');
+					repo = repository(errorAdapter, 'test-type');
 				});
-				describe('When set() is called on the interface', function () {
+				describe('When set() is called on the mediator', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'validate').andCallThrough();
 						spyOn(repo, 'emit');
-						spyOn(errorConnector, 'set').andCallThrough();
+						spyOn(errorAdapter, 'set').andCallThrough();
 						callbackSpy = jasmine.createSpy('set callback').andCallFake(function () {
 							done();
 						});
@@ -212,9 +212,9 @@
 						expect(repo.validate.mostRecentCall.args[0].value).toBe('this is the new value');
 						expect(_.isFunction(repo.validate.mostRecentCall.args[1])).toBeTruthy();
 					});
-					it('Calls set() on the connector, passing an error', function () {
-						expect(errorConnector.set).toHaveBeenCalled();
-						expect(errorConnector.set.callCount).toBe(1);
+					it('Calls set() on the adapter, passing an error', function () {
+						expect(errorAdapter.set).toHaveBeenCalled();
+						expect(errorAdapter.set.callCount).toBe(1);
 					});
 					it('Calls the callback, passing an error', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(error);
@@ -228,18 +228,18 @@
 						expect(returnValue).toBe(repo);
 					});
 				});
-				describe('When get() is called on the interface', function () {
+				describe('When get() is called on the mediator', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'emit');
-						spyOn(errorConnector, 'get').andCallThrough();
+						spyOn(errorAdapter, 'get').andCallThrough();
 						callbackSpy = jasmine.createSpy('get callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repo.get('test-key', callbackSpy);
 					});
-					it('Calls get() on the connector, passing an error', function () {
-						expect(errorConnector.get).toHaveBeenCalled();
-						expect(errorConnector.get.callCount).toBe(1);
+					it('Calls get() on the adapter, passing an error', function () {
+						expect(errorAdapter.get).toHaveBeenCalled();
+						expect(errorAdapter.get.callCount).toBe(1);
 					});
 					it('Calls the callback, passing an error', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(error, undefined);
@@ -253,18 +253,18 @@
 						expect(returnValue).toBe(repo);
 					});
 				});
-				describe('When keys() is called on the interface', function () {
+				describe('When keys() is called on the mediator', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'emit');
-						spyOn(errorConnector, 'keys').andCallThrough();
+						spyOn(errorAdapter, 'keys').andCallThrough();
 						callbackSpy = jasmine.createSpy('keys callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repo.keys(callbackSpy);
 					});
-					it('Calls keys() on the connector', function () {
-						expect(errorConnector.keys).toHaveBeenCalled();
-						expect(errorConnector.keys.callCount).toBe(1);
+					it('Calls keys() on the adapter', function () {
+						expect(errorAdapter.keys).toHaveBeenCalled();
+						expect(errorAdapter.keys.callCount).toBe(1);
 					});
 					it('Calls the callback, passing an error', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(error, undefined);
@@ -278,18 +278,18 @@
 						expect(returnValue).toBe(repo);
 					});
 				});
-				describe('When all() is called on the interface', function () {
+				describe('When all() is called on the mediator', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'emit');
-						spyOn(errorConnector, 'all').andCallThrough();
+						spyOn(errorAdapter, 'all').andCallThrough();
 						callbackSpy = jasmine.createSpy('all callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repo.all(callbackSpy);
 					});
-					it('Calls all() on the connector', function () {
-						expect(errorConnector.all).toHaveBeenCalled();
-						expect(errorConnector.all.callCount).toBe(1);
+					it('Calls all() on the adapter', function () {
+						expect(errorAdapter.all).toHaveBeenCalled();
+						expect(errorAdapter.all.callCount).toBe(1);
 					});
 					it('Calls the callback, passing an error', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(error, undefined);
@@ -303,18 +303,18 @@
 						expect(returnValue).toBe(repo);
 					});
 				});
-				describe('When remove() is called on the interface', function () {
+				describe('When remove() is called on the mediator', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'emit');
-						spyOn(errorConnector, 'remove').andCallThrough();
+						spyOn(errorAdapter, 'remove').andCallThrough();
 						callbackSpy = jasmine.createSpy('remove callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repo.remove('test-key', callbackSpy);
 					});
-					it('Calls remove() on the connector, passing an error', function () {
-						expect(errorConnector.remove).toHaveBeenCalled();
-						expect(errorConnector.remove.callCount).toBe(1);
+					it('Calls remove() on the adapter, passing an error', function () {
+						expect(errorAdapter.remove).toHaveBeenCalled();
+						expect(errorAdapter.remove.callCount).toBe(1);
 					});
 					it('Calls the callback, passing an error', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(error);
@@ -328,18 +328,18 @@
 						expect(returnValue).toBe(repo);
 					});
 				});
-				describe('When clear() is called on the interface', function () {
+				describe('When clear() is called on the mediator', function () {
 					beforeEach(function (done) {
 						spyOn(repo, 'emit');
-						spyOn(errorConnector, 'clear').andCallThrough();
+						spyOn(errorAdapter, 'clear').andCallThrough();
 						callbackSpy = jasmine.createSpy('clear callback').andCallFake(function () {
 							done();
 						});
 						returnValue = repo.clear(callbackSpy);
 					});
-					it('Calls clear() on the connector, passing an error', function () {
-						expect(errorConnector.clear).toHaveBeenCalled();
-						expect(errorConnector.clear.callCount).toBe(1);
+					it('Calls clear() on the adapter, passing an error', function () {
+						expect(errorAdapter.clear).toHaveBeenCalled();
+						expect(errorAdapter.clear.callCount).toBe(1);
 					});
 					it('Calls the callback, passing an error', function () {
 						expect(callbackSpy).toHaveBeenCalledWith(error);
@@ -358,7 +358,7 @@
 		describe('Applies model methods', function () {
 			var entity;
 			beforeEach(function () {
-				repo = repository(connector, 'test-type', {
+				repo = repository(adapter, 'test-type', {
 					foo: function () {
 						return 'bar';
 					}
@@ -382,7 +382,7 @@
 						validatorSpy = jasmine.createSpy('mock validator').andCallFake(function (data, callback) {
 							return mockValidator()(data, callback);
 						});
-						repo = repository(connector, 'test-type', null, [ validatorSpy ]);
+						repo = repository(adapter, 'test-type', null, [ validatorSpy ]);
 					});
 					describe('When validate() is called', function () {
 						beforeEach(function (done) {
@@ -429,7 +429,7 @@
 						validatorSpy = jasmine.createSpy('mock validator').andCallFake(function (data, callback) {
 							return mockValidator(error)(data, callback);
 						});
-						repo = repository(connector, 'test-type', null, [ validatorSpy ]);
+						repo = repository(adapter, 'test-type', null, [ validatorSpy ]);
 					});
 					describe('When validate() is called', function () {
 						beforeEach(function (done) {
@@ -484,7 +484,7 @@
 								return mockValidator()(data, callback);
 							}));
 						});
-						repo = repository(connector, 'test-type', null, validatorSpies);
+						repo = repository(adapter, 'test-type', null, validatorSpies);
 					});
 					describe('When validate() is called', function () {
 						beforeEach(function (done) {
@@ -519,7 +519,7 @@
 								return mockValidator(error)(data, callback);
 							}));
 						});
-						repo = repository(connector, 'test-type', null, validatorSpies);
+						repo = repository(adapter, 'test-type', null, validatorSpies);
 					});
 					describe('When validate() is called', function () {
 						beforeEach(function (done) {
@@ -554,4 +554,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../lib/data/repository'), require('../_mock/data/connector'), require('../_mock/data/validator'), require('jasmine-node')));
+}(require('lodash'), require('../../../lib/data/repository'), require('../_mock/data/adapter'), require('../_mock/data/validator'), require('jasmine-node')));
