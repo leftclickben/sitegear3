@@ -5,7 +5,7 @@
  * MIT Licensed
  */
 
-(function (_, utils, mockDataProvider) {
+(function (_, utils, mockMediator) {
 	"use strict";
 
 	module.exports = function () {
@@ -17,7 +17,7 @@
 			get: function (key) {
 				return this.settings[key];
 			},
-			data: mockDataProvider()
+			data: mockMediator()
 		};
 	};
-}(require('lodash'), require('../../../lib/utils'), require('./data/provider')));
+}(require('lodash'), require('../../../lib/utils'), require('./data/mediator')));

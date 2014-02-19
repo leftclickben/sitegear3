@@ -11,12 +11,12 @@
 	require('../setupTests');
 
 	describe('Application lifecycle: connect()', function () {
-		var app, mockConnector;
+		var app, mockAdapter;
 		beforeEach(function () {
-			mockConnector = require('../_mock/data/connector');
-			app = sitegear3(require('../settings.json')).connect(mockConnector());
+			mockAdapter = require('../_mock/data/adapter');
+			app = sitegear3(require('../settings.json')).connect(mockAdapter());
 		});
-		it('Instantiates the data provider', function () {
+		it('Instantiates the data mediator', function () {
 			expect(app.data).toBeDefined();
 		});
 	});

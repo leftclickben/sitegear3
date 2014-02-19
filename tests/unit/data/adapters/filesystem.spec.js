@@ -6,18 +6,18 @@
  * MIT Licensed
  */
 
-(function (_, filesystemConnector, os, fs, jasmine) {
+(function (_, filesystemAdapter, os, fs, jasmine) {
 	"use strict";
 	require('../../setupTests');
 
-	describe('Data connector: filesystem', function () {
+	describe('Data adapter: filesystem', function () {
 		it('Exports a function', function () {
-			expect(_.isFunction(filesystemConnector)).toBeTruthy();
+			expect(_.isFunction(filesystemAdapter)).toBeTruthy();
 		});
 		describe('When underlying filesystem is working and accessible', function () {
 			var filesystem, callbackSpy;
 			beforeEach(function () {
-				filesystem = filesystemConnector({ root: os.tmpdir() });
+				filesystem = filesystemAdapter({ root: os.tmpdir() });
 			});
 			describe('The set() method', function () {
 				var error;
@@ -155,7 +155,7 @@
 			var filesystem, callbackSpy,
 				thrownError = new Error('This is an error');
 			beforeEach(function () {
-				filesystem = filesystemConnector({ root: os.tmpdir() });
+				filesystem = filesystemAdapter({ root: os.tmpdir() });
 			});
 			describe('The set() method', function () {
 				var error;
@@ -270,4 +270,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../../lib/data/connectors/filesystem'), require('os'), require('graceful-fs'), require('jasmine-node')));
+}(require('lodash'), require('../../../../lib/data/adapters/filesystem'), require('os'), require('graceful-fs'), require('jasmine-node')));

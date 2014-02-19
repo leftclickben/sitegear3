@@ -52,7 +52,7 @@
 				});
 				describe('When persistence is throwing errors', function () {
 					var next,
-						error = new Error('This is an error from data provider');
+						error = new Error('This is an error from the data mediator');
 					beforeEach(function () {
 						mockRequest = require('../_mock/request');
 						mockResponse = require('../_mock/response');
