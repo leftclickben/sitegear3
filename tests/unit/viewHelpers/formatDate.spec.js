@@ -8,7 +8,7 @@
 
 (function (_, formatDate) {
 	"use strict";
-	require('../setupTests');
+	require('../../setupTests');
 
 	describe('View Helper: formatDate', function () {
 		var date = new Date();

@@ -8,7 +8,7 @@
 
 (function (_, jasmine, internalServerError) {
 	"use strict";
-	require('../setupTests');
+	require('../../setupTests');
 
 	describe('Helper: internalServerError', function () {
 		it('Exports a function', function () {

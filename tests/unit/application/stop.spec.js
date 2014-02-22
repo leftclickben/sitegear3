@@ -8,17 +8,19 @@
 
 (function (sitegear3, http, https, mockServer) {
 	"use strict";
-	require('../setupTests');
+	require('../../setupTests');
 
 	describe('Application lifecycle: stop()', function () {
-		var app;
+		var app, originalHttpCreateServer, originalHttpsCreateServer;
 		beforeEach(function () {
+			originalHttpCreateServer = http.createServer;
+			originalHttpsCreateServer = https.createServer;
 			spyOn(http, 'createServer').andReturn(mockServer());
 			spyOn(https, 'createServer').andReturn(mockServer());
 		});
 		describe('When start() is called with no parameters', function () {
 			beforeEach(function () {
-				app = sitegear3(require('../settings.json')).start();
+				app = sitegear3(require('../_input/settings.json')).start();
 				spyOn(app.server.http, 'close').andCallThrough();
 				app.stop();
 			});
@@ -29,7 +31,7 @@
 		});
 		describe('When start() is called with one parameter', function () {
 			beforeEach(function () {
-				app = sitegear3(require('../settings.json')).start(8888);
+				app = sitegear3(require('../_input/settings.json')).start(8888);
 				spyOn(app.server.http, 'close').andCallThrough();
 				app.stop();
 			});
@@ -40,7 +42,7 @@
 		});
 		describe('When start() is called with two parameters', function () {
 			beforeEach(function () {
-				app = sitegear3(require('../settings.json')).start(8888, {});
+				app = sitegear3(require('../_input/settings.json')).start(8888, {});
 				spyOn(app.server.http, 'close').andCallThrough();
 				spyOn(app.server.https, 'close').andCallThrough();
 				app.stop();
@@ -54,7 +56,7 @@
 		});
 		describe('When start() is called with two parameters and skipping httpPort', function () {
 			beforeEach(function () {
-				app = sitegear3(require('../settings.json')).start({}, 8444);
+				app = sitegear3(require('../_input/settings.json')).start({}, 8444);
 				spyOn(app.server.https, 'close').andCallThrough();
 				app.stop();
 			});
@@ -65,7 +67,7 @@
 		});
 		describe('When start() is called with three parameters', function () {
 			beforeEach(function () {
-				app = sitegear3(require('../settings.json')).start(8888, {}, 8444);
+				app = sitegear3(require('../_input/settings.json')).start(8888, {}, 8444);
 				spyOn(app.server.http, 'close').andCallThrough();
 				spyOn(app.server.https, 'close').andCallThrough();
 				app.stop();
@@ -77,5 +79,9 @@
 				expect(app.server.https.close.callCount).toBe(1);
 			});
 		});
+		afterEach(function () {
+			http.createServer = originalHttpCreateServer;
+			https.createServer = originalHttpsCreateServer;
+		});
 	});
-}(require('../../../index'), require('http'), require('https'), require('../_mock/server')));
+}(require('../../../'), require('http'), require('https'), require('../_mock/server')));

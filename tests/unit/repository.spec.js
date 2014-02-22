@@ -554,4 +554,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../lib/data/repository'), require('../_mock/data/adapter'), require('../_mock/data/validator'), require('jasmine-node')));
+}(require('lodash'), require('../../lib/repository'), require('./_mock/adapter'), require('./_mock/validator'), require('jasmine-node')));

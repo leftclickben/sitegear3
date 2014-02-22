@@ -10,7 +10,7 @@
 
 	module.exports = function () {
 		return 	{
-			settings: utils.expandSettings(_.merge({}, require('../../../lib/defaults.json'), require('../settings.json'))),
+			settings: utils.expandSettings(_.merge({}, require('../../../lib/defaults.json'), require('../_input/settings.json'))),
 			locals: {},
 			start: _.noop,
 			stop: _.noop,
@@ -20,4 +20,4 @@
 			data: mockMediator()
 		};
 	};
-}(require('lodash'), require('../../../lib/utils'), require('./data/mediator')));
+}(require('lodash'), require('../../../lib/utils'), require('./mediator')));

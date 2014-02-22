@@ -8,16 +8,16 @@
 
 (function (_, sitegear3) {
 	"use strict";
-	require('../setupTests');
+	require('../../setupTests');
 
 	describe('Application lifecycle: connect()', function () {
 		var app, mockAdapter;
 		beforeEach(function () {
-			mockAdapter = require('../_mock/data/adapter');
-			app = sitegear3(require('../settings.json')).connect(mockAdapter());
+			mockAdapter = require('../_mock/adapter');
+			app = sitegear3(require('../_input/settings.json')).connect(mockAdapter());
 		});
 		it('Instantiates the data mediator', function () {
 			expect(app.data).toBeDefined();
 		});
 	});
-}(require('lodash'), require('../../../index')));
+}(require('lodash'), require('../../../')));

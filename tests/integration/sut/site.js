@@ -27,4 +27,4 @@
 			.start(8888);
 	};
 
-}(require('../../../index'), require('../../../lib/data/adapters/filesystem'), require('swig')));
+}(require('../../../'), require('sitegear3-adapter-filesystem'), require('swig')));
