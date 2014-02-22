@@ -6,7 +6,7 @@
  * MIT Licensed
  */
 
-(function (_, sitegear3, utils, mockMediator, mockServer, mockAdapter, http, https) {
+(function (_, sitegear3, mockMediator, mockServer, mockAdapter, http, https) {
 	"use strict";
 	require('../setupTests');
 
@@ -31,11 +31,8 @@
 				});
 			});
 			describe('With object parameter', function () {
-				var originalExpandSettings,
-					settings = require('./_input/settings.json');
+				var settings = require('./_input/settings.json');
 				beforeEach(function () {
-					originalExpandSettings = utils.expandSettings;
-					spyOn(utils, 'expandSettings').andCallThrough();
 					app = sitegear3(settings);
 				});
 				it('Applies settings over defaults', function () {
@@ -47,21 +44,17 @@
 					expect(app.get('https url')).toBe('https://localhost/');
 				});
 				it('Utilises settings expansion', function () {
-					expect(utils.expandSettings).toHaveBeenCalled();
-					expect(utils.expandSettings.callCount).toBe(1);
 					expect(app.get('expando')).toBe('bar');
 					expect(app.get('expando2')).toBe('bar');
 					expect(app.get('expando3')).toBe('prefix-bar');
 					expect(app.get('expando4')).toBe('bar-suffix');
 					expect(app.get('expando5')).toBe('prefix-bar-suffix');
-					expect(app.get('expando6')).toBeNull();
 				});
 				it('Does not expose additional settings', function () {
 					expect(app.get('testKey')).toBeUndefined();
 				});
 				afterEach(function () {
 					app.stop();
-					utils.expandSettings = originalExpandSettings;
 				});
 			});
 		});
@@ -389,4 +382,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../'), require('../../lib/utils'), require('./_mock/mediator'), require('./_mock/server'), require('./_mock/adapter'), require('http'), require('https')));
+}(require('lodash'), require('../../'), require('./_mock/mediator'), require('./_mock/server'), require('./_mock/adapter'), require('http'), require('https')));

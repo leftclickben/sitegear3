@@ -5,12 +5,12 @@
  * MIT Licensed
  */
 
-(function (_, utils, mockMediator) {
+(function (_, templateObject, mockMediator) {
 	"use strict";
 
 	module.exports = function () {
 		return 	{
-			settings: utils.expandSettings(_.merge({}, require('../../../lib/defaults.json'), require('../_input/settings.json'))),
+			settings: templateObject(_.merge({}, require('../../../lib/defaults.json'), require('../_input/settings.json')), 'mustache'),
 			locals: {},
 			start: _.noop,
 			stop: _.noop,
@@ -20,4 +20,4 @@
 			data: mockMediator()
 		};
 	};
-}(require('lodash'), require('../../../lib/utils'), require('./mediator')));
+}(require('lodash'), require('template-object'), require('./mediator')));
