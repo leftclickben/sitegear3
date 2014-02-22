@@ -14,7 +14,7 @@
 		var app, mockAdapter;
 		beforeEach(function () {
 			mockAdapter = require('../_mock/adapter');
-			app = sitegear3(require('../settings.json')).connect(mockAdapter());
+			app = sitegear3(require('../_input/settings.json')).connect(mockAdapter());
 		});
 		it('Instantiates the data mediator', function () {
 			expect(app.data).toBeDefined();

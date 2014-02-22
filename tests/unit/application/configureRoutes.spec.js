@@ -14,7 +14,7 @@
 		var app;
 		describe('Works correctly with correct configuration', function () {
 			beforeEach(function () {
-				app = sitegear3(require('../settings.json'));
+				app = sitegear3(require('../_input/settings.json'));
 				app.data = mockMediator();
 				app.component = function (name) {
 					if (name === 'products') {
@@ -108,7 +108,7 @@
 		});
 		describe('Handles invalid component', function () {
 			beforeEach(function () {
-				app = sitegear3(require('../settings.json'));
+				app = sitegear3(require('../_input/settings.json'));
 				app.data = mockMediator();
 			});
 			it('Throws an error when invalid component is specified', function () {
@@ -130,7 +130,7 @@
 		});
 		describe('Handles unknown action', function () {
 			beforeEach(function () {
-				app = sitegear3(require('../settings.json'));
+				app = sitegear3(require('../_input/settings.json'));
 				app.data = mockMediator();
 				app.component = function (name) {
 					if (name === 'default') {

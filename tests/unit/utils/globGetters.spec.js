@@ -16,7 +16,7 @@
 			beforeEach(function (done) {
 				object = {};
 				spyOn(object, '__defineGetter__').andCallThrough();
-				utils.globGetters(object, path.join(__dirname, '_getters', '*.js'), {}, function () {
+				utils.globGetters(object, path.join(__dirname, '..', '_input', 'getters', '*.js'), {}, function () {
 					done();
 				});
 			});
@@ -28,7 +28,7 @@
 		describe('Creates an empty object by default', function () {
 			var error, returnedObject;
 			beforeEach(function (done) {
-				utils.globGetters(path.join(__dirname, '_getters', '*.js'), {}, function (e, r) {
+				utils.globGetters(path.join(__dirname, '..', '_input', 'getters', '*.js'), {}, function (e, r) {
 					error = e;
 					returnedObject = r;
 					done();
@@ -63,7 +63,7 @@
 			var object, error, returnedObject;
 			beforeEach(function (done) {
 				object = {};
-				utils.globGetters(object, path.join(__dirname, '_getters', '*.js'), {}, function (e, r) {
+				utils.globGetters(object, path.join(__dirname, '..', '_input', 'getters', '*.js'), {}, function (e, r) {
 					error = e;
 					returnedObject = r;
 					done();
@@ -111,7 +111,7 @@
 					},
 					z: 'A string'
 				};
-				utils.globGetters(object, path.join(__dirname, '_getters', '*.js'), {}, function (e, r) {
+				utils.globGetters(object, path.join(__dirname, '..', '_input', 'getters', '*.js'), {}, function (e, r) {
 					error = e;
 					returnedObject = r;
 					done();
@@ -152,7 +152,7 @@
 		describe('Matches deep glob patterns', function () {
 			var error, returnedObject;
 			beforeEach(function (done) {
-				utils.globGetters(/\/([a-zA-Z0-9_\-\.]+)\/getter\.js/, path.join(__dirname, '_gettersNested', '**', '*.js'), {}, function (e, r) {
+				utils.globGetters(/\/([a-zA-Z0-9_\-\.]+)\/getter\.js/, path.join(__dirname, '..', '_input', 'gettersNested', '**', '*.js'), {}, function (e, r) {
 					error = e;
 					returnedObject = r;
 					done();

@@ -11,7 +11,7 @@
 	require('../../setupTests');
 
 	describe('Utility Function: expandSettings()', function () {
-		var settings = require('../settings.json');
+		var settings = require('../_input/settings.json');
 		beforeEach(function () {
 			settings = utils.expandSettings(settings);
 		});

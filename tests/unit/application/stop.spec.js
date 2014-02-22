@@ -20,7 +20,7 @@
 		});
 		describe('When start() is called with no parameters', function () {
 			beforeEach(function () {
-				app = sitegear3(require('../settings.json')).start();
+				app = sitegear3(require('../_input/settings.json')).start();
 				spyOn(app.server.http, 'close').andCallThrough();
 				app.stop();
 			});
@@ -31,7 +31,7 @@
 		});
 		describe('When start() is called with one parameter', function () {
 			beforeEach(function () {
-				app = sitegear3(require('../settings.json')).start(8888);
+				app = sitegear3(require('../_input/settings.json')).start(8888);
 				spyOn(app.server.http, 'close').andCallThrough();
 				app.stop();
 			});
@@ -42,7 +42,7 @@
 		});
 		describe('When start() is called with two parameters', function () {
 			beforeEach(function () {
-				app = sitegear3(require('../settings.json')).start(8888, {});
+				app = sitegear3(require('../_input/settings.json')).start(8888, {});
 				spyOn(app.server.http, 'close').andCallThrough();
 				spyOn(app.server.https, 'close').andCallThrough();
 				app.stop();
@@ -56,7 +56,7 @@
 		});
 		describe('When start() is called with two parameters and skipping httpPort', function () {
 			beforeEach(function () {
-				app = sitegear3(require('../settings.json')).start({}, 8444);
+				app = sitegear3(require('../_input/settings.json')).start({}, 8444);
 				spyOn(app.server.https, 'close').andCallThrough();
 				app.stop();
 			});
@@ -67,7 +67,7 @@
 		});
 		describe('When start() is called with three parameters', function () {
 			beforeEach(function () {
-				app = sitegear3(require('../settings.json')).start(8888, {}, 8444);
+				app = sitegear3(require('../_input/settings.json')).start(8888, {}, 8444);
 				spyOn(app.server.http, 'close').andCallThrough();
 				spyOn(app.server.https, 'close').andCallThrough();
 				app.stop();

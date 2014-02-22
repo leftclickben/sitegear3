@@ -13,7 +13,7 @@
 	describe('Application lifecycle: start()', function () {
 		var app, originalHttpCreateServer, originalHttpsCreateServer;
 		beforeEach(function () {
-			app = sitegear3(require('../settings.json'));
+			app = sitegear3(require('../_input/settings.json'));
 			originalHttpCreateServer = http.createServer;
 			originalHttpsCreateServer = https.createServer;
 			spyOn(http, 'createServer').andReturn(mockServer());

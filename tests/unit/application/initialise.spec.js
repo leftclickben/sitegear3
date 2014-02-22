@@ -31,7 +31,7 @@
 		});
 		describe('With object parameter', function () {
 			var originalExpandSettings,
-				settings = require('../settings.json');
+				settings = require('../_input/settings.json');
 			beforeEach(function () {
 				originalExpandSettings = utils.expandSettings;
 				spyOn(utils, 'expandSettings').andCallThrough();
