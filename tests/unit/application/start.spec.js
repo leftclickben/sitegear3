@@ -8,12 +8,14 @@
 
 (function (sitegear3, http, https, mockServer) {
 	"use strict";
-	require('../setupTests');
+	require('../../setupTests');
 
 	describe('Application lifecycle: start()', function () {
-		var app;
+		var app, originalHttpCreateServer, originalHttpsCreateServer;
 		beforeEach(function () {
 			app = sitegear3(require('../settings.json'));
+			originalHttpCreateServer = http.createServer;
+			originalHttpsCreateServer = https.createServer;
 			spyOn(http, 'createServer').andReturn(mockServer());
 			spyOn(https, 'createServer').andReturn(mockServer());
 		});
@@ -94,5 +96,9 @@
 				app.stop();
 			});
 		});
+		afterEach(function () {
+			http.createServer = originalHttpCreateServer;
+			https.createServer = originalHttpsCreateServer;
+		});
 	});
-}(require('../../../index'), require('http'), require('https'), require('../_mock/server')));
+}(require('../../../'), require('http'), require('https'), require('../_mock/server')));

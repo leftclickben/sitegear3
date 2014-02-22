@@ -20,4 +20,4 @@
 			data: mockMediator()
 		};
 	};
-}(require('lodash'), require('../../../lib/utils'), require('./data/mediator')));
+}(require('lodash'), require('../../../lib/utils'), require('./mediator')));

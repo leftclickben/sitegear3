@@ -135,4 +135,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../lib/data/mediator'), require('../_mock/data/adapter'), require('../_mock/data/model'), require('../_mock/data/validator')));
+}(require('lodash'), require('../../lib/mediator'), require('./_mock/adapter'), require('./_mock/model'), require('./_mock/validator')));

@@ -8,7 +8,7 @@
 
 (function (_, sitegear3, mockMediator) {
 	"use strict";
-	require('../setupTests');
+	require('../../setupTests');
 
 	describe('Application lifecycle: configureRoutes()', function () {
 		var app;
@@ -121,7 +121,7 @@
 					]);
 					expect('This code should not execute').toBeFalsy();
 				} catch (error) {
-					expect(error.toString()).toMatch(/Error: Cannot find module '[a-zA-Z0-9_\-\.\/]*components\/INVALID'/);
+					expect(error.toString()).toMatch(/Error: Cannot find module 'sitegear3-component-INVALID'/);
 				}
 			});
 			afterEach(function () {
@@ -159,4 +159,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../../index'), require('../_mock/data/mediator')));
+}(require('lodash'), require('../../../'), require('../_mock/mediator')));

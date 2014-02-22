@@ -8,7 +8,7 @@
 
 (function (_, formatCurrency) {
 	"use strict";
-	require('../setupTests');
+	require('../../setupTests');
 
 	describe('View Helper: formatCurrency', function () {
 		it('Exports a function', function () {

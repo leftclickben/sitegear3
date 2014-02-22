@@ -8,7 +8,7 @@
 
 (function (_, utils, path) {
 	"use strict";
-	require('../setupTests');
+	require('../../setupTests');
 
 	describe('Utility Function: globGetters()', function () {
 		describe('Uses __defineGetter__()', function () {

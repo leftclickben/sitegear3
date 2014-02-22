@@ -8,7 +8,7 @@
 
 (function (_, sitegear3, utils) {
 	"use strict";
-	require('../setupTests');
+	require('../../setupTests');
 
 	describe('Application lifecycle: initialise()', function () {
 		var app;
@@ -30,8 +30,10 @@
 			});
 		});
 		describe('With object parameter', function () {
-			var settings = require('../settings.json');
+			var originalExpandSettings,
+				settings = require('../settings.json');
 			beforeEach(function () {
+				originalExpandSettings = utils.expandSettings;
 				spyOn(utils, 'expandSettings').andCallThrough();
 				app = sitegear3(settings);
 			});
@@ -58,7 +60,8 @@
 			});
 			afterEach(function () {
 				app.stop();
+				utils.expandSettings = originalExpandSettings;
 			});
 		});
 	});
-}(require('lodash'), require('../../../index'), require('../../../lib/utils')));
+}(require('lodash'), require('../../../'), require('../../../lib/utils')));

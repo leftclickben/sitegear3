@@ -4,12 +4,11 @@
  * Sitegear3
  * Copyright(c) 2014 Ben New, Sitegear.org
  * MIT Licensed
- *
-
-INTEGRATION TESTS TEMPORARILY DISABLED FOR PACKAGE REFACTOR
+ */
 
 (function (sitegear3, siteBootstrap, fs, request) {
 	"use strict";
+	require('../setupTests');
 
 	describe('Sitegear3 integration test', function () {
 		var app,
@@ -85,4 +84,3 @@ INTEGRATION TESTS TEMPORARILY DISABLED FOR PACKAGE REFACTOR
 		});
 	});
 }(require('../../index'), require('./sut/site'), require('graceful-fs'), require('request')));
-*/

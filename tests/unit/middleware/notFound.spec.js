@@ -8,7 +8,7 @@
 
 (function (_, jasmine, notFound) {
 	"use strict";
-	require('../setupTests');
+	require('../../setupTests');
 
 	describe('Helper: notFound', function () {
 		var helper;

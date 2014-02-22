@@ -8,7 +8,7 @@
 
 (function (_, jasmine, fs, path, prepareView, mockApplication) {
 	"use strict";
-	require('../setupTests');
+	require('../../setupTests');
 
 	describe('Helper: prepareView', function () {
 		var app, helper;
