@@ -10,7 +10,7 @@
 	"use strict";
 	require('../setupTests');
 
-	describe('Data: mediator', function () {
+	describe('Mediator', function () {
 		it('Exports a function', function () {
 			expect(_.isFunction(engine)).toBeTruthy();
 		});

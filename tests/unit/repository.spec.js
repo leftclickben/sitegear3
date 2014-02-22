@@ -10,7 +10,7 @@
 	"use strict";
 	require('../setupTests');
 
-	describe('Data: repository', function () {
+	describe('Repository', function () {
 		var callbackSpy, repo, returnValue,
 			newValue = { value: 'this is the new value' },
 			error = new Error('something went wrong'),
