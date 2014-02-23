@@ -10,8 +10,14 @@
 
 	module.exports = function () {
 		var server = {
-			listen: function () { return server; },
-			close: _.noop
+			listen: function (port, callback) {
+				process.nextTick(callback);
+				return server;
+			},
+			close: function(callback) {
+				process.nextTick(callback);
+				return server;
+			}
 		};
 		return server;
 	};
