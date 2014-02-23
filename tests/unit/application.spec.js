@@ -6,7 +6,7 @@
  * MIT Licensed
  */
 
-(function (_, sitegear3, mockMediator, mockServer, mockAdapter, http, https) {
+(function (_, sitegear3, mockMediator, mockServer, mockAdapter, http, https, fs) {
 	"use strict";
 	require('../setupTests');
 
@@ -25,9 +25,6 @@
 				it('Does not expose additional settings', function () {
 					expect(app.get('testKey')).toBeUndefined();
 					expect(app.get('foo')).toBeUndefined();
-				});
-				afterEach(function () {
-					app.stop();
 				});
 			});
 			describe('With object parameter', function () {
@@ -52,9 +49,6 @@
 				});
 				it('Does not expose additional settings', function () {
 					expect(app.get('testKey')).toBeUndefined();
-				});
-				afterEach(function () {
-					app.stop();
 				});
 			});
 		});
@@ -150,9 +144,6 @@
 					expect(app.routes.get[2].regexp.test('/about/history')).toBeTruthy();
 					expect(app.routes.get[2].regexp.test('/about/history/')).toBeTruthy();
 				});
-				afterEach(function () {
-					app.stop();
-				});
 			});
 			describe('Handles invalid component', function () {
 				beforeEach(function () {
@@ -171,9 +162,6 @@
 					} catch (error) {
 						expect(error.toString()).toMatch(/Error: Cannot find module 'sitegear3-component-INVALID'/);
 					}
-				});
-				afterEach(function () {
-					app.stop();
 				});
 			});
 			describe('Handles unknown action', function () {
@@ -202,9 +190,6 @@
 						expect(error.toString()).toBe('Error: Unknown action "INVALID" specified for route at URL "/another/path"');
 					}
 				});
-				afterEach(function () {
-					app.stop();
-				});
 			});
 		});
 		describe('connect()', function () {
@@ -217,93 +202,180 @@
 			});
 		});
 		describe('start()', function () {
-			var app, originalHttpCreateServer, originalHttpsCreateServer;
+			var app, originalHttpCreateServer, server;
 			beforeEach(function () {
 				app = sitegear3(require('./_input/settings.json'));
+				server = mockServer();
+				spyOn(server, 'listen').andCallThrough();
 				originalHttpCreateServer = http.createServer;
-				originalHttpsCreateServer = https.createServer;
-				spyOn(http, 'createServer').andReturn(mockServer());
-				spyOn(https, 'createServer').andReturn(mockServer());
+				spyOn(http, 'createServer').andReturn(server);
 			});
-			describe('With no parameters', function () {
-				beforeEach(function () {
-					app.start();
+			describe('With default port', function () {
+				beforeEach(function (done) {
+					app.start(done);
 				});
 				it('Calls createServer() on http', function () {
 					expect(http.createServer).toHaveBeenCalledWith(app);
 					expect(http.createServer.callCount).toBe(1);
 				});
-				it('Does not call createServer() on https', function () {
-					expect(https.createServer).not.toHaveBeenCalled();
+				it('Listens on the default port', function () {
+					expect(server.listen).toHaveBeenCalled();
+					expect(server.listen.callCount).toBe(1);
+					expect(server.listen.mostRecentCall.args.length).toBe(2);
+					expect(server.listen.mostRecentCall.args[0]).toBe(80);
+					expect(_.isFunction(server.listen.mostRecentCall.args[1])).toBeTruthy();
 				});
-				afterEach(function () {
-					app.stop();
+				it('Exposes the server by app.server.http', function () {
+					expect(app.server.http).toBe(server);
+				});
+				afterEach(function (done) {
+					app.stop(done);
 				});
 			});
-			describe('With one parameter', function () {
-				beforeEach(function () {
-					app.start(8080);
+			describe('With specified port', function () {
+				beforeEach(function (done) {
+					app.start(8080, done);
 				});
 				it('Calls createServer() on http', function () {
 					expect(http.createServer).toHaveBeenCalledWith(app);
 					expect(http.createServer.callCount).toBe(1);
 				});
-				it('Does not call createServer() on https', function () {
-					expect(https.createServer).not.toHaveBeenCalled();
+				it('Listens on the specified port', function () {
+					expect(server.listen).toHaveBeenCalled();
+					expect(server.listen.callCount).toBe(1);
+					expect(server.listen.mostRecentCall.args.length).toBe(2);
+					expect(server.listen.mostRecentCall.args[0]).toBe(8080);
+					expect(_.isFunction(server.listen.mostRecentCall.args[1])).toBeTruthy();
 				});
-				afterEach(function () {
-					app.stop();
+				it('Exposes the server by app.server.http', function () {
+					expect(app.server.http).toBe(server);
 				});
-			});
-			describe('With two parameters', function () {
-				beforeEach(function () {
-					app.start(8080, {});
-				});
-				it('Calls createServer() on http', function () {
-					expect(http.createServer).toHaveBeenCalledWith(app);
-					expect(http.createServer.callCount).toBe(1);
-				});
-				it('Calls createServer() on https', function () {
-					expect(https.createServer).toHaveBeenCalledWith({}, app);
-					expect(https.createServer.callCount).toBe(1);
-				});
-				afterEach(function () {
-					app.stop();
-				});
-			});
-			describe('With two parameters skipping httpPort', function () {
-				beforeEach(function () {
-					app.start({}, 8443);
-				});
-				it('Does not call createServer() on http', function () {
-					expect(http.createServer).not.toHaveBeenCalled();
-				});
-				it('Calls createServer() on https', function () {
-					expect(https.createServer).toHaveBeenCalledWith({}, app);
-					expect(https.createServer.callCount).toBe(1);
-				});
-				afterEach(function () {
-					app.stop();
-				});
-			});
-			describe('With three parameters', function () {
-				beforeEach(function () {
-					app.start(8080, {}, 8443);
-				});
-				it('Calls createServer() on http', function () {
-					expect(http.createServer).toHaveBeenCalledWith(app);
-					expect(http.createServer.callCount).toBe(1);
-				});
-				it('Calls createServer() on https', function () {
-					expect(https.createServer).toHaveBeenCalledWith({}, app);
-					expect(https.createServer.callCount).toBe(1);
-				});
-				afterEach(function () {
-					app.stop();
+				afterEach(function (done) {
+					app.stop(done);
 				});
 			});
 			afterEach(function () {
 				http.createServer = originalHttpCreateServer;
+			});
+		});
+		describe('startSecure()', function () {
+			var app, originalHttpsCreateServer, server;
+			beforeEach(function () {
+				app = sitegear3(require('./_input/settings.json'));
+				server = mockServer();
+				spyOn(server, 'listen').andCallThrough();
+				originalHttpsCreateServer = https.createServer;
+				spyOn(https, 'createServer').andReturn(server);
+			});
+			describe('With inline options object and default port', function () {
+				beforeEach(function (done) {
+					app.startSecure({ pfx: 'some encrypted data' }, done);
+				});
+				it('Calls createServer() on https', function () {
+					expect(https.createServer).toHaveBeenCalledWith({ pfx: 'some encrypted data' }, app);
+					expect(https.createServer.callCount).toBe(1);
+				});
+				it('Listens on the default port', function () {
+					expect(server.listen).toHaveBeenCalled();
+					expect(server.listen.callCount).toBe(1);
+					expect(server.listen.mostRecentCall.args.length).toBe(2);
+					expect(server.listen.mostRecentCall.args[0]).toBe(443);
+					expect(_.isFunction(server.listen.mostRecentCall.args[1])).toBeTruthy();
+				});
+				it('Exposes the server by app.server.https', function () {
+					expect(app.server.https).toBe(server);
+				});
+				afterEach(function (done) {
+					app.stop(done);
+				});
+			});
+			describe('With inline options object and specified port', function () {
+				beforeEach(function (done) {
+					app.startSecure({ pfx: 'some encrypted data' }, 8444, done);
+				});
+				it('Calls createServer() on https', function () {
+					expect(https.createServer).toHaveBeenCalledWith({ pfx: 'some encrypted data' }, app);
+					expect(https.createServer.callCount).toBe(1);
+				});
+				it('Listens on the specified port', function () {
+					expect(server.listen).toHaveBeenCalled();
+					expect(server.listen.callCount).toBe(1);
+					expect(server.listen.mostRecentCall.args.length).toBe(2);
+					expect(server.listen.mostRecentCall.args[0]).toBe(8444);
+					expect(_.isFunction(server.listen.mostRecentCall.args[1])).toBeTruthy();
+				});
+				it('Exposes the server by app.server.https', function () {
+					expect(app.server.https).toBe(server);
+				});
+				afterEach(function (done) {
+					app.stop(done);
+				});
+			});
+			describe('With specified PFX filename and default port', function () {
+				var originalReadFile;
+				beforeEach(function (done) {
+					originalReadFile = fs.readFile;
+					spyOn(fs, 'readFile').andCallFake(function (filename, callback) {
+						callback(null, 'some encrypted data from file');
+					});
+					app.startSecure('/path/to/localhost.pfx', done);
+				});
+				it('Reads the PFX from file', function () {
+					expect(fs.readFile).toHaveBeenCalled();
+					expect(fs.readFile.callCount).toBe(1);
+				});
+				it('Calls createServer() on https', function () {
+					expect(https.createServer).toHaveBeenCalledWith({ pfx: 'some encrypted data from file' }, app);
+					expect(https.createServer.callCount).toBe(1);
+				});
+				it('Listens on the specified port', function () {
+					expect(server.listen).toHaveBeenCalled();
+					expect(server.listen.callCount).toBe(1);
+					expect(server.listen.mostRecentCall.args.length).toBe(2);
+					expect(server.listen.mostRecentCall.args[0]).toBe(443);
+					expect(_.isFunction(server.listen.mostRecentCall.args[1])).toBeTruthy();
+				});
+				it('Exposes the server by app.server.https', function () {
+					expect(app.server.https).toBe(server);
+				});
+				afterEach(function (done) {
+					app.stop(done);
+					fs.readFile = originalReadFile;
+				});
+			});
+			describe('With specified PFX filename and specified port', function () {
+				var originalReadFile;
+				beforeEach(function (done) {
+					originalReadFile = fs.readFile;
+					spyOn(fs, 'readFile').andCallFake(function (filename, callback) {
+						callback(null, 'some encrypted data from file');
+					});
+					app.startSecure('/path/to/localhost.pfx', 8444, done);
+				});
+				it('Reads the PFX from file', function () {
+					expect(fs.readFile).toHaveBeenCalled();
+					expect(fs.readFile.callCount).toBe(1);
+				});
+				it('Calls createServer() on https', function () {
+					expect(https.createServer).toHaveBeenCalledWith({ pfx: 'some encrypted data from file' }, app);
+					expect(https.createServer.callCount).toBe(1);
+				});
+				it('Listens on the specified port', function () {
+					expect(server.listen).toHaveBeenCalled();
+					expect(server.listen.callCount).toBe(1);
+					expect(server.listen.mostRecentCall.args.length).toBe(2);
+					expect(server.listen.mostRecentCall.args[0]).toBe(8444);
+					expect(_.isFunction(server.listen.mostRecentCall.args[1])).toBeTruthy();
+				});
+				it('Exposes the server by app.server.https', function () {
+					expect(app.server.https).toBe(server);
+				});
+				afterEach(function (done) {
+					app.stop(done);
+					fs.readFile = originalReadFile;
+				});
+			});
+			afterEach(function () {
 				https.createServer = originalHttpsCreateServer;
 			});
 		});
@@ -312,68 +384,66 @@
 			beforeEach(function () {
 				originalHttpCreateServer = http.createServer;
 				originalHttpsCreateServer = https.createServer;
-				spyOn(http, 'createServer').andReturn(mockServer());
-				spyOn(https, 'createServer').andReturn(mockServer());
+				http.createServer = mockServer;
+				https.createServer = mockServer;
 			});
-			describe('When start() is called with no parameters', function () {
-				beforeEach(function () {
-					app = sitegear3(require('./_input/settings.json')).start();
-					spyOn(app.server.http, 'close').andCallThrough();
-					app.stop();
+			describe('When start() was called', function () {
+				var httpServer;
+				beforeEach(function (done) {
+					app = sitegear3(require('./_input/settings.json')).start(function () {
+						httpServer = app.server.http;
+						spyOn(httpServer, 'close').andCallThrough();
+						app.stop(done);
+					});
 				});
 				it('Calls close() on http server', function () {
-					expect(app.server.http.close).toHaveBeenCalled();
-					expect(app.server.http.close.callCount).toBe(1);
+					expect(httpServer.close).toHaveBeenCalled();
+					expect(httpServer.close.callCount).toBe(1);
+				});
+				it('Removes app.server', function () {
+					expect(app.server).toBeUndefined();
 				});
 			});
-			describe('When start() is called with one parameter', function () {
-				beforeEach(function () {
-					app = sitegear3(require('./_input/settings.json')).start(8888);
-					spyOn(app.server.http, 'close').andCallThrough();
-					app.stop();
-				});
-				it('Calls close() on http server', function () {
-					expect(app.server.http.close).toHaveBeenCalled();
-					expect(app.server.http.close.callCount).toBe(1);
-				});
-			});
-			describe('When start() is called with two parameters', function () {
-				beforeEach(function () {
-					app = sitegear3(require('./_input/settings.json')).start(8888, {});
-					spyOn(app.server.http, 'close').andCallThrough();
-					spyOn(app.server.https, 'close').andCallThrough();
-					app.stop();
-				});
-				it('Calls close() on http and https servers', function () {
-					expect(app.server.http.close).toHaveBeenCalled();
-					expect(app.server.http.close.callCount).toBe(1);
-					expect(app.server.https.close).toHaveBeenCalled();
-					expect(app.server.https.close.callCount).toBe(1);
-				});
-			});
-			describe('When start() is called with two parameters and skipping httpPort', function () {
-				beforeEach(function () {
-					app = sitegear3(require('./_input/settings.json')).start({}, 8444);
-					spyOn(app.server.https, 'close').andCallThrough();
-					app.stop();
+			describe('When startSecure() was called', function () {
+				var httpsServer;
+				beforeEach(function (done) {
+					app = sitegear3(require('./_input/settings.json')).startSecure({ pfx: 'some encrypted data' }, function () {
+						httpsServer = app.server.https;
+						spyOn(httpsServer, 'close').andCallThrough();
+						app.stop(done);
+					});
 				});
 				it('Calls close() on https server', function () {
-					expect(app.server.https.close).toHaveBeenCalled();
-					expect(app.server.https.close.callCount).toBe(1);
+					expect(httpsServer.close).toHaveBeenCalled();
+					expect(httpsServer.close.callCount).toBe(1);
+				});
+				it('Removes app.server', function () {
+					expect(app.server).toBeUndefined();
 				});
 			});
-			describe('When start() is called with three parameters', function () {
-				beforeEach(function () {
-					app = sitegear3(require('./_input/settings.json')).start(8888, {}, 8444);
-					spyOn(app.server.http, 'close').andCallThrough();
-					spyOn(app.server.https, 'close').andCallThrough();
-					app.stop();
+			describe('When both start() and startSecure() were called', function () {
+				var httpServer, httpsServer;
+				beforeEach(function (done) {
+					app = sitegear3(require('./_input/settings.json')).start(function () {
+						app.startSecure({ pfx: 'some encrypted data' }, function () {
+							httpsServer = app.server.https;
+							spyOn(httpsServer, 'close').andCallThrough();
+							httpServer = app.server.http;
+							spyOn(httpServer, 'close').andCallThrough();
+							app.stop(done);
+						});
+					});
 				});
-				it('Calls close() on http and https servers', function () {
-					expect(app.server.http.close).toHaveBeenCalled();
-					expect(app.server.http.close.callCount).toBe(1);
-					expect(app.server.https.close).toHaveBeenCalled();
-					expect(app.server.https.close.callCount).toBe(1);
+				it('Calls close() on http server', function () {
+					expect(httpServer.close).toHaveBeenCalled();
+					expect(httpServer.close.callCount).toBe(1);
+				});
+				it('Calls close() on https server', function () {
+					expect(httpsServer.close).toHaveBeenCalled();
+					expect(httpsServer.close.callCount).toBe(1);
+				});
+				it('Removes app.server', function () {
+					expect(app.server).toBeUndefined();
 				});
 			});
 			afterEach(function () {
@@ -382,4 +452,4 @@
 			});
 		});
 	});
-}(require('lodash'), require('../../'), require('./_mock/mediator'), require('./_mock/server'), require('./_mock/adapter'), require('http'), require('https')));
+}(require('lodash'), require('../../'), require('./_mock/mediator'), require('./_mock/server'), require('./_mock/adapter'), require('http'), require('https'), require('fs')));
