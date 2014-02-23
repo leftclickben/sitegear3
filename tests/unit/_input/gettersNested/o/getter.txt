@@ -1,1 +1,0 @@
-This file is used to verify that no files without a .js extension are loaded by globGetters().

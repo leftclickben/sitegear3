@@ -58,7 +58,7 @@
 				});
 			});
 		});
-		describe('configureRoutes()', function () {
+		describe('routing()', function () {
 			var app;
 			describe('Works correctly with correct configuration', function () {
 				beforeEach(function () {
@@ -78,7 +78,7 @@
 						}
 						return null;
 					};
-					app.configureRoutes([
+					app.routing([
 						{
 							path: '/products',
 							component: 'products'
@@ -161,7 +161,7 @@
 				});
 				it('Throws an error when invalid component is specified', function () {
 					try {
-						app.configureRoutes([
+						app.routing([
 							{
 								path: '/some/path',
 								component: 'INVALID'
@@ -191,7 +191,7 @@
 				});
 				it('Throws an error when invalid action is specified in a valid component', function () {
 					try {
-						app.configureRoutes([
+						app.routing([
 							{
 								path: '/another/path',
 								action: 'INVALID'
