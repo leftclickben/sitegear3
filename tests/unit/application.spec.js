@@ -10,51 +10,54 @@
 	"use strict";
 	require('../setupTests');
 
-	describe('Application', function () {
-		describe('initialise()', function () {
+	describe('application.js', function () {
+		it('exports a function', function () {
+			expect(_.isFunction(sitegear3)).toBeTruthy();
+		});
+		describe('the initialise() method', function () {
 			var app;
-			describe('With no parameters', function () {
+			describe('when called with no parameters', function () {
 				beforeEach(function () {
 					app = sitegear3();
 				});
-				it('Exposes all defaults as settings', function () {
+				it('exposes all defaults as settings', function () {
 					expect(app.get('site name')).toBe('Anonymous Website');
 					expect(app.get('http url')).toBe('http://localhost/');
 					expect(app.get('https url')).toBe('https://localhost/');
 				});
-				it('Does not expose additional settings', function () {
+				it('does not expose additional settings', function () {
 					expect(app.get('testKey')).toBeUndefined();
 					expect(app.get('foo')).toBeUndefined();
 				});
 			});
-			describe('With object parameter', function () {
+			describe('when called with settings object parameter', function () {
 				var settings = require('./_input/settings.json');
 				beforeEach(function () {
 					app = sitegear3(settings);
 				});
-				it('Applies settings over defaults', function () {
+				it('applies settings over defaults', function () {
 					expect(app.get('site name')).toBe('Test Spec');
 					expect(app.get('foo')).toBe('bar');
 				});
-				it('Exposes defaults not overridden as settings', function () {
+				it('exposes defaults not overridden as settings', function () {
 					expect(app.get('http url')).toBe('http://localhost/');
 					expect(app.get('https url')).toBe('https://localhost/');
 				});
-				it('Utilises settings expansion', function () {
+				it('utilises settings expansion', function () {
 					expect(app.get('expando')).toBe('bar');
 					expect(app.get('expando2')).toBe('bar');
 					expect(app.get('expando3')).toBe('prefix-bar');
 					expect(app.get('expando4')).toBe('bar-suffix');
 					expect(app.get('expando5')).toBe('prefix-bar-suffix');
 				});
-				it('Does not expose additional settings', function () {
+				it('does not expose additional settings', function () {
 					expect(app.get('testKey')).toBeUndefined();
 				});
 			});
 		});
-		describe('routing()', function () {
+		describe('the routing() method', function () {
 			var app;
-			describe('Works correctly with correct configuration', function () {
+			describe('when called with a valid configuration', function () {
 				beforeEach(function () {
 					app = sitegear3(require('./_input/settings.json'));
 					app.data = mockMediator();
@@ -87,13 +90,13 @@
 						}
 					]);
 				});
-				it('Adds all expected routes', function () {
+				it('adds all expected routes', function () {
 					expect(_.size(app.routes.get)).toBe(3);
 					expect(_.size(app.routes.post)).toBe(0);
 					expect(_.size(app.routes.put)).toBe(0);
 					expect(_.size(app.routes.dele)).toBe(0);
 				});
-				it('Correctly configures static routes to non-default components', function () {
+				it('correctly configures static routes to non-default components', function () {
 					expect(app.routes.get[0].path).toBe('/products');
 					expect(app.routes.get[0].method).toBe('get');
 					expect(app.routes.get[0].callbacks.length).toBe(1);
@@ -110,7 +113,7 @@
 					expect(app.routes.get[0].regexp.test('/about/history')).toBeFalsy();
 					expect(app.routes.get[0].regexp.test('/about/history/')).toBeFalsy();
 				});
-				it('Correctly configures slug routes', function () {
+				it('correctly configures slug routes', function () {
 					expect(app.routes.get[1].path).toBe('/products/:item');
 					expect(app.routes.get[1].method).toBe('get');
 					expect(app.routes.get[1].callbacks.length).toBe(1);
@@ -127,7 +130,7 @@
 					expect(app.routes.get[1].regexp.test('/about/history')).toBeFalsy();
 					expect(app.routes.get[1].regexp.test('/about/history/')).toBeFalsy();
 				});
-				it('Correctly configures the fallback route', function () {
+				it('correctly configures the fallback route', function () {
 					expect(app.routes.get[2].path).toBe('*');
 					expect(app.routes.get[2].method).toBe('get');
 					expect(app.routes.get[2].callbacks.length).toBe(1);
@@ -145,12 +148,12 @@
 					expect(app.routes.get[2].regexp.test('/about/history/')).toBeTruthy();
 				});
 			});
-			describe('Handles invalid component', function () {
+			describe('when called with an invalid component', function () {
 				beforeEach(function () {
 					app = sitegear3(require('./_input/settings.json'));
 					app.data = mockMediator();
 				});
-				it('Throws an error when invalid component is specified', function () {
+				it('throws an error when invalid component is specified', function () {
 					try {
 						app.routing([
 							{
@@ -164,7 +167,7 @@
 					}
 				});
 			});
-			describe('Handles unknown action', function () {
+			describe('when called with an unknown action', function () {
 				beforeEach(function () {
 					app = sitegear3(require('./_input/settings.json'));
 					app.data = mockMediator();
@@ -177,7 +180,7 @@
 						return null;
 					};
 				});
-				it('Throws an error when invalid action is specified in a valid component', function () {
+				it('throws an error when invalid action is specified in a valid component', function () {
 					try {
 						app.routing([
 							{
@@ -192,16 +195,16 @@
 				});
 			});
 		});
-		describe('connect()', function () {
+		describe('the connect() method', function () {
 			var app;
 			beforeEach(function () {
 				app = sitegear3(require('./_input/settings.json')).connect(mockAdapter());
 			});
-			it('Instantiates the data mediator', function () {
+			it('instantiates the data mediator', function () {
 				expect(app.data).toBeDefined();
 			});
 		});
-		describe('start()', function () {
+		describe('the start() method', function () {
 			var app, originalHttpCreateServer, server;
 			beforeEach(function () {
 				app = sitegear3(require('./_input/settings.json'));
@@ -210,44 +213,44 @@
 				originalHttpCreateServer = http.createServer;
 				spyOn(http, 'createServer').andReturn(server);
 			});
-			describe('With default port', function () {
+			describe('when called with default port', function () {
 				beforeEach(function (done) {
 					app.start(done);
 				});
-				it('Calls createServer() on http', function () {
+				it('calls createServer() on http', function () {
 					expect(http.createServer).toHaveBeenCalledWith(app);
 					expect(http.createServer.callCount).toBe(1);
 				});
-				it('Listens on the default port', function () {
+				it('listens on the default port', function () {
 					expect(server.listen).toHaveBeenCalled();
 					expect(server.listen.callCount).toBe(1);
 					expect(server.listen.mostRecentCall.args.length).toBe(2);
 					expect(server.listen.mostRecentCall.args[0]).toBe(80);
 					expect(_.isFunction(server.listen.mostRecentCall.args[1])).toBeTruthy();
 				});
-				it('Exposes the server by app.server.http', function () {
+				it('exposes the server by app.server.http', function () {
 					expect(app.server.http).toBe(server);
 				});
 				afterEach(function (done) {
 					app.stop(done);
 				});
 			});
-			describe('With specified port', function () {
+			describe('when called with specified port', function () {
 				beforeEach(function (done) {
 					app.start(8080, done);
 				});
-				it('Calls createServer() on http', function () {
+				it('calls createServer() on http', function () {
 					expect(http.createServer).toHaveBeenCalledWith(app);
 					expect(http.createServer.callCount).toBe(1);
 				});
-				it('Listens on the specified port', function () {
+				it('listens on the specified port', function () {
 					expect(server.listen).toHaveBeenCalled();
 					expect(server.listen.callCount).toBe(1);
 					expect(server.listen.mostRecentCall.args.length).toBe(2);
 					expect(server.listen.mostRecentCall.args[0]).toBe(8080);
 					expect(_.isFunction(server.listen.mostRecentCall.args[1])).toBeTruthy();
 				});
-				it('Exposes the server by app.server.http', function () {
+				it('exposes the server by app.server.http', function () {
 					expect(app.server.http).toBe(server);
 				});
 				afterEach(function (done) {
@@ -258,7 +261,7 @@
 				http.createServer = originalHttpCreateServer;
 			});
 		});
-		describe('startSecure()', function () {
+		describe('the startSecure() method', function () {
 			var app, originalHttpsCreateServer, server;
 			beforeEach(function () {
 				app = sitegear3(require('./_input/settings.json'));
@@ -267,51 +270,51 @@
 				originalHttpsCreateServer = https.createServer;
 				spyOn(https, 'createServer').andReturn(server);
 			});
-			describe('With inline options object and default port', function () {
+			describe('when called with inline options object and default port', function () {
 				beforeEach(function (done) {
 					app.startSecure({ pfx: 'some encrypted data' }, done);
 				});
-				it('Calls createServer() on https', function () {
+				it('calls createServer() on https', function () {
 					expect(https.createServer).toHaveBeenCalledWith({ pfx: 'some encrypted data' }, app);
 					expect(https.createServer.callCount).toBe(1);
 				});
-				it('Listens on the default port', function () {
+				it('listens on the default port', function () {
 					expect(server.listen).toHaveBeenCalled();
 					expect(server.listen.callCount).toBe(1);
 					expect(server.listen.mostRecentCall.args.length).toBe(2);
 					expect(server.listen.mostRecentCall.args[0]).toBe(443);
 					expect(_.isFunction(server.listen.mostRecentCall.args[1])).toBeTruthy();
 				});
-				it('Exposes the server by app.server.https', function () {
+				it('exposes the server by app.server.https', function () {
 					expect(app.server.https).toBe(server);
 				});
 				afterEach(function (done) {
 					app.stop(done);
 				});
 			});
-			describe('With inline options object and specified port', function () {
+			describe('when called with inline options object and specified port', function () {
 				beforeEach(function (done) {
 					app.startSecure({ pfx: 'some encrypted data' }, 8444, done);
 				});
-				it('Calls createServer() on https', function () {
+				it('calls createServer() on https', function () {
 					expect(https.createServer).toHaveBeenCalledWith({ pfx: 'some encrypted data' }, app);
 					expect(https.createServer.callCount).toBe(1);
 				});
-				it('Listens on the specified port', function () {
+				it('listens on the specified port', function () {
 					expect(server.listen).toHaveBeenCalled();
 					expect(server.listen.callCount).toBe(1);
 					expect(server.listen.mostRecentCall.args.length).toBe(2);
 					expect(server.listen.mostRecentCall.args[0]).toBe(8444);
 					expect(_.isFunction(server.listen.mostRecentCall.args[1])).toBeTruthy();
 				});
-				it('Exposes the server by app.server.https', function () {
+				it('exposes the server by app.server.https', function () {
 					expect(app.server.https).toBe(server);
 				});
 				afterEach(function (done) {
 					app.stop(done);
 				});
 			});
-			describe('With specified PFX filename and default port', function () {
+			describe('when called with specified PFX filename and default port', function () {
 				var originalReadFile;
 				beforeEach(function (done) {
 					originalReadFile = fs.readFile;
@@ -320,22 +323,22 @@
 					});
 					app.startSecure('/path/to/localhost.pfx', done);
 				});
-				it('Reads the PFX from file', function () {
+				it('reads the PFX from file', function () {
 					expect(fs.readFile).toHaveBeenCalled();
 					expect(fs.readFile.callCount).toBe(1);
 				});
-				it('Calls createServer() on https', function () {
+				it('calls createServer() on https', function () {
 					expect(https.createServer).toHaveBeenCalledWith({ pfx: 'some encrypted data from file' }, app);
 					expect(https.createServer.callCount).toBe(1);
 				});
-				it('Listens on the specified port', function () {
+				it('listens on the specified port', function () {
 					expect(server.listen).toHaveBeenCalled();
 					expect(server.listen.callCount).toBe(1);
 					expect(server.listen.mostRecentCall.args.length).toBe(2);
 					expect(server.listen.mostRecentCall.args[0]).toBe(443);
 					expect(_.isFunction(server.listen.mostRecentCall.args[1])).toBeTruthy();
 				});
-				it('Exposes the server by app.server.https', function () {
+				it('exposes the server by app.server.https', function () {
 					expect(app.server.https).toBe(server);
 				});
 				afterEach(function (done) {
@@ -343,7 +346,7 @@
 					fs.readFile = originalReadFile;
 				});
 			});
-			describe('With specified PFX filename and specified port', function () {
+			describe('when called with specified PFX filename and specified port', function () {
 				var originalReadFile;
 				beforeEach(function (done) {
 					originalReadFile = fs.readFile;
@@ -352,22 +355,22 @@
 					});
 					app.startSecure('/path/to/localhost.pfx', 8444, done);
 				});
-				it('Reads the PFX from file', function () {
+				it('reads the PFX from file', function () {
 					expect(fs.readFile).toHaveBeenCalled();
 					expect(fs.readFile.callCount).toBe(1);
 				});
-				it('Calls createServer() on https', function () {
+				it('calls createServer() on https', function () {
 					expect(https.createServer).toHaveBeenCalledWith({ pfx: 'some encrypted data from file' }, app);
 					expect(https.createServer.callCount).toBe(1);
 				});
-				it('Listens on the specified port', function () {
+				it('listens on the specified port', function () {
 					expect(server.listen).toHaveBeenCalled();
 					expect(server.listen.callCount).toBe(1);
 					expect(server.listen.mostRecentCall.args.length).toBe(2);
 					expect(server.listen.mostRecentCall.args[0]).toBe(8444);
 					expect(_.isFunction(server.listen.mostRecentCall.args[1])).toBeTruthy();
 				});
-				it('Exposes the server by app.server.https', function () {
+				it('exposes the server by app.server.https', function () {
 					expect(app.server.https).toBe(server);
 				});
 				afterEach(function (done) {
@@ -379,7 +382,7 @@
 				https.createServer = originalHttpsCreateServer;
 			});
 		});
-		describe('stop()', function () {
+		describe('the stop() method', function () {
 			var app, originalHttpCreateServer, originalHttpsCreateServer;
 			beforeEach(function () {
 				originalHttpCreateServer = http.createServer;
@@ -387,7 +390,7 @@
 				http.createServer = mockServer;
 				https.createServer = mockServer;
 			});
-			describe('When start() was called', function () {
+			describe('when start() was called', function () {
 				var httpServer;
 				beforeEach(function (done) {
 					app = sitegear3(require('./_input/settings.json')).start(function () {
@@ -396,15 +399,15 @@
 						app.stop(done);
 					});
 				});
-				it('Calls close() on http server', function () {
+				it('calls close() on http server', function () {
 					expect(httpServer.close).toHaveBeenCalled();
 					expect(httpServer.close.callCount).toBe(1);
 				});
-				it('Removes app.server', function () {
+				it('removes app.server', function () {
 					expect(app.server).toBeUndefined();
 				});
 			});
-			describe('When startSecure() was called', function () {
+			describe('when startSecure() was called', function () {
 				var httpsServer;
 				beforeEach(function (done) {
 					app = sitegear3(require('./_input/settings.json')).startSecure({ pfx: 'some encrypted data' }, function () {
@@ -413,15 +416,15 @@
 						app.stop(done);
 					});
 				});
-				it('Calls close() on https server', function () {
+				it('calls close() on https server', function () {
 					expect(httpsServer.close).toHaveBeenCalled();
 					expect(httpsServer.close.callCount).toBe(1);
 				});
-				it('Removes app.server', function () {
+				it('removes app.server', function () {
 					expect(app.server).toBeUndefined();
 				});
 			});
-			describe('When both start() and startSecure() were called', function () {
+			describe('when both start() and startSecure() were called', function () {
 				var httpServer, httpsServer;
 				beforeEach(function (done) {
 					app = sitegear3(require('./_input/settings.json')).start(function () {
@@ -434,15 +437,15 @@
 						});
 					});
 				});
-				it('Calls close() on http server', function () {
+				it('calls close() on http server', function () {
 					expect(httpServer.close).toHaveBeenCalled();
 					expect(httpServer.close.callCount).toBe(1);
 				});
-				it('Calls close() on https server', function () {
+				it('calls close() on https server', function () {
 					expect(httpsServer.close).toHaveBeenCalled();
 					expect(httpsServer.close.callCount).toBe(1);
 				});
-				it('Removes app.server', function () {
+				it('removes app.server', function () {
 					expect(app.server).toBeUndefined();
 				});
 			});
