@@ -30,9 +30,11 @@
 				repo = repository(adapter, 'test-type');
 			});
 			describe('the set() method', function () {
+				var originalAdapterSet;
 				beforeEach(function (done) {
 					spyOn(repo, 'validate').andCallThrough();
 					spyOn(repo, 'emit');
+					originalAdapterSet = adapter.set;
 					spyOn(adapter, 'set').andCallThrough();
 					callbackSpy = jasmine.createSpy('set callback').andCallFake(function () {
 						done();
@@ -62,10 +64,15 @@
 				it('returns the repository instance for chaining', function () {
 					expect(returnValue).toBe(repo);
 				});
+				afterEach(function () {
+					adapter.set = originalAdapterSet;
+				});
 			});
 			describe('the get() method', function () {
+				var originalAdapterGet;
 				beforeEach(function (done) {
 					spyOn(repo, 'emit');
+					originalAdapterGet = adapter.get;
 					spyOn(adapter, 'get').andCallThrough();
 					callbackSpy = jasmine.createSpy('get callback').andCallFake(function () {
 						done();
@@ -87,10 +94,15 @@
 				it('returns the repository instance for chaining', function () {
 					expect(returnValue).toBe(repo);
 				});
+				afterEach(function () {
+					adapter.get = originalAdapterGet;
+				});
 			});
 			describe('the keys() method', function () {
+				var originalAdapterKeys;
 				beforeEach(function (done) {
 					spyOn(repo, 'emit');
+					originalAdapterKeys = adapter.keys;
 					spyOn(adapter, 'keys').andCallThrough();
 					callbackSpy = jasmine.createSpy('keys callback').andCallFake(function () {
 						done();
@@ -112,10 +124,15 @@
 				it('returns the repository instance for chaining', function () {
 					expect(returnValue).toBe(repo);
 				});
+				afterEach(function () {
+					adapter.keys = originalAdapterKeys;
+				});
 			});
 			describe('the all() method', function () {
+				var originalAdapterAll;
 				beforeEach(function (done) {
 					spyOn(repo, 'emit');
+					originalAdapterAll = adapter.all;
 					spyOn(adapter, 'all').andCallThrough();
 					callbackSpy = jasmine.createSpy('all callback').andCallFake(function () {
 						done();
@@ -137,10 +154,15 @@
 				it('returns the repository instance for chaining', function () {
 					expect(returnValue).toBe(repo);
 				});
+				afterEach(function () {
+					adapter.all = originalAdapterAll;
+				});
 			});
 			describe('the remove() method', function () {
+				var originalAdapterRemove;
 				beforeEach(function (done) {
 					spyOn(repo, 'emit');
+					originalAdapterRemove = adapter.remove;
 					spyOn(adapter, 'remove').andCallThrough();
 					callbackSpy = jasmine.createSpy('remove callback').andCallFake(function () {
 						done();
@@ -162,10 +184,15 @@
 				it('returns the repository instance for chaining', function () {
 					expect(returnValue).toBe(repo);
 				});
+				afterEach(function () {
+					adapter.remove = originalAdapterRemove;
+				});
 			});
 			describe('the clear() method', function () {
+				var originalAdapterClear;
 				beforeEach(function (done) {
 					spyOn(repo, 'emit');
+					originalAdapterClear = adapter.clear;
 					spyOn(adapter, 'clear').andCallThrough();
 					callbackSpy = jasmine.createSpy('clear callback').andCallFake(function () {
 						done();
@@ -187,6 +214,9 @@
 				it('returns the repository instance for chaining', function () {
 					expect(returnValue).toBe(repo);
 				});
+				afterEach(function () {
+					adapter.clear = originalAdapterClear;
+				});
 			});
 		});
 		describe('when adapter is generating errors', function () {
@@ -194,9 +224,11 @@
 				repo = repository(errorAdapter, 'test-type');
 			});
 			describe('the set() method', function () {
+				var originalAdapterSet;
 				beforeEach(function (done) {
 					spyOn(repo, 'validate').andCallThrough();
 					spyOn(repo, 'emit');
+					originalAdapterSet = errorAdapter.set;
 					spyOn(errorAdapter, 'set').andCallThrough();
 					callbackSpy = jasmine.createSpy('set callback').andCallFake(function () {
 						done();
@@ -226,10 +258,15 @@
 				it('returns the repository instance for chaining', function () {
 					expect(returnValue).toBe(repo);
 				});
+				afterEach(function () {
+					errorAdapter.set = originalAdapterSet;
+				});
 			});
 			describe('the get() method', function () {
+				var originalAdapterGet;
 				beforeEach(function (done) {
 					spyOn(repo, 'emit');
+					originalAdapterGet = errorAdapter.get;
 					spyOn(errorAdapter, 'get').andCallThrough();
 					callbackSpy = jasmine.createSpy('get callback').andCallFake(function () {
 						done();
@@ -251,10 +288,15 @@
 				it('returns the repository instance for chaining', function () {
 					expect(returnValue).toBe(repo);
 				});
+				afterEach(function () {
+					errorAdapter.get = originalAdapterGet;
+				});
 			});
 			describe('the keys() method', function () {
+				var originalAdapterKeys;
 				beforeEach(function (done) {
 					spyOn(repo, 'emit');
+					originalAdapterKeys = errorAdapter.keys;
 					spyOn(errorAdapter, 'keys').andCallThrough();
 					callbackSpy = jasmine.createSpy('keys callback').andCallFake(function () {
 						done();
@@ -276,10 +318,15 @@
 				it('returns the repository instance for chaining', function () {
 					expect(returnValue).toBe(repo);
 				});
+				afterEach(function () {
+					errorAdapter.keys = originalAdapterKeys;
+				});
 			});
 			describe('the all() method', function () {
+				var originalAdapterAll;
 				beforeEach(function (done) {
 					spyOn(repo, 'emit');
+					originalAdapterAll = errorAdapter.all;
 					spyOn(errorAdapter, 'all').andCallThrough();
 					callbackSpy = jasmine.createSpy('all callback').andCallFake(function () {
 						done();
@@ -301,10 +348,15 @@
 				it('returns the repository instance for chaining', function () {
 					expect(returnValue).toBe(repo);
 				});
+				afterEach(function () {
+					errorAdapter.all = originalAdapterAll;
+				});
 			});
 			describe('the remove() method', function () {
+				var originalAdapterRemove;
 				beforeEach(function (done) {
 					spyOn(repo, 'emit');
+					originalAdapterRemove = errorAdapter.remove;
 					spyOn(errorAdapter, 'remove').andCallThrough();
 					callbackSpy = jasmine.createSpy('remove callback').andCallFake(function () {
 						done();
@@ -326,10 +378,15 @@
 				it('returns the repository instance for chaining', function () {
 					expect(returnValue).toBe(repo);
 				});
+				afterEach(function () {
+					errorAdapter.remove = originalAdapterRemove;
+				});
 			});
 			describe('the clear() method', function () {
+				var originalAdapterClear;
 				beforeEach(function (done) {
 					spyOn(repo, 'emit');
+					originalAdapterClear = errorAdapter.clear;
 					spyOn(errorAdapter, 'clear').andCallThrough();
 					callbackSpy = jasmine.createSpy('clear callback').andCallFake(function () {
 						done();
@@ -350,6 +407,9 @@
 				});
 				it('returns the repository instance for chaining', function () {
 					expect(returnValue).toBe(repo);
+				});
+				afterEach(function () {
+					errorAdapter.clear = originalAdapterClear;
 				});
 			});
 		});
@@ -405,10 +465,12 @@
 					});
 				});
 				describe('the set() method', function () {
+					var originalAdapterSet;
 					beforeEach(function (done) {
 						callbackSpy = jasmine.createSpy('callback spy').andCallFake(function () {
 							done();
 						});
+						originalAdapterSet = adapter.set;
 						spyOn(adapter, 'set').andCallThrough();
 						returnValue = repo.set('test-key', newValue, callbackSpy);
 					});
@@ -423,6 +485,9 @@
 					it('calls set on the adapter', function () {
 						expect(adapter.set).toHaveBeenCalled();
 						expect(adapter.set.callCount).toBe(1);
+					});
+					afterEach(function () {
+						adapter.set = originalAdapterSet;
 					});
 				});
 			});
@@ -457,10 +522,12 @@
 					});
 				});
 				describe('the set() method', function () {
+					var originalAdapterSet;
 					beforeEach(function (done) {
 						callbackSpy = jasmine.createSpy('callback spy').andCallFake(function () {
 							done();
 						});
+						originalAdapterSet = errorAdapter.set;
 						spyOn(errorAdapter, 'set').andCallThrough();
 						returnValue = repo.set('test-key', newValue, callbackSpy);
 					});
@@ -474,6 +541,9 @@
 					});
 					it('does not call set on the adapter', function () {
 						expect(errorAdapter.set).not.toHaveBeenCalled();
+					});
+					afterEach(function () {
+						errorAdapter.set = originalAdapterSet;
 					});
 				});
 			});
